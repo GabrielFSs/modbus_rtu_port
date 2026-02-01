@@ -1,0 +1,10 @@
+../App/Drivers/ports/hal_uart_stm32f4.c:53:13:stm32_uart_init	1
+../App/Drivers/ports/hal_uart_stm32f4.c:64:13:stm32_uart_deinit	3
+../App/Drivers/ports/hal_uart_stm32f4.c:76:23:stm32_uart_open	14
+../App/Drivers/ports/hal_uart_stm32f4.c:194:13:stm32_uart_close	3
+../App/Drivers/ports/hal_uart_stm32f4.c:221:22:stm32_uart_write	16
+../App/Drivers/ports/hal_uart_stm32f4.c:308:22:stm32_uart_read	11
+../App/Drivers/ports/hal_uart_stm32f4.c:355:13:stm32_uart_flush	2
+../App/Drivers/ports/hal_uart_stm32f4.c:371:13:stm32_uart_set_event_cb	2
+../App/Drivers/ports/hal_uart_stm32f4.c:383:6:HAL_UART_TxCpltCallback	5
+../App/Drivers/ports/hal_uart_stm32f4.c:408:6:HAL_UART_RxCpltCallback	9

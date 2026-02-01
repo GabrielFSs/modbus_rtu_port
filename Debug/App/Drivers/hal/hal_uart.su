@@ -1,0 +1,8 @@
+../App/Drivers/hal/hal_uart.c:9:6:hal_uart_init	8	static
+../App/Drivers/hal/hal_uart.c:15:6:hal_uart_deinit	8	static
+../App/Drivers/hal/hal_uart.c:21:16:hal_uart_open	16	static
+../App/Drivers/hal/hal_uart.c:26:6:hal_uart_close	16	static
+../App/Drivers/hal/hal_uart.c:31:15:hal_uart_write	40	static
+../App/Drivers/hal/hal_uart.c:36:15:hal_uart_read	40	static
+../App/Drivers/hal/hal_uart.c:41:6:hal_uart_flush	16	static
+../App/Drivers/hal/hal_uart.c:47:6:hal_uart_set_event_cb	24	static

@@ -1,0 +1,2 @@
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_uart.c:8:6:bsp_uart_init	2
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_uart.c:33:6:bsp_uart_deinit	2
