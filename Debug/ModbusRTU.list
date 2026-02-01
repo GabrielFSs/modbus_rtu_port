@@ -452,7 +452,7 @@ void bsp_uart_init(bsp_uart_id_t id)
 08000560 <app_setup>:
 /* ===== VARIÁVEIS QUE PRECISAM VIVER NO LOOP ===== */
 static uint32_t last_tick = 0;
-static const uint8_t msg[] = "TeSTE\n";
+static const uint8_t msg[] = "TESTE\r\n";
 
 int app_setup(void)
 {
@@ -524,7 +524,7 @@ void app_loop(void)
  80005c2:	1d3b      	adds	r3, r7, #4
  80005c4:	2264      	movs	r2, #100	; 0x64
  80005c6:	9200      	str	r2, [sp, #0]
- 80005c8:	2206      	movs	r2, #6
+ 80005c8:	2207      	movs	r2, #7
  80005ca:	4905      	ldr	r1, [pc, #20]	; (80005e0 <app_loop+0x44>)
  80005cc:	f000 f82e 	bl	800062c <hal_uart_write>
                        msg,
