@@ -1,2 +1,2 @@
-../App/Core/Src/app.c:33:5:app_setup	2
-../App/Core/Src/app.c:50:6:app_loop	2
+../App/Core/Src/app.c:40:6:app_setup	2
+../App/Core/Src/app.c:53:6:app_loop	4
