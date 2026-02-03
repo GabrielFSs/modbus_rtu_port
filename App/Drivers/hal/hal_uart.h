@@ -86,6 +86,13 @@ typedef enum
     UART_RX_MODE_CIRCULAR
 } uart_rx_mode_t;
 
+typedef enum {
+    UART_RX_DONE_NONE,
+    UART_RX_DONE_ON_CHAR,
+    UART_RX_DONE_ON_TIMEOUT,
+    UART_RX_DONE_ON_LENGTH,
+} uart_rx_done_mode_t;
+
 typedef struct
 {
     hal_uart_baud_t  baudrate;
@@ -100,8 +107,11 @@ typedef struct
     uart_mode_t comm_mode;
     uart_duplex_t duplex_mode;
     hal_uart_databits_t databits;
+    uart_rx_done_mode_t rx_done_mode;
+    uint8_t rx_done_char;
+    uint16_t rx_done_length;
+    uint32_t rx_done_timeout;
 } hal_uart_cfg_t;
-//verificar possibilidade de não definir o buffer ou o usuário alocar o proprio buffer
 
 typedef void (*hal_uart_event_cb_t)(hal_uart_drv_t  dev, uart_event_t event, uart_status_t  status, const uint8_t  *data, size_t len, void *ctx);
 //Verificar se pode dar problema em full duplex por ser só um callback
