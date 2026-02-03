@@ -466,6 +466,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 
+void USART3_IRQHandler(void)
+{
+    for (int i = 0; i < HAL_UART_DEVS_N; i++)
+    {
+        if (uart_instances[i].huart &&
+            uart_instances[i].huart->Instance == USART3)
+        {
+            HAL_UART_IRQHandler(uart_instances[i].huart);
+            break;
+        }
+    }
+}
+
+
 hal_uart_drv_imp_t HAL_UART_DRV = {
     .init = stm32_uart_init,
     .deinit = stm32_uart_deinit,
