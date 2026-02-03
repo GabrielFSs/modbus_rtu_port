@@ -414,57 +414,31 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->huart != huart || !drv->rx_enabled)
             continue;
 
-        /* ======= RX LINEAR ======= */
-        if (drv->rx_mode == UART_RX_MODE_LINEAR)
+        if (drv->rx_len < drv->rx_buf_size)
         {
-            if (drv->rx_len < drv->rx_buf_size)
-            {
-                drv->rx_buf[drv->rx_len++] = drv->rx_byte;
-            }
-            else
-            {
-                /* Buffer cheio */
-                if (drv->cb)
-                {
-                    drv->cb((hal_uart_drv_t)drv,
-                            UART_EVENT_ERROR,
-                            UART_STATUS_BUFFER_FULL,
-                            NULL,
-                            0,
-                            drv->cb_ctx);
-                }
-            }
-        }
-        /* ======= RX CIRCULAR ======= */
-        else
-        {
-            size_t next = (drv->rx_wr + 1) % drv->rx_buf_size;
+            drv->rx_buf[drv->rx_len++] = drv->rx_byte;
 
-            if (next != drv->rx_rd)
+            /* ===== DETECTA ENTER (APP LOGIC) ===== */
+            if (drv->rx_byte == '\n' || drv->rx_byte == '\r')
             {
-                drv->rx_buf[drv->rx_wr] = drv->rx_byte;
-                drv->rx_wr = next;
-            }
-            else
-            {
-                /* Buffer cheio */
                 if (drv->cb)
                 {
                     drv->cb((hal_uart_drv_t)drv,
-                            UART_EVENT_ERROR,
-                            UART_STATUS_BUFFER_FULL,
-                            NULL,
-                            0,
+                            UART_EVENT_RX_DONE,
+                            UART_STATUS_OK,
+                            drv->rx_buf,
+                            drv->rx_len,
                             drv->cb_ctx);
                 }
             }
         }
 
-        /* Rearma RX para próximo byte */
+        /* Rearma RX */
         HAL_UART_Receive_IT(drv->huart, &drv->rx_byte, 1);
         break;
     }
 }
+
 
 void USART3_IRQHandler(void)
 {

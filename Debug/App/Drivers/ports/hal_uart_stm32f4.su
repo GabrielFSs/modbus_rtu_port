@@ -7,5 +7,5 @@
 ../App/Drivers/ports/hal_uart_stm32f4.c:355:13:stm32_uart_flush	24	static
 ../App/Drivers/ports/hal_uart_stm32f4.c:371:13:stm32_uart_set_event_cb	32	static
 ../App/Drivers/ports/hal_uart_stm32f4.c:383:6:HAL_UART_TxCpltCallback	40	static
-../App/Drivers/ports/hal_uart_stm32f4.c:408:6:HAL_UART_RxCpltCallback	48	static
-../App/Drivers/ports/hal_uart_stm32f4.c:469:6:USART3_IRQHandler	16	static
+../App/Drivers/ports/hal_uart_stm32f4.c:408:6:HAL_UART_RxCpltCallback	40	static
+../App/Drivers/ports/hal_uart_stm32f4.c:443:6:USART3_IRQHandler	16	static
