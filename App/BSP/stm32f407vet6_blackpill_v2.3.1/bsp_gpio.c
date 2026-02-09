@@ -9,14 +9,16 @@ typedef struct
 {
     GPIO_TypeDef *port;
     uint16_t pin;
+    bool active_high;
 } bsp_gpio_map_t;
 
 static const bsp_gpio_map_t gpio_map[HAL_GPIO_N] =
 {
-    /* HAL_GPIO_0 */ { GPIOA, GPIO_PIN_0 },   // botão
-    /* HAL_GPIO_1 */ { GPIOB, GPIO_PIN_1 },   // LED
-    /* HAL_GPIO_2 */ { GPIOC, GPIO_PIN_13 },  // botão onboard
-    /* HAL_GPIO_3 */ { GPIOB, GPIO_PIN_10 },  // qualquer outro
+    /* HAL_GPIO_0 */ { GPIOA, GPIO_PIN_0, true  },  // KEY1 (PA0, ativo HIGH)
+    /* HAL_GPIO_1 */ { GPIOC, GPIO_PIN_5, false }, // LED RED (PC5, ativo LOW)
+    /* HAL_GPIO_2 */ { GPIOB, GPIO_PIN_2, false }, // LED BLUE (PB2, ativo LOW)
+    /* HAL_GPIO_3 */ { GPIOA, GPIO_PIN_1, true  }, // KEY2 (PA1)
+    /* HAL_GPIO_4 */ { GPIOA, GPIO_PIN_4, true  }, // KEY3 (PA4)
 };
 
 /* ===== CLOCK ENABLE ===== */
@@ -74,3 +76,12 @@ void bsp_gpio_enable_irq(uint16_t pin)
     HAL_NVIC_SetPriority(irq, 5, 0);
     HAL_NVIC_EnableIRQ(irq);
 }
+
+bool bsp_gpio_get_active_level(hal_gpio_id_t id)
+{
+    if (id >= HAL_GPIO_N)
+        return true; // default seguro: ativo HIGH
+
+    return gpio_map[id].active_high;
+}
+

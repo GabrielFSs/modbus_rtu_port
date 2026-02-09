@@ -11,6 +11,7 @@ typedef enum
     HAL_GPIO_1,
     HAL_GPIO_2,
     HAL_GPIO_3,
+    HAL_GPIO_4,
     HAL_GPIO_N
 } hal_gpio_id_t;
 
