@@ -7,13 +7,21 @@
 /* ===== OPAQUE HANDLE ===== */
 typedef struct hal_timer_drv_s *hal_timer_t;
 
-/* ===== TIMER MODE ===== */
+/* ===== TIMER IDS =====
+ * Mapeados no port (ex: STM32):
+ * HAL_TIMER_0 -> TIM2
+ * HAL_TIMER_1 -> TIM5
+ * HAL_TIMER_2 -> TIM3
+ */
 typedef enum
 {
-    HAL_TIMER_ONE_SHOT,
-    HAL_TIMER_PERIODIC
-} hal_timer_mode_t;
+    HAL_TIMER_0 = 0,
+    HAL_TIMER_1,
+    HAL_TIMER_2,
+    HAL_TIMER_N
+} hal_timer_id_t;
 
+/* ===== TIMER RESOLUTION ===== */
 typedef enum
 {
     HAL_TIMER_RESOLUTION_MS,
@@ -34,13 +42,12 @@ typedef void (*hal_timer_cb_t)(hal_timer_t timer, void *ctx);
 /* ===== TIMER CONFIG ===== */
 typedef struct
 {
-    uint32_t period;
-    bool periodic;
+    uint32_t period;                 /* Em ms ou us */
+    bool periodic;                   /* true = periódico */
     hal_timer_resolution_t resolution;
     hal_timer_cb_t cb;
     void *cb_ctx;
 } hal_timer_cfg_t;
-
 
 /* ===== DRIVER INTERFACE ===== */
 typedef struct
@@ -48,7 +55,9 @@ typedef struct
     void (*init)(void);
     void (*deinit)(void);
 
-    hal_timer_t (*open)(const hal_timer_cfg_t *cfg);
+    hal_timer_t (*open)(hal_timer_id_t id,
+                        const hal_timer_cfg_t *cfg);
+
     void (*close)(hal_timer_t timer);
 
     hal_timer_status_t (*start)(hal_timer_t timer);
@@ -66,7 +75,9 @@ extern hal_timer_drv_imp_t HAL_TIMER_DRV;
 void hal_timer_init(void);
 void hal_timer_deinit(void);
 
-hal_timer_t hal_timer_open(const hal_timer_cfg_t *cfg);
+hal_timer_t hal_timer_open(hal_timer_id_t id,
+                           const hal_timer_cfg_t *cfg);
+
 void hal_timer_close(hal_timer_t timer);
 
 hal_timer_status_t hal_timer_start(hal_timer_t timer);
