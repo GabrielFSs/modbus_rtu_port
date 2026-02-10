@@ -1,4 +1,5 @@
 #include "hal_gpio.h"
+#include <stddef.h>
 
 /* Ponteiro para a implementação concreta (PORT) */
 static hal_gpio_drv_imp_t *drv = &HAL_GPIO_DRV;

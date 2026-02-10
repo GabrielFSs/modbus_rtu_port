@@ -1,2 +1,2 @@
-../App/Core/Src/app.c:33:5:app_setup	8	static
-../App/Core/Src/app.c:50:6:app_loop	24	static
+../App/Core/Src/app.c:10:6:app_setup	4	static
+../App/Core/Src/app.c:15:6:app_loop	4	static

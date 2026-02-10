@@ -5,12 +5,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../App/Drivers/ports/hal_gpio_stm32f4.c \
+../App/Drivers/ports/hal_timer_stm32f4.c \
 ../App/Drivers/ports/hal_uart_stm32f4.c 
 
 OBJS += \
+./App/Drivers/ports/hal_gpio_stm32f4.o \
+./App/Drivers/ports/hal_timer_stm32f4.o \
 ./App/Drivers/ports/hal_uart_stm32f4.o 
 
 C_DEPS += \
+./App/Drivers/ports/hal_gpio_stm32f4.d \
+./App/Drivers/ports/hal_timer_stm32f4.d \
 ./App/Drivers/ports/hal_uart_stm32f4.d 
 
 
@@ -21,7 +27,7 @@ App/Drivers/ports/%.o App/Drivers/ports/%.su App/Drivers/ports/%.cyclo: ../App/D
 clean: clean-App-2f-Drivers-2f-ports
 
 clean-App-2f-Drivers-2f-ports:
-	-$(RM) ./App/Drivers/ports/hal_uart_stm32f4.cyclo ./App/Drivers/ports/hal_uart_stm32f4.d ./App/Drivers/ports/hal_uart_stm32f4.o ./App/Drivers/ports/hal_uart_stm32f4.su
+	-$(RM) ./App/Drivers/ports/hal_gpio_stm32f4.cyclo ./App/Drivers/ports/hal_gpio_stm32f4.d ./App/Drivers/ports/hal_gpio_stm32f4.o ./App/Drivers/ports/hal_gpio_stm32f4.su ./App/Drivers/ports/hal_timer_stm32f4.cyclo ./App/Drivers/ports/hal_timer_stm32f4.d ./App/Drivers/ports/hal_timer_stm32f4.o ./App/Drivers/ports/hal_timer_stm32f4.su ./App/Drivers/ports/hal_uart_stm32f4.cyclo ./App/Drivers/ports/hal_uart_stm32f4.d ./App/Drivers/ports/hal_uart_stm32f4.o ./App/Drivers/ports/hal_uart_stm32f4.su
 
 .PHONY: clean-App-2f-Drivers-2f-ports
 

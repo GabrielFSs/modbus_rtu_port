@@ -5,12 +5,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../App/Drivers/hal/hal_gpio.c \
+../App/Drivers/hal/hal_timer.c \
 ../App/Drivers/hal/hal_uart.c 
 
 OBJS += \
+./App/Drivers/hal/hal_gpio.o \
+./App/Drivers/hal/hal_timer.o \
 ./App/Drivers/hal/hal_uart.o 
 
 C_DEPS += \
+./App/Drivers/hal/hal_gpio.d \
+./App/Drivers/hal/hal_timer.d \
 ./App/Drivers/hal/hal_uart.d 
 
 
@@ -21,7 +27,7 @@ App/Drivers/hal/%.o App/Drivers/hal/%.su App/Drivers/hal/%.cyclo: ../App/Drivers
 clean: clean-App-2f-Drivers-2f-hal
 
 clean-App-2f-Drivers-2f-hal:
-	-$(RM) ./App/Drivers/hal/hal_uart.cyclo ./App/Drivers/hal/hal_uart.d ./App/Drivers/hal/hal_uart.o ./App/Drivers/hal/hal_uart.su
+	-$(RM) ./App/Drivers/hal/hal_gpio.cyclo ./App/Drivers/hal/hal_gpio.d ./App/Drivers/hal/hal_gpio.o ./App/Drivers/hal/hal_gpio.su ./App/Drivers/hal/hal_timer.cyclo ./App/Drivers/hal/hal_timer.d ./App/Drivers/hal/hal_timer.o ./App/Drivers/hal/hal_timer.su ./App/Drivers/hal/hal_uart.cyclo ./App/Drivers/hal/hal_uart.d ./App/Drivers/hal/hal_uart.o ./App/Drivers/hal/hal_uart.su
 
 .PHONY: clean-App-2f-Drivers-2f-hal
 

@@ -1,0 +1,9 @@
+../App/Drivers/ports/hal_timer_stm32f4.c:40:27:timer_hw_map	16	static
+../App/Drivers/ports/hal_timer_stm32f4.c:52:13:stm32_timer_init	8	static
+../App/Drivers/ports/hal_timer_stm32f4.c:58:20:stm32_timer_open	56	static
+../App/Drivers/ports/hal_timer_stm32f4.c:126:27:stm32_timer_start	24	static
+../App/Drivers/ports/hal_timer_stm32f4.c:141:27:stm32_timer_stop	24	static
+../App/Drivers/ports/hal_timer_stm32f4.c:155:6:HAL_TIM_PeriodElapsedCallback	24	static
+../App/Drivers/ports/hal_timer_stm32f4.c:176:6:TIM2_IRQHandler	8	static
+../App/Drivers/ports/hal_timer_stm32f4.c:177:6:TIM5_IRQHandler	8	static
+../App/Drivers/ports/hal_timer_stm32f4.c:178:6:TIM3_IRQHandler	8	static
