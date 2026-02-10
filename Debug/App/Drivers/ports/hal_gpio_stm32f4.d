@@ -1,7 +1,6 @@
-App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.o: \
- ../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.c \
- ../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.h \
- ../App/Drivers/hal/hal_gpio.h \
+App/Drivers/ports/hal_gpio_stm32f4.o: \
+ ../App/Drivers/ports/hal_gpio_stm32f4.c ../App/Drivers/hal/hal_gpio.h \
+ C:/Users/gab_p/STM32CubeIDE/workspace_1.12.1/ModbusRTU/App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.h \
  C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -30,8 +29,8 @@ App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.o: \
  C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.h:
 ../App/Drivers/hal/hal_gpio.h:
+C:/Users/gab_p/STM32CubeIDE/workspace_1.12.1/ModbusRTU/App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.h:
 C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
