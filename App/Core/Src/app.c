@@ -6,7 +6,7 @@
 
 
 
-int app_setup(void)
+void app_setup(void)
 {
 
 }

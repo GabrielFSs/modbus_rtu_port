@@ -80,6 +80,7 @@ typedef enum
     UART_EVENT_TX_DONE,
     UART_EVENT_ERROR
 } uart_event_t;
+
 typedef enum
 {
     UART_RX_MODE_LINEAR,
