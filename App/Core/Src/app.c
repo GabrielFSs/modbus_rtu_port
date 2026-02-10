@@ -30,7 +30,7 @@ static hal_uart_cfg_t uart_cfg =
 static uint32_t last_tick = 0;
 static const uint8_t msg[] = "TeSTE\n";
 
-int app_setup(void)
+void app_setup(void)
 {
     hal_uart_init();
 
@@ -44,7 +44,6 @@ int app_setup(void)
 
     last_tick = HAL_GetTick();
 
-    return 0;
 }
 
 void app_loop(void)
