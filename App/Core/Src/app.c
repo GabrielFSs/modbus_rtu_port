@@ -1,12 +1,11 @@
 #include "app.h"
 #include "hal_uart.h"
 
-#include "stm32f4xx_hal.h"
-
-
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+
+#include "stm32f4xx_hal.h"
 
 /* ===== CONFIG ===== */
 #define RX_BUF_SIZE 64
