@@ -150,12 +150,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief TIM6 Initialization Function
-  * @param None
-  * @retval None
-  */
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
