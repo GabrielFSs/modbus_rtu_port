@@ -1,8 +1,0 @@
-../App/Drivers/hal/hal_timer.c:10:6:hal_timer_init	3
-../App/Drivers/hal/hal_timer.c:18:6:hal_timer_deinit	3
-../App/Drivers/hal/hal_timer.c:26:13:hal_timer_open	4
-../App/Drivers/hal/hal_timer.c:35:6:hal_timer_close	4
-../App/Drivers/hal/hal_timer.c:43:20:hal_timer_start	4
-../App/Drivers/hal/hal_timer.c:51:20:hal_timer_stop	4
-../App/Drivers/hal/hal_timer.c:59:20:hal_timer_reset	4
-../App/Drivers/hal/hal_timer.c:67:6:hal_timer_is_running	4
