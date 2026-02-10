@@ -19,7 +19,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "app.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -48,7 +47,6 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -157,13 +155,11 @@ void SystemClock_Config(void)
   * @retval None
   */
 
-
 /**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
   */
-
 
 /* USER CODE BEGIN 4 */
 
