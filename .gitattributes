@@ -1,0 +1,15 @@
+# Default
+* text=auto
+
+# Código C / headers → sempre LF
+*.c   text eol=lf
+*.h   text eol=lf
+*.s   text eol=lf
+*.ld  text eol=lf
+
+# Scripts
+*.sh  text eol=lf
+
+# Documentação
+*.txt text eol=lf
+*.md  text eol=lf
