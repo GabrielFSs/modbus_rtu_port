@@ -7,7 +7,6 @@
 /* ===== CONFIG ===== */
 #define HAL_TIMER_MAX   HAL_TIMER_N
 
-/* ===== TIMER STATE ===== */
 typedef enum
 {
     TIMER_STOPPED = 0,
@@ -41,20 +40,39 @@ static TIM_HandleTypeDef *timer_hw_map(hal_timer_id_t id)
 {
     switch (id)
     {
-        case HAL_TIMER_0: return &htim2; /* TIM2 */
-        case HAL_TIMER_1: return &htim5; /* TIM5 */
-        case HAL_TIMER_2: return &htim3; /* TIM3 */
+        case HAL_TIMER_0: return &htim2;
+        case HAL_TIMER_1: return &htim5;
+        case HAL_TIMER_2: return &htim3;
         default: return NULL;
     }
 }
 
-/* ===== INIT ===== */
+/* ========================================================= */
+/* ================= INIT / DEINIT ========================= */
+/* ========================================================= */
+
 static void stm32_timer_init(void)
 {
     memset(timers, 0, sizeof(timers));
 }
 
-/* ===== OPEN ===== */
+static void stm32_timer_deinit(void)
+{
+    for (int i = 0; i < HAL_TIMER_MAX; i++)
+    {
+        if (timers[i].htim)
+        {
+            HAL_TIM_Base_Stop_IT(timers[i].htim);
+            HAL_TIM_Base_DeInit(timers[i].htim);
+            timers[i].htim = NULL;
+        }
+    }
+}
+
+/* ========================================================= */
+/* ================= OPEN / CLOSE ========================== */
+/* ========================================================= */
+
 static hal_timer_t stm32_timer_open(hal_timer_id_t id,
                                     const hal_timer_cfg_t *cfg)
 {
@@ -79,12 +97,12 @@ static hal_timer_t stm32_timer_open(hal_timer_id_t id,
     if (cfg->resolution == HAL_TIMER_RESOLUTION_MS)
     {
         prescaler = (tim_clk / 1000) - 1;
-        period = cfg->period - 1;
+        period    = cfg->period - 1;
     }
     else
     {
         prescaler = (tim_clk / 1000000) - 1;
-        period = cfg->period - 1;
+        period    = cfg->period - 1;
     }
 
     htim->Instance =
@@ -122,7 +140,24 @@ static hal_timer_t stm32_timer_open(hal_timer_id_t id,
     return (hal_timer_t)t;
 }
 
-/* ===== START ===== */
+static void stm32_timer_close(hal_timer_t timer)
+{
+    struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
+
+    if (!t || !t->htim)
+        return;
+
+    HAL_TIM_Base_Stop_IT(t->htim);
+    HAL_TIM_Base_DeInit(t->htim);
+
+    t->htim = NULL;
+    t->state = TIMER_STOPPED;
+}
+
+/* ========================================================= */
+/* ================= START / STOP / RESET ================== */
+/* ========================================================= */
+
 static hal_timer_status_t stm32_timer_start(hal_timer_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
@@ -137,7 +172,6 @@ static hal_timer_status_t stm32_timer_start(hal_timer_t timer)
     return HAL_TIMER_OK;
 }
 
-/* ===== STOP ===== */
 static hal_timer_status_t stm32_timer_stop(hal_timer_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
@@ -151,7 +185,31 @@ static hal_timer_status_t stm32_timer_stop(hal_timer_t timer)
     return HAL_TIMER_OK;
 }
 
-/* ===== IRQ CALLBACK ===== */
+static hal_timer_status_t stm32_timer_reset(hal_timer_t timer)
+{
+    struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
+
+    if (!t || !t->htim)
+        return HAL_TIMER_ERROR;
+
+    __HAL_TIM_SET_COUNTER(t->htim, 0);
+    return HAL_TIMER_OK;
+}
+
+static bool stm32_timer_is_running(hal_timer_t timer)
+{
+    struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
+
+    if (!t)
+        return false;
+
+    return (t->state == TIMER_RUNNING);
+}
+
+/* ========================================================= */
+/* ================= IRQ CALLBACK ========================== */
+/* ========================================================= */
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
     for (int i = 0; i < HAL_TIMER_MAX; i++)
@@ -173,15 +231,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 }
 
 /* ===== IRQ HANDLERS ===== */
+
 void TIM2_IRQHandler(void) { HAL_TIM_IRQHandler(&htim2); }
 void TIM5_IRQHandler(void) { HAL_TIM_IRQHandler(&htim5); }
 void TIM3_IRQHandler(void) { HAL_TIM_IRQHandler(&htim3); }
 
-/* ===== DRIVER EXPORT ===== */
+/* ========================================================= */
+/* ================= DRIVER EXPORT ========================= */
+/* ========================================================= */
+
 hal_timer_drv_imp_t HAL_TIMER_DRV =
 {
-    .init  = stm32_timer_init,
-    .open  = stm32_timer_open,
-    .start = stm32_timer_start,
-    .stop  = stm32_timer_stop
+    .init       = stm32_timer_init,
+    .deinit     = stm32_timer_deinit,
+    .open       = stm32_timer_open,
+    .close      = stm32_timer_close,
+    .start      = stm32_timer_start,
+    .stop       = stm32_timer_stop,
+    .reset      = stm32_timer_reset,
+    .is_running = stm32_timer_is_running
 };

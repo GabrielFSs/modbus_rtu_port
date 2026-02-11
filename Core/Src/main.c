@@ -18,10 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+#include "app.h"
 
 /* USER CODE END Includes */
 
@@ -55,7 +55,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 
 
 /* USER CODE END 0 */
@@ -163,7 +162,6 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-
 
 /* USER CODE BEGIN 4 */
 
