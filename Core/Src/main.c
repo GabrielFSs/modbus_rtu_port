@@ -18,9 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "app.h"
 
 /* USER CODE END Includes */
@@ -48,6 +48,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -55,22 +56,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART3)
-    {
-    	if (rx_idx < RX_BUF_SIZE - 1)
-    	{
-    		rx_buf[rx_idx++] = rx_byte;
-    		HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
-    	}
-    	else
-    	{
-    		rx_idx = 0;
-    	}
-    }
-}
-*/
 
 /* USER CODE END 0 */
 
@@ -101,6 +86,7 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+
   /* USER CODE BEGIN 2 */
   app_setup();
   /* USER CODE END 2 */
@@ -163,6 +149,19 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
 
 /* USER CODE BEGIN 4 */
 

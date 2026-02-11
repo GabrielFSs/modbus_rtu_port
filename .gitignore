@@ -1,0 +1,16 @@
+# Build
+Debug/
+Release/
+
+# STM32CubeIDE
+.settings/
+
+# Objetos
+*.o
+*.elf
+*.map
+*.list
+*.d
+*.su
+*.cyclo
+*.mk
