@@ -16,29 +16,30 @@ struct hal_uart_drv_s
     hal_uart_dev_interface_t iface;
     UART_HandleTypeDef *huart;
 
-    uart_mode_t mode;
+    uart_mode_t   mode;
     uart_duplex_t duplex;
 
     /* RX */
-    bool rx_enabled;
-    uint8_t rx_byte;
+    bool     rx_enabled;
+    uint8_t  rx_byte;
 
-    uint8_t  *rx_buf;
-    size_t    rx_buf_size;
-    size_t    rx_len;
-
+    uint8_t *rx_buf;
+    size_t   rx_buf_size;
+    size_t   rx_len;
     uart_rx_mode_t rx_mode;
 
     /* RX DONE control */
     uart_rx_done_mode_t rx_done_mode;
     uint8_t  rx_done_char;
     uint16_t rx_done_length;
-    uint32_t rx_done_timeout;
+    bool     rx_done;
 
-    uint32_t rx_last_tick;
-    bool rx_done;
+    /* RX timeout (external timer) */
+    hal_uart_timer_start_fn_t timer_start;
+    hal_uart_timer_stop_fn_t  timer_stop;
+    void *timer_ctx;
 
-    /* RX circular only */
+    /* RX circular */
     size_t rx_wr;
     size_t rx_rd;
 
@@ -53,11 +54,6 @@ struct hal_uart_drv_s
     uart_dir_ctrl_t dir_mode;
     GPIO_TypeDef *de_port;
     uint16_t de_pin;
-
-    hal_uart_baud_t baudrate;
-    hal_uart_databits_t databits;
-    hal_uart_dev_parity_t parity;
-    hal_uart_dev_stopbit_t stopbits;
 };
 
 static struct hal_uart_drv_s uart_instances[HAL_UART_DEVS_N];
@@ -100,30 +96,23 @@ static hal_uart_drv_t stm32_uart_open(hal_uart_dev_interface_t interface,
     drv = &uart_instances[interface];
     memset(drv, 0, sizeof(*drv));
 
-    drv->iface = interface;
-    drv->mode  = cfg->comm_mode;
-    drv->duplex = cfg->duplex_mode;
+    drv->iface   = interface;
+    drv->mode    = cfg->comm_mode;
+    drv->duplex  = cfg->duplex_mode;
     drv->dir_mode = cfg->comm_control;
 
-    drv->baudrate = cfg->baudrate;
-    drv->databits = cfg->databits;
-    drv->parity   = cfg->parity;
-    drv->stopbits = cfg->stopbits;
+    drv->rx_mode      = cfg->rx_mode;
+    drv->rx_buf       = cfg->rx_buffer;
+    drv->rx_buf_size  = cfg->rx_buffer_size;
 
-    drv->rx_mode = cfg->rx_mode;
-    drv->rx_buf  = cfg->rx_buffer;
-    drv->rx_buf_size = cfg->rx_buffer_size;
-
-    drv->rx_done_mode    = cfg->rx_done_mode;
-    drv->rx_done_char    = cfg->rx_done_char;
-    drv->rx_done_length  = cfg->rx_done_length;
-    drv->rx_done_timeout = cfg->rx_done_timeout;
+    drv->rx_done_mode   = cfg->rx_done_mode;
+    drv->rx_done_char   = cfg->rx_done_char;
+    drv->rx_done_length = cfg->rx_done_length;
+    drv->rx_done        = false;
 
     drv->rx_len = 0;
     drv->rx_wr  = 0;
     drv->rx_rd  = 0;
-    drv->rx_done = false;
-    drv->rx_last_tick = HAL_GetTick();
 
     static UART_HandleTypeDef huart1, huart2, huart3;
 
@@ -228,7 +217,6 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
     else
     {
         drv->tx_busy = true;
-
         if (HAL_UART_Transmit_IT(drv->huart, (uint8_t *)data, len) != HAL_OK)
         {
             drv->tx_busy = false;
@@ -243,7 +231,7 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
 }
 
 /* ========================================================= */
-/* ================= READ (RX_DONE CORE) =================== */
+/* ================= READ (OPTIONAL) ======================= */
 /* ========================================================= */
 
 static uart_status_t stm32_uart_read(hal_uart_drv_t dev,
@@ -258,39 +246,17 @@ static uart_status_t stm32_uart_read(hal_uart_drv_t dev,
     if (!drv || !data || maxlen == 0)
         return UART_STATUS_ERROR;
 
-    /* RX DONE por timeout */
-    if (drv->rx_done_mode == UART_RX_DONE_ON_TIMEOUT &&
-        drv->rx_len > 0 &&
-        (HAL_GetTick() - drv->rx_last_tick) >= drv->rx_done_timeout)
-    {
-        drv->rx_done = true;
-    }
+    if (!drv->rx_done && drv->rx_done_mode != UART_RX_DONE_NONE)
+        return UART_STATUS_TIMEOUT;
 
-    if (drv->rx_mode == UART_RX_MODE_LINEAR)
-    {
-        if (!drv->rx_done && drv->rx_done_mode != UART_RX_DONE_NONE)
-            return UART_STATUS_TIMEOUT;
+    if (drv->rx_len == 0)
+        return UART_STATUS_TIMEOUT;
 
-        if (drv->rx_len == 0)
-            return UART_STATUS_TIMEOUT;
+    count = (drv->rx_len < maxlen) ? drv->rx_len : maxlen;
+    memcpy(data, drv->rx_buf, count);
 
-        count = (drv->rx_len < maxlen) ? drv->rx_len : maxlen;
-        memcpy(data, drv->rx_buf, count);
-
-        drv->rx_len = 0;
-        drv->rx_done = false;
-    }
-    else
-    {
-        while ((drv->rx_rd != drv->rx_wr) && count < maxlen)
-        {
-            data[count++] = drv->rx_buf[drv->rx_rd];
-            drv->rx_rd = (drv->rx_rd + 1) % drv->rx_buf_size;
-        }
-
-        if (count == 0)
-            return UART_STATUS_TIMEOUT;
-    }
+    drv->rx_len = 0;
+    drv->rx_done = false;
 
     if (out_len)
         *out_len = count;
@@ -317,7 +283,7 @@ static void stm32_uart_flush(hal_uart_drv_t dev)
 }
 
 /* ========================================================= */
-/* ================= CALLBACKS ============================= */
+/* ================= CALLBACK REG ========================== */
 /* ========================================================= */
 
 static void stm32_uart_set_event_cb(hal_uart_drv_t dev,
@@ -331,6 +297,10 @@ static void stm32_uart_set_event_cb(hal_uart_drv_t dev,
     drv->cb = cb;
     drv->cb_ctx = ctx;
 }
+
+/* ========================================================= */
+/* ================= HAL CALLBACKS ========================= */
+/* ========================================================= */
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -362,8 +332,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->huart != huart || !drv->rx_enabled)
             continue;
 
-        drv->rx_last_tick = HAL_GetTick();
-
+        /* Store byte */
         if (drv->rx_mode == UART_RX_MODE_LINEAR)
         {
             if (drv->rx_len < drv->rx_buf_size)
@@ -382,16 +351,46 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         /* RX DONE conditions */
         if (drv->rx_done_mode == UART_RX_DONE_ON_CHAR &&
             drv->rx_byte == drv->rx_done_char)
+        {
             drv->rx_done = true;
+            if (drv->timer_stop)
+                drv->timer_stop(drv->timer_ctx);
+        }
 
         if (drv->rx_done_mode == UART_RX_DONE_ON_LENGTH &&
             drv->rx_len >= drv->rx_done_length)
+        {
             drv->rx_done = true;
+            if (drv->timer_stop)
+                drv->timer_stop(drv->timer_ctx);
+        }
+
+        /* Restart timeout timer */
+        if (drv->rx_done_mode == UART_RX_DONE_ON_TIMEOUT &&
+            drv->timer_start)
+        {
+            drv->timer_stop(drv->timer_ctx);
+            drv->timer_start(drv->timer_ctx);
+        }
 
         HAL_UART_Receive_IT(drv->huart, &drv->rx_byte, 1);
         break;
     }
 }
+
+static void stm32_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
+                                            hal_uart_timer_start_fn_t start,
+                                            hal_uart_timer_stop_fn_t stop,
+                                            void *ctx)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+    if (!drv) return;
+
+    drv->timer_start = start;
+    drv->timer_stop  = stop;
+    drv->timer_ctx   = ctx;
+}
+
 
 /* ========================================================= */
 /* ================= DRIVER EXPORT ========================= */
@@ -405,5 +404,6 @@ hal_uart_drv_imp_t HAL_UART_DRV = {
     .write = stm32_uart_write,
     .read = stm32_uart_read,
     .flush = stm32_uart_flush,
+	.set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,
     .set_event_cb = stm32_uart_set_event_cb,
 };
