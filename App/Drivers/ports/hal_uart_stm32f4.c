@@ -84,6 +84,10 @@ static void stm32_uart_deinit(void)
 /* ================= OPEN / CLOSE ========================== */
 /* ========================================================= */
 
+UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart3;
+
 static hal_uart_drv_t stm32_uart_open(hal_uart_dev_interface_t interface,
                                       const hal_uart_cfg_t *cfg)
 {
@@ -113,8 +117,6 @@ static hal_uart_drv_t stm32_uart_open(hal_uart_dev_interface_t interface,
     drv->rx_len = 0;
     drv->rx_wr  = 0;
     drv->rx_rd  = 0;
-
-    static UART_HandleTypeDef huart1, huart2, huart3;
 
     switch (interface)
     {
@@ -352,9 +354,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->rx_done_mode == UART_RX_DONE_ON_CHAR &&
             drv->rx_byte == drv->rx_done_char)
         {
-            drv->rx_done = true;
-            if (drv->timer_stop)
-                drv->timer_stop(drv->timer_ctx);
+            if (drv->rx_len > 0)
+                drv->rx_len--;  // remove terminador
+
+            if (drv->cb)
+            {
+                drv->cb((hal_uart_drv_t)drv,
+                        UART_EVENT_RX_DONE,
+                        UART_STATUS_OK,
+                        drv->rx_buf,
+                        drv->rx_len,
+                        drv->cb_ctx);
+            }
+
+            drv->rx_len = 0;
         }
 
         if (drv->rx_done_mode == UART_RX_DONE_ON_LENGTH &&
@@ -389,6 +402,26 @@ static void stm32_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
     drv->timer_start = start;
     drv->timer_stop  = stop;
     drv->timer_ctx   = ctx;
+}
+
+
+/* ========================================================= */
+/* ================= IRQ HANDLERS ========================== */
+/* ========================================================= */
+
+void USART1_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(&huart1);
+}
+
+void USART2_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(&huart2);
+}
+
+void USART3_IRQHandler(void)
+{
+    HAL_UART_IRQHandler(&huart3);
 }
 
 
