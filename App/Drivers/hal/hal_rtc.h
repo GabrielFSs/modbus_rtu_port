@@ -14,18 +14,32 @@ typedef enum
 /* ===== TIME ===== */
 typedef struct
 {
-    uint8_t sec;    /* 0..59 */
-    uint8_t min;    /* 0..59 */
-    uint8_t hour;   /* 0..23 */
+    uint8_t sec;
+    uint8_t min;
+    uint8_t hour;
 } hal_rtc_time_t;
 
 /* ===== DATE ===== */
 typedef struct
 {
-    uint8_t day;    /* 1..31 */
-    uint8_t month;  /* 1..12 */
-    uint16_t year;  /* ex: 2025 */
+    uint8_t day;
+    uint8_t month;
+    uint16_t year;
 } hal_rtc_date_t;
+
+/* ===== TIMESTAMP ===== */
+typedef struct
+{
+    uint16_t year;
+    uint8_t  month;
+    uint8_t  day;
+
+    uint8_t  hour;
+    uint8_t  min;
+    uint8_t  sec;
+
+    uint16_t ms;
+} hal_rtc_timestamp_t;
 
 /* ===== DRIVER API ===== */
 typedef struct
@@ -37,6 +51,8 @@ typedef struct
 
     hal_rtc_status_t (*set_date)(const hal_rtc_date_t *date);
     hal_rtc_status_t (*get_date)(hal_rtc_date_t *date);
+
+    hal_rtc_status_t (*get_timestamp)(hal_rtc_timestamp_t *ts);
 
 } hal_rtc_drv_imp_t;
 
@@ -52,4 +68,6 @@ hal_rtc_status_t hal_rtc_get_time(hal_rtc_time_t *time);
 hal_rtc_status_t hal_rtc_set_date(const hal_rtc_date_t *date);
 hal_rtc_status_t hal_rtc_get_date(hal_rtc_date_t *date);
 
-#endif /* _HAL_RTC_H_ */
+hal_rtc_status_t hal_rtc_get_timestamp(hal_rtc_timestamp_t *ts);
+
+#endif

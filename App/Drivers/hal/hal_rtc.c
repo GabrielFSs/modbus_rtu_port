@@ -41,3 +41,14 @@ hal_rtc_status_t hal_rtc_get_date(hal_rtc_date_t *date)
 
     return HAL_RTC_ERROR;
 }
+
+hal_rtc_status_t (*get_timestamp)(hal_rtc_timestamp_t *ts);
+
+hal_rtc_status_t hal_rtc_get_timestamp(hal_rtc_timestamp_t *ts)
+{
+    if (drv->get_timestamp)
+        return drv->get_timestamp(ts);
+
+    return HAL_RTC_ERROR;
+}
+
