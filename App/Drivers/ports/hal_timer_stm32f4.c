@@ -90,20 +90,20 @@ static hal_timer_t stm32_timer_open(hal_timer_id_t id,
     if (id == HAL_TIMER_1) __HAL_RCC_TIM5_CLK_ENABLE();
     if (id == HAL_TIMER_2) __HAL_RCC_TIM3_CLK_ENABLE();
 
-    uint32_t tim_clk = HAL_RCC_GetPCLK1Freq() * 2;
-    uint32_t prescaler;
-    uint32_t period;
+    uint32_t pclk1 = HAL_RCC_GetPCLK1Freq();
 
-    if (cfg->resolution == HAL_TIMER_RESOLUTION_MS)
+    if ((RCC->CFGR & RCC_CFGR_PPRE1) != RCC_CFGR_PPRE1_DIV1)
     {
-        prescaler = (tim_clk / 1000) - 1;
-        period    = cfg->period - 1;
+        pclk1 *= 2;
     }
-    else
-    {
-        prescaler = (tim_clk / 1000000) - 1;
-        period    = cfg->period - 1;
-    }
+
+    uint32_t tim_clk = pclk1;
+
+    /* Base de 1MHz */
+    uint32_t prescaler = (tim_clk / 1000000) - 1;
+
+    /* Periodo em microsegundos */
+    uint32_t period = cfg->period * 1000 - 1; // se period estiver em ms
 
     htim->Instance =
         (id == HAL_TIMER_0) ? TIM2 :
