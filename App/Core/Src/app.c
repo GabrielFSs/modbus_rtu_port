@@ -1,70 +1,78 @@
 #include "app.h"
 #include "hal_uart.h"
-#include "stm32f4xx_hal.h"
-
+#include "hal_timer.h"
 #include <string.h>
 #include <stdio.h>
 
+#define RX_BUF_SIZE 64
+
 static hal_uart_drv_t uart;
+static hal_timer_t timer;
+static uint8_t rx_buf[RX_BUF_SIZE];
+
+/* ================= TIMER CALLBACK ================= */
+static void timer_cb(hal_timer_t t, void *ctx)
+{
+    hal_uart_drv_t dev = (hal_uart_drv_t)ctx;
+
+    const char *msg = "Timeout 5s\r\n";
+    size_t written;
+
+    hal_uart_write(dev, (uint8_t*)msg, strlen(msg), &written, 100);
+
+    /* NÃO reinicia aqui.
+       Ele só reinicia quando a UART receber algo novamente */
+}
 
 /* ================= SETUP ================= */
-
 void app_setup(void)
 {
     hal_uart_init();
+    hal_timer_init();
 
     hal_uart_cfg_t ucfg =
     {
-        .baudrate = HAL_UART_BAUD_115200,
-        .databits = HAL_UART_DATABITS_8,
-        .stopbits = HAL_UART_STOPBIT_1,
-        .parity   = HAL_UART_PARITY_NONE,
+        .baudrate        = HAL_UART_BAUD_9600,
+        .databits        = HAL_UART_DATABITS_8,
+        .stopbits        = HAL_UART_STOPBIT_1,
+        .parity          = HAL_UART_PARITY_NONE,
+        .rx_buffer       = rx_buf,
+        .rx_buffer_size  = sizeof(rx_buf),
+        .rx_mode         = UART_RX_MODE_LINEAR,
+        .comm_mode       = UART_MODE_INTERRUPT,
+        .duplex_mode     = UART_DUPLEX_FULL,
 
-        .rx_buffer = NULL,
-        .rx_buffer_size = 0,
-        .rx_mode = UART_RX_MODE_LINEAR,
-
-        .comm_mode = UART_MODE_POLLING,
-        .duplex_mode = UART_DUPLEX_FULL,
-        .rx_done_mode = UART_RX_DONE_NONE
+        /* Timeout controlado pelo HAL UART */
+        .rx_done_mode    = UART_RX_DONE_ON_TIMEOUT
     };
 
     uart = hal_uart_open(HAL_UART_DEV_3, &ucfg);
-}
 
-/* ================= LOOP ================= */
+    /* TIMER CONFIG */
+    hal_timer_cfg_t tcfg =
+    {
+        .period     = 10000,   // 10 segundos reais agora
+        .resolution = HAL_TIMER_RESOLUTION_MS,
+        .periodic   = false,  // one-shot
+        .cb         = timer_cb,
+        .cb_ctx     = uart
+    };
+
+    timer = hal_timer_open(HAL_TIMER_0, &tcfg);
+
+    /* Conecta UART ao timer */
+    hal_uart_set_rx_timeout_timer(
+        uart,
+        (hal_uart_timer_start_fn_t)hal_timer_start,
+        (hal_uart_timer_stop_fn_t)hal_timer_stop,
+        timer
+    );
+
+    /* IMPORTANTE:
+       NÃO inicia o timer aqui.
+       Ele só será iniciado quando chegar o primeiro byte. */
+}
 
 void app_loop(void)
 {
-    static uint32_t last_tick = 0;
-    uint32_t now = HAL_GetTick();
-
-    if ((now - last_tick) >= 5000)   // 5 segundos reais
-    {
-        last_tick = now;
-
-        char msg[256];
-        size_t written;
-
-        uint32_t sysclk = HAL_RCC_GetSysClockFreq();
-        uint32_t hclk   = HAL_RCC_GetHCLKFreq();
-        uint32_t pclk1  = HAL_RCC_GetPCLK1Freq();
-
-        /* Se quiser ainda ver os valores do TIM2 */
-        uint32_t psc = TIM2->PSC;
-        uint32_t arr = TIM2->ARR;
-
-        int len = snprintf(msg, sizeof(msg),
-            "\r\n=== CLOCK DEBUG ===\r\n"
-            "SYSCLK = %lu\r\n"
-            "HCLK   = %lu\r\n"
-            "PCLK1  = %lu\r\n"
-            "TIM2_PSC = %lu\r\n"
-            "TIM2_ARR = %lu\r\n"
-            "HAL_Tick = %lu\r\n"
-            "====================\r\n",
-            sysclk, hclk, pclk1, psc, arr, now);
-
-        hal_uart_write(uart, (uint8_t*)msg, len, &written, 100);
-    }
 }
