@@ -97,6 +97,45 @@ static hal_rtc_status_t stm32_rtc_get_date(hal_rtc_date_t *date)
     return HAL_RTC_OK;
 }
 
+static hal_rtc_status_t stm32_rtc_get_timestamp(hal_rtc_timestamp_t *ts)
+{
+    if (!ts)
+        return HAL_RTC_ERROR;
+
+    RTC_TimeTypeDef t;
+    RTC_DateTypeDef d;
+
+    /* Ordem IMPORTANTE segundo RM:
+       1) GetTime
+       2) GetDate
+    */
+    if (HAL_RTC_GetTime(&hrtc, &t, RTC_FORMAT_BIN) != HAL_OK)
+        return HAL_RTC_ERROR;
+
+    if (HAL_RTC_GetDate(&hrtc, &d, RTC_FORMAT_BIN) != HAL_OK)
+        return HAL_RTC_ERROR;
+
+    /* Calcula milissegundos baseados no SubSeconds */
+    uint32_t sync = hrtc.Init.SynchPrediv;
+
+    uint32_t sub = t.SubSeconds;
+
+    uint16_t ms = (uint16_t)(((sync - sub) * 1000) / (sync + 1));
+
+    ts->year  = 2000 + d.Year;
+    ts->month = d.Month;
+    ts->day   = d.Date;
+
+    ts->hour = t.Hours;
+    ts->min  = t.Minutes;
+    ts->sec  = t.Seconds;
+
+    ts->ms   = ms;
+
+    return HAL_RTC_OK;
+}
+
+
 /* ===== DRIVER EXPORT ===== */
 hal_rtc_drv_imp_t HAL_RTC_DRV =
 {
@@ -104,5 +143,6 @@ hal_rtc_drv_imp_t HAL_RTC_DRV =
     .set_time = stm32_rtc_set_time,
     .get_time = stm32_rtc_get_time,
     .set_date = stm32_rtc_set_date,
-    .get_date = stm32_rtc_get_date
+    .get_date = stm32_rtc_get_date,
+	.get_timestamp = stm32_rtc_get_timestamp
 };
