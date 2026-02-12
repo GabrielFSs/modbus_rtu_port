@@ -59,27 +59,26 @@ void app_loop(void)
 {
     static uint32_t last_tick = 0;
 
-    if (HAL_GetTick() - last_tick >= 1000)
+    if (HAL_GetTick() - last_tick >= 200)
     {
         last_tick = HAL_GetTick();
 
-        hal_rtc_time_t time;
-        hal_rtc_date_t date;
+        hal_rtc_timestamp_t ts;
 
-        hal_rtc_get_time(&time);
-        hal_rtc_get_date(&date);
+        hal_rtc_get_timestamp(&ts);
 
         char buffer[128];
         size_t written;
 
         int len = snprintf(buffer, sizeof(buffer),
-                           "%02d/%02d/%04d  %02d:%02d:%02d\r\n",
-                           date.day,
-                           date.month,
-                           date.year,
-                           time.hour,
-                           time.min,
-                           time.sec);
+                           "%02d/%02d/%04d  %02d:%02d:%02d.%03d\r\n",
+                           ts.day,
+                           ts.month,
+                           ts.year,
+                           ts.hour,
+                           ts.min,
+                           ts.sec,
+                           ts.ms);
 
         hal_uart_write(uart, (uint8_t*)buffer, len, &written, 100);
     }
