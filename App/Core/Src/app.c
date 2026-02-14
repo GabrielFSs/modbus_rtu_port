@@ -1,5 +1,4 @@
 #include "main.h"
-#include "hal_uart.h"
 #include "hal_timer.h"
 
 #include <stdint.h>
