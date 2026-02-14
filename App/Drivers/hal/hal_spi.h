@@ -5,10 +5,12 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-/* ===== OPAQUE HANDLE ===== */
+/* ================= OPAQUE HANDLE ================= */
+
 typedef struct hal_spi_drv_s *hal_spi_drv_t;
 
-/* ===== SPI ID ===== */
+/* ================= SPI ID ================= */
+
 typedef enum
 {
     HAL_SPI_1 = 0,
@@ -17,42 +19,48 @@ typedef enum
     HAL_SPI_N
 } hal_spi_id_t;
 
-/* ===== MODE ===== */
+/* ================= MODE ================= */
+
 typedef enum
 {
     HAL_SPI_MODE_MASTER,
     HAL_SPI_MODE_SLAVE
 } hal_spi_mode_t;
 
-/* ===== POLARITY ===== */
+/* ================= CLOCK POLARITY ================= */
+
 typedef enum
 {
     HAL_SPI_CPOL_LOW,
     HAL_SPI_CPOL_HIGH
 } hal_spi_cpol_t;
 
-/* ===== PHASE ===== */
+/* ================= CLOCK PHASE ================= */
+
 typedef enum
 {
     HAL_SPI_CPHA_1EDGE,
     HAL_SPI_CPHA_2EDGE
 } hal_spi_cpha_t;
 
-/* ===== BIT ORDER ===== */
+/* ================= BIT ORDER ================= */
+
 typedef enum
 {
     HAL_SPI_MSB_FIRST,
     HAL_SPI_LSB_FIRST
 } hal_spi_bit_order_t;
 
-/* ===== DATA SIZE ===== */
+/* ================= DATA SIZE ================= */
+
 typedef enum
 {
     HAL_SPI_DATASIZE_8BIT,
     HAL_SPI_DATASIZE_16BIT
 } hal_spi_datasize_t;
 
-/* ===== TRANSFER MODE ===== */
+/* ================= TRANSFER MODE ================= */
+
 typedef enum
 {
     HAL_SPI_XFER_POLLING,
@@ -60,16 +68,18 @@ typedef enum
     HAL_SPI_XFER_DMA
 } hal_spi_xfer_mode_t;
 
-/* ===== STATUS ===== */
+/* ================= STATUS ================= */
+
 typedef enum
 {
-    HAL_SPI_OK,
+    HAL_SPI_OK = 0,
     HAL_SPI_BUSY,
     HAL_SPI_TIMEOUT,
     HAL_SPI_ERROR
 } hal_spi_status_t;
 
-/* ===== EVENT ===== */
+/* ================= EVENT ================= */
+
 typedef enum
 {
     HAL_SPI_EVENT_TX_DONE,
@@ -78,13 +88,15 @@ typedef enum
     HAL_SPI_EVENT_ERROR
 } hal_spi_event_t;
 
-/* ===== CALLBACK ===== */
+/* ================= CALLBACK ================= */
+
 typedef void (*hal_spi_event_cb_t)(hal_spi_drv_t spi,
                                    hal_spi_event_t event,
                                    hal_spi_status_t status,
                                    void *ctx);
 
-/* ===== CONFIG ===== */
+/* ================= CONFIG ================= */
+
 typedef struct
 {
     hal_spi_mode_t       mode;
@@ -100,7 +112,42 @@ typedef struct
     void                *cb_ctx;
 } hal_spi_cfg_t;
 
-/* ===== API ===== */
+/* ================= DRIVER INTERFACE ================= */
+
+typedef struct
+{
+    void (*init)(void);
+    void (*deinit)(void);
+
+    hal_spi_drv_t (*open)(hal_spi_id_t id,
+                          const hal_spi_cfg_t *cfg);
+
+    void (*close)(hal_spi_drv_t spi);
+
+    hal_spi_status_t (*tx)(hal_spi_drv_t spi,
+                           const uint8_t *tx,
+                           size_t len,
+                           uint32_t timeout_ms);
+
+    hal_spi_status_t (*rx)(hal_spi_drv_t spi,
+                           uint8_t *rx,
+                           size_t len,
+                           uint32_t timeout_ms);
+
+    hal_spi_status_t (*txrx)(hal_spi_drv_t spi,
+                             const uint8_t *tx,
+                             uint8_t *rx,
+                             size_t len,
+                             uint32_t timeout_ms);
+
+} hal_spi_drv_imp_t;
+
+/* ================= DRIVER INSTANCE ================= */
+
+extern hal_spi_drv_imp_t HAL_SPI_DRV;
+
+/* ================= HAL API ================= */
+
 void hal_spi_init(void);
 void hal_spi_deinit(void);
 
@@ -125,33 +172,4 @@ hal_spi_status_t hal_spi_transmit_receive(hal_spi_drv_t spi,
                                           size_t len,
                                           uint32_t timeout_ms);
 
-/* ===== DRIVER INTERFACE ===== */
-typedef struct
-{
-    void (*init)(void);
-    void (*deinit)(void);
-
-    hal_spi_drv_t (*open)(hal_spi_id_t id, const hal_spi_cfg_t *cfg);
-    void (*close)(hal_spi_drv_t spi);
-
-    hal_spi_status_t (*tx)(hal_spi_drv_t spi,
-                           const uint8_t *tx,
-                           size_t len,
-                           uint32_t timeout_ms);
-
-    hal_spi_status_t (*rx)(hal_spi_drv_t spi,
-                           uint8_t *rx,
-                           size_t len,
-                           uint32_t timeout_ms);
-
-    hal_spi_status_t (*txrx)(hal_spi_drv_t spi,
-                             const uint8_t *tx,
-                             uint8_t *rx,
-                             size_t len,
-                             uint32_t timeout_ms);
-} hal_spi_drv_imp_t;
-
-/* ===== DRIVER INSTANCE ===== */
-extern hal_spi_drv_imp_t HAL_SPI_DRV;
-
-#endif /* _HAL_SPI_H_ */
+#endif
