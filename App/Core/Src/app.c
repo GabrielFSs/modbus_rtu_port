@@ -1,6 +1,5 @@
 #include "main.h"
-#include "hal_uart.h"
-#include "hal_timer.h"
+#include "hal_rtc.h"
 
 #include <stdint.h>
 #include <stddef.h>
