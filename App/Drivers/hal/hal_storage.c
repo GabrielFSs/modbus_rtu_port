@@ -4,67 +4,27 @@ static hal_storage_drv_imp_t *drv = &HAL_STORAGE_DRV;
 
 hal_storage_status_t hal_storage_init(void)
 {
-    if (!drv || !drv->init)
-        return HAL_STORAGE_ERROR;
-
     return drv->init();
 }
 
-hal_storage_status_t hal_storage_open(
-    hal_storage_t *dev,
-    const hal_storage_cfg_t *cfg)
+hal_storage_status_t hal_storage_deinit(void)
 {
-    if (!drv || !drv->open)
-        return HAL_STORAGE_ERROR;
-
-    return drv->open(dev, cfg);
+    return drv->deinit();
 }
 
-void hal_storage_close(hal_storage_t dev)
-{
-    if (drv && drv->close)
-        drv->close(dev);
-}
-
-hal_storage_status_t hal_storage_read(
-    hal_storage_t dev,
-    uint32_t block,
-    uint8_t *data,
-    uint32_t count)
-{
-    if (!drv || !drv->read)
-        return HAL_STORAGE_ERROR;
-
-    return drv->read(dev, block, data, count);
-}
-
-hal_storage_status_t hal_storage_write(
-    hal_storage_t dev,
-    uint32_t block,
+hal_storage_status_t hal_storage_write_file(
+    const char *path,
     const uint8_t *data,
-    uint32_t count)
+    size_t len)
 {
-    if (!drv || !drv->write)
-        return HAL_STORAGE_ERROR;
-
-    return drv->write(dev, block, data, count);
+    return drv->write_file(path, data, len);
 }
 
-hal_storage_status_t hal_storage_erase(
-    hal_storage_t dev,
-    uint32_t block,
-    uint32_t count)
+hal_storage_status_t hal_storage_read_file(
+    const char *path,
+    uint8_t *data,
+    size_t maxlen,
+    size_t *out_len)
 {
-    if (!drv || !drv->erase)
-        return HAL_STORAGE_ERROR;
-
-    return drv->erase(dev, block, count);
-}
-
-hal_storage_status_t hal_storage_sync(hal_storage_t dev)
-{
-    if (!drv || !drv->sync)
-        return HAL_STORAGE_ERROR;
-
-    return drv->sync(dev);
+    return drv->read_file(path, data, maxlen, out_len);
 }
