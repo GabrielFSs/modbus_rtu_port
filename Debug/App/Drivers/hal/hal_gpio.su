@@ -1,7 +1,0 @@
-../App/Drivers/hal/hal_gpio.c:9:6:hal_gpio_init	8	static
-../App/Drivers/hal/hal_gpio.c:15:6:hal_gpio_deinit	8	static
-../App/Drivers/hal/hal_gpio.c:23:16:hal_gpio_open	16	static
-../App/Drivers/hal/hal_gpio.c:31:6:hal_gpio_close	16	static
-../App/Drivers/hal/hal_gpio.c:41:19:hal_gpio_write	16	static
-../App/Drivers/hal/hal_gpio.c:49:19:hal_gpio_read	16	static
-../App/Drivers/hal/hal_gpio.c:59:6:hal_gpio_set_irq_cb	24	static
