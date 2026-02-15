@@ -50,6 +50,10 @@ bool bsp_gpio_get_pin(hal_gpio_id_t id,
 /* ===== EXTI IRQ ENABLE ===== */
 void bsp_gpio_enable_irq(uint16_t pin)
 {
+
+	__HAL_RCC_SYSCFG_CLK_ENABLE();
+
+
     IRQn_Type irq;
 
     switch (pin)
