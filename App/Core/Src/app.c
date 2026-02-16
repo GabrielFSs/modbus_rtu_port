@@ -1,5 +1,4 @@
 #include "main.h"
-#include "hal_rtc.h"
 
 #include <stdint.h>
 #include <stddef.h>
