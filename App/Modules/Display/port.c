@@ -1,8 +1,10 @@
-#include "stm32f4xx_hal.h"
 #include "ili9341.h"
 #include "hal_display.h"
+#include "hal_time.h"
 
 static hal_display_t disp;
+
+/* ================= PORT FUNCTIONS ================= */
 
 static void port_write_cmd(uint16_t cmd)
 {
@@ -16,8 +18,10 @@ static void port_write_data(uint16_t data)
 
 static void port_delay(uint32_t ms)
 {
-    HAL_Delay(ms);
+    hal_time_delay_ms(ms);
 }
+
+/* ================= PORT INIT ================= */
 
 void ili9341_port_init(void)
 {
