@@ -1,12 +1,11 @@
 #include "main.h"
-#include "hal_uart.h"
 
 #include <stdint.h>
 #include <stddef.h>
 
 
 
-int app_setup(void)
+voidapp_setup(void)
 {
 
 }
