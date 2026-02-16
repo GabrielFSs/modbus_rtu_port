@@ -1,6 +1,6 @@
+#include <hal_time.h>
 #include "stm32f4xx_hal.h"
 #include "ili9341.h"
-#include "hal_display.h"
 
 static hal_display_t disp;
 
