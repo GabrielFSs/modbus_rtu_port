@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 /* ===== OPAQUE HANDLE ===== */
-typedef struct hal_timer_drv_s *hal_timer_t;
+typedef struct hal_timer_drv_s *hal_timer_drv_t;
 
 /* ===== TIMER IDS =====
  * Mapeados no port (ex: STM32):
@@ -37,7 +37,7 @@ typedef enum
 } hal_timer_status_t;
 
 /* ===== TIMER CALLBACK ===== */
-typedef void (*hal_timer_cb_t)(hal_timer_t timer, void *ctx);
+typedef void (*hal_timer_cb_t)(hal_timer_drv_t timer, void *ctx);
 
 /* ===== TIMER CONFIG ===== */
 typedef struct
@@ -55,16 +55,16 @@ typedef struct
     void (*init)(void);
     void (*deinit)(void);
 
-    hal_timer_t (*open)(hal_timer_id_t id,
+    hal_timer_drv_t (*open)(hal_timer_id_t id,
                         const hal_timer_cfg_t *cfg);
 
-    void (*close)(hal_timer_t timer);
+    void (*close)(hal_timer_drv_t timer);
 
-    hal_timer_status_t (*start)(hal_timer_t timer);
-    hal_timer_status_t (*stop)(hal_timer_t timer);
-    hal_timer_status_t (*reset)(hal_timer_t timer);
+    hal_timer_status_t (*start)(hal_timer_drv_t timer);
+    hal_timer_status_t (*stop)(hal_timer_drv_t timer);
+    hal_timer_status_t (*reset)(hal_timer_drv_t timer);
 
-    bool (*is_running)(hal_timer_t timer);
+    bool (*is_running)(hal_timer_drv_t timer);
 
 } hal_timer_drv_imp_t;
 
@@ -75,15 +75,15 @@ extern hal_timer_drv_imp_t HAL_TIMER_DRV;
 void hal_timer_init(void);
 void hal_timer_deinit(void);
 
-hal_timer_t hal_timer_open(hal_timer_id_t id,
+hal_timer_drv_t hal_timer_open(hal_timer_id_t id,
                            const hal_timer_cfg_t *cfg);
 
-void hal_timer_close(hal_timer_t timer);
+void hal_timer_close(hal_timer_drv_t timer);
 
-hal_timer_status_t hal_timer_start(hal_timer_t timer);
-hal_timer_status_t hal_timer_stop(hal_timer_t timer);
-hal_timer_status_t hal_timer_reset(hal_timer_t timer);
+hal_timer_status_t hal_timer_start(hal_timer_drv_t timer);
+hal_timer_status_t hal_timer_stop(hal_timer_drv_t timer);
+hal_timer_status_t hal_timer_reset(hal_timer_drv_t timer);
 
-bool hal_timer_is_running(hal_timer_t timer);
+bool hal_timer_is_running(hal_timer_drv_t timer);
 
 #endif /* _HAL_TIMER_H_ */

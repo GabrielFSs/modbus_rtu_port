@@ -60,7 +60,10 @@
 									<listOptionValue builtIn="false" value="C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="C:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../App/Modules/Display"/>
+									<listOptionValue builtIn="false" value="../App/Modules/modbus/include"/>
+									<listOptionValue builtIn="false" value="../App/Modules/modbus/rtu"/>
+									<listOptionValue builtIn="false" value="../App/Modules/modbus/port"/>
+									<listOptionValue builtIn="false" value="../App/Middlewares/fatfs/source"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.29736296" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
@@ -89,7 +92,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="App"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers/STM32F4xx_HAL_Driver/Src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -172,7 +175,7 @@
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="App"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers/STM32F4xx_HAL_Driver/Src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -584,15 +587,18 @@
 		<project id="ModbusRTU.null.1399541614" name="ModbusRTU"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.658962583;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.658962583.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.296136815;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1413881062">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1974202192;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1974202192.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.2047189536;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.98424896">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.217633918;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.217633918.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.422982977;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.29736296">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>

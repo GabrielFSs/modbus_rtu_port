@@ -73,7 +73,7 @@ static void stm32_timer_deinit(void)
 /* ================= OPEN / CLOSE ========================== */
 /* ========================================================= */
 
-static hal_timer_t stm32_timer_open(hal_timer_id_t id,
+static hal_timer_drv_t stm32_timer_open(hal_timer_id_t id,
                                     const hal_timer_cfg_t *cfg)
 {
     if (!cfg || id >= HAL_TIMER_MAX)
@@ -137,10 +137,10 @@ static hal_timer_t stm32_timer_open(hal_timer_id_t id,
     HAL_NVIC_SetPriority(irq, 5, 0);
     HAL_NVIC_EnableIRQ(irq);
 
-    return (hal_timer_t)t;
+    return (hal_timer_drv_t)t;
 }
 
-static void stm32_timer_close(hal_timer_t timer)
+static void stm32_timer_close(hal_timer_drv_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
 
@@ -158,7 +158,7 @@ static void stm32_timer_close(hal_timer_t timer)
 /* ================= START / STOP / RESET ================== */
 /* ========================================================= */
 
-static hal_timer_status_t stm32_timer_start(hal_timer_t timer)
+static hal_timer_status_t stm32_timer_start(hal_timer_drv_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
 
@@ -172,7 +172,7 @@ static hal_timer_status_t stm32_timer_start(hal_timer_t timer)
     return HAL_TIMER_OK;
 }
 
-static hal_timer_status_t stm32_timer_stop(hal_timer_t timer)
+static hal_timer_status_t stm32_timer_stop(hal_timer_drv_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
 
@@ -185,7 +185,7 @@ static hal_timer_status_t stm32_timer_stop(hal_timer_t timer)
     return HAL_TIMER_OK;
 }
 
-static hal_timer_status_t stm32_timer_reset(hal_timer_t timer)
+static hal_timer_status_t stm32_timer_reset(hal_timer_drv_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
 
@@ -196,7 +196,7 @@ static hal_timer_status_t stm32_timer_reset(hal_timer_t timer)
     return HAL_TIMER_OK;
 }
 
-static bool stm32_timer_is_running(hal_timer_t timer)
+static bool stm32_timer_is_running(hal_timer_drv_t timer)
 {
     struct hal_timer_drv_s *t = (struct hal_timer_drv_s *)timer;
 
@@ -219,7 +219,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         if (t->htim == htim && t->state == TIMER_RUNNING)
         {
             if (t->cb)
-                t->cb((hal_timer_t)t, t->cb_ctx);
+                t->cb((hal_timer_drv_t)t, t->cb_ctx);
 
             if (!t->periodic)
             {
