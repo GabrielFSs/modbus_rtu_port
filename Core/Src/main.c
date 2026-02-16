@@ -55,24 +55,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART3)
-    {
-    	if (rx_idx < RX_BUF_SIZE - 1)
-    	{
-    		rx_buf[rx_idx++] = rx_byte;
-    		HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
-    	}
-    	else
-    	{
-    		rx_idx = 0;
-    	}
-    }
-}
-*/
-
 /* USER CODE END 0 */
 
 /**
