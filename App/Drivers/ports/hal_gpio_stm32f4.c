@@ -8,8 +8,6 @@
 /* ===== DRIVER INSTANCE ===== */
 extern hal_gpio_drv_imp_t HAL_GPIO_DRV;
 
-static struct hal_gpio_drv_s *exti_table[16];
-
 /* ===== GPIO DRIVER STRUCT ===== */
 struct hal_gpio_drv_s
 {
@@ -60,7 +58,7 @@ static hal_gpio_drv_t stm32_gpio_open(hal_gpio_id_t id,
 
     GPIO_InitTypeDef gpio = {0};
 
-    /* ===== MODE ===== */
+    /* MODE */
     if (cfg->direction == HAL_GPIO_OUTPUT)
     {
         gpio.Mode = (cfg->out_type == HAL_GPIO_OPEN_DRAIN)
@@ -86,7 +84,7 @@ static hal_gpio_drv_t stm32_gpio_open(hal_gpio_id_t id,
         }
     }
 
-    /* ===== PULL ===== */
+    /* PULL */
     switch (cfg->pull)
     {
         case HAL_GPIO_PULLUP:
@@ -103,21 +101,13 @@ static hal_gpio_drv_t stm32_gpio_open(hal_gpio_id_t id,
     gpio.Pin   = drv->pin;
     gpio.Speed = GPIO_SPEED_FREQ_LOW;
 
-    /* ===== APPLY CONFIG ===== */
     HAL_GPIO_Init(drv->port, &gpio);
 
-    /* ===== EXTI TABLE REGISTER ===== */
     if (cfg->irq_edge != HAL_GPIO_IRQ_NONE)
-    {
-        uint8_t line = __builtin_ctz(drv->pin);
-        exti_table[line] = drv;
-
         bsp_gpio_enable_irq(drv->pin);
-    }
 
     return (hal_gpio_drv_t)drv;
 }
-
 
 /* ===== CLOSE ===== */
 static void stm32_gpio_close(hal_gpio_drv_t gpio)
@@ -131,9 +121,6 @@ static void stm32_gpio_close(hal_gpio_drv_t gpio)
 
     drv->cb = NULL;
     drv->cb_ctx = NULL;
-
-    uint8_t line = __builtin_ctz(drv->pin);
-    exti_table[line] = NULL;
 }
 
 /* ===== WRITE ===== */
@@ -189,12 +176,13 @@ static void stm32_gpio_set_irq_cb(hal_gpio_drv_t gpio,
 /* ===== EXTI DISPATCH ===== */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    uint8_t line = __builtin_ctz(GPIO_Pin);
+    for (int i = 0; i < HAL_GPIO_N; i++)
+    {
+        struct hal_gpio_drv_s *drv = &gpio_instances[i];
 
-    struct hal_gpio_drv_s *drv = exti_table[line];
-
-    if (drv && drv->cb)
-        drv->cb((hal_gpio_drv_t)drv, drv->cb_ctx);
+        if (drv->pin == GPIO_Pin && drv->cb)
+            drv->cb((hal_gpio_drv_t)drv, drv->cb_ctx);
+    }
 }
 
 /* ===== DRIVER VTABLE ===== */

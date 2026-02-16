@@ -1,18 +1,16 @@
-#include "app.h"
+#include "main.h"
+#include "hal_rtc.h"
 
-#include "hal_crc.h"
-
-#include <string.h>
-#include <stdio.h>
+#include <stdint.h>
+#include <stddef.h>
 
 
-/* ===== SETUP ===== */
+
 void app_setup(void)
 {
 
 }
 
-/* ===== LOOP ===== */
 void app_loop(void)
 {
 
