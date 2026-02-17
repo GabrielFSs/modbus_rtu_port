@@ -1,0 +1,4 @@
+../App/Modules/modbus/port/porttimer.c:23:13:mb_timer_cb	16	static
+../App/Modules/modbus/port/porttimer.c:35:6:xMBPortTimersInit	32	static
+../App/Modules/modbus/port/porttimer.c:57:6:vMBPortTimersEnable	8	static
+../App/Modules/modbus/port/porttimer.c:70:6:vMBPortTimersDisable	8	static

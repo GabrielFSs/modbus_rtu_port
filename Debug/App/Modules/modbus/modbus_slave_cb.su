@@ -1,0 +1,4 @@
+../App/Modules/modbus/modbus_slave_cb.c:5:14:eMBRegHoldingCB	32	static
+../App/Modules/modbus/modbus_slave_cb.c:40:14:eMBRegInputCB	24	static
+../App/Modules/modbus/modbus_slave_cb.c:62:14:eMBRegCoilsCB	32	static
+../App/Modules/modbus/modbus_slave_cb.c:94:14:eMBRegDiscreteCB	24	static

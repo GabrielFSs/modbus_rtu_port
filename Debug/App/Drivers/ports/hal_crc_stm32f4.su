@@ -1,0 +1,6 @@
+../App/Drivers/ports/hal_crc_stm32f4.c:15:17:crc16_modbus	32	static
+../App/Drivers/ports/hal_crc_stm32f4.c:36:13:stm32_crc_init	16	static
+../App/Drivers/ports/hal_crc_stm32f4.c:49:13:stm32_crc_deinit	8	static
+../App/Drivers/ports/hal_crc_stm32f4.c:56:22:stm32_crc_open	16	static
+../App/Drivers/ports/hal_crc_stm32f4.c:69:13:stm32_crc_close	16	static
+../App/Drivers/ports/hal_crc_stm32f4.c:75:17:stm32_crc_compute	56	static

@@ -1,0 +1,5 @@
+../App/Middlewares/fatfs/source/diskio.c:11:9:disk_status	16	static
+../App/Middlewares/fatfs/source/diskio.c:26:9:disk_initialize	16	static
+../App/Middlewares/fatfs/source/diskio.c:41:9:disk_read	32	static
+../App/Middlewares/fatfs/source/diskio.c:67:9:disk_write	32	static
+../App/Middlewares/fatfs/source/diskio.c:93:9:disk_ioctl	48	static

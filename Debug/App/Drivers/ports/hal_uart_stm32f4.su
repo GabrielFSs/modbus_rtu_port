@@ -1,0 +1,14 @@
+../App/Drivers/ports/hal_uart_stm32f4.c:65:13:stm32_uart_init	16	static
+../App/Drivers/ports/hal_uart_stm32f4.c:71:13:stm32_uart_deinit	16	static
+../App/Drivers/ports/hal_uart_stm32f4.c:91:23:stm32_uart_open	24	static
+../App/Drivers/ports/hal_uart_stm32f4.c:183:13:stm32_uart_close	24	static
+../App/Drivers/ports/hal_uart_stm32f4.c:203:22:stm32_uart_write	32	static
+../App/Drivers/ports/hal_uart_stm32f4.c:239:22:stm32_uart_read	32	static
+../App/Drivers/ports/hal_uart_stm32f4.c:273:13:stm32_uart_flush	24	static
+../App/Drivers/ports/hal_uart_stm32f4.c:291:13:stm32_uart_set_event_cb	32	static
+../App/Drivers/ports/hal_uart_stm32f4.c:307:6:HAL_UART_TxCpltCallback	40	static
+../App/Drivers/ports/hal_uart_stm32f4.c:328:6:HAL_UART_RxCpltCallback	48	static
+../App/Drivers/ports/hal_uart_stm32f4.c:394:13:stm32_uart_set_rx_timeout_timer	32	static
+../App/Drivers/ports/hal_uart_stm32f4.c:412:6:USART1_IRQHandler	8	static
+../App/Drivers/ports/hal_uart_stm32f4.c:417:6:USART2_IRQHandler	8	static
+../App/Drivers/ports/hal_uart_stm32f4.c:422:6:USART3_IRQHandler	8	static

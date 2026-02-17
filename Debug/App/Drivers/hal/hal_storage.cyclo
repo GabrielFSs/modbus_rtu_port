@@ -1,0 +1,4 @@
+../App/Drivers/hal/hal_storage.c:5:22:hal_storage_init	1
+../App/Drivers/hal/hal_storage.c:10:22:hal_storage_deinit	1
+../App/Drivers/hal/hal_storage.c:15:22:hal_storage_write_file	1
+../App/Drivers/hal/hal_storage.c:23:22:hal_storage_read_file	1

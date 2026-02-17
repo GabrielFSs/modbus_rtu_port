@@ -1,0 +1,9 @@
+../App/Drivers/hal/hal_uart.c:9:6:hal_uart_init	2
+../App/Drivers/hal/hal_uart.c:15:6:hal_uart_deinit	2
+../App/Drivers/hal/hal_uart.c:21:16:hal_uart_open	1
+../App/Drivers/hal/hal_uart.c:27:6:hal_uart_close	2
+../App/Drivers/hal/hal_uart.c:33:15:hal_uart_write	1
+../App/Drivers/hal/hal_uart.c:42:15:hal_uart_read	1
+../App/Drivers/hal/hal_uart.c:51:6:hal_uart_flush	2
+../App/Drivers/hal/hal_uart.c:57:6:hal_uart_set_event_cb	2
+../App/Drivers/hal/hal_uart.c:66:6:hal_uart_set_rx_timeout_timer	2

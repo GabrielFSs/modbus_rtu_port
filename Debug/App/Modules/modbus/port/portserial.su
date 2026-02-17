@@ -1,0 +1,5 @@
+../App/Modules/modbus/port/portserial.c:18:13:mb_uart_event_cb	24	static
+../App/Modules/modbus/port/portserial.c:49:6:xMBPortSerialInit	48	static
+../App/Modules/modbus/port/portserial.c:104:6:vMBPortSerialEnable	16	static
+../App/Modules/modbus/port/portserial.c:116:6:xMBPortSerialPutByte	32	static
+../App/Modules/modbus/port/portserial.c:133:6:xMBPortSerialGetByte	32	static

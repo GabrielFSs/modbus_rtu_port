@@ -1,0 +1,5 @@
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_storage.c:7:13:bsp_storage_gpio_init	1
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_storage.c:30:22:bsp_storage_init	3
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_storage.c:57:6:bsp_storage_deinit	1
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_storage.c:65:22:bsp_storage_read_blocks	3
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_storage.c:80:22:bsp_storage_write_blocks	3

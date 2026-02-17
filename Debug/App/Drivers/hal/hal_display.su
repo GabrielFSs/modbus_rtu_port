@@ -1,0 +1,7 @@
+../App/Drivers/hal/hal_display.c:8:6:hal_display_init	8	static
+../App/Drivers/hal/hal_display.c:16:6:hal_display_deinit	8	static
+../App/Drivers/hal/hal_display.c:24:15:hal_display_open	8	static
+../App/Drivers/hal/hal_display.c:34:6:hal_display_close	16	static
+../App/Drivers/hal/hal_display.c:42:22:hal_display_write_cmd	16	static
+../App/Drivers/hal/hal_display.c:53:22:hal_display_write_data	16	static
+../App/Drivers/hal/hal_display.c:64:22:hal_display_write_buffer	24	static

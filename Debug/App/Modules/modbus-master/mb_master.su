@@ -1,0 +1,12 @@
+../App/Modules/modbus-master/mb_master.c:80:27:get_slave_cache	24	static
+../App/Modules/modbus-master/mb_master.c:96:13:cache_update	40	static
+../App/Modules/modbus-master/mb_master.c:134:17:build_request	24	static
+../App/Modules/modbus-master/mb_master.c:158:13:remove_current_job	8	static
+../App/Modules/modbus-master/mb_master.c:170:13:process_response	16	static
+../App/Modules/modbus-master/mb_master.c:229:6:mbm_init	16	static
+../App/Modules/modbus-master/mb_master.c:235:14:mbm_add_request	24	static
+../App/Modules/modbus-master/mb_master.c:244:14:mbm_schedule	24	static
+../App/Modules/modbus-master/mb_master.c:257:6:mbm_rx_byte	16	static
+../App/Modules/modbus-master/mb_master.c:265:6:mbm_frame_timeout	4	static
+../App/Modules/modbus-master/mb_master.c:271:9:mbm_cache_get	24	static
+../App/Modules/modbus-master/mb_master.c:294:6:mbm_poll	280	static

@@ -1,0 +1,7 @@
+../App/Drivers/hal/hal_display.c:8:6:hal_display_init	3
+../App/Drivers/hal/hal_display.c:16:6:hal_display_deinit	3
+../App/Drivers/hal/hal_display.c:24:15:hal_display_open	3
+../App/Drivers/hal/hal_display.c:34:6:hal_display_close	3
+../App/Drivers/hal/hal_display.c:42:22:hal_display_write_cmd	3
+../App/Drivers/hal/hal_display.c:53:22:hal_display_write_data	3
+../App/Drivers/hal/hal_display.c:64:22:hal_display_write_buffer	3

@@ -1,0 +1,4 @@
+../App/Modules/Display/port.c:9:13:port_write_cmd	1
+../App/Modules/Display/port.c:14:13:port_write_data	1
+../App/Modules/Display/port.c:19:13:port_delay	1
+../App/Modules/Display/port.c:26:6:ili9341_port_init	1

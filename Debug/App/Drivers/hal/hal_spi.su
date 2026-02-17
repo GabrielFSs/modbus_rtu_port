@@ -1,0 +1,7 @@
+../App/Drivers/hal/hal_spi.c:7:6:hal_spi_init	8	static
+../App/Drivers/hal/hal_spi.c:15:6:hal_spi_deinit	8	static
+../App/Drivers/hal/hal_spi.c:23:15:hal_spi_open	16	static
+../App/Drivers/hal/hal_spi.c:34:6:hal_spi_close	16	static
+../App/Drivers/hal/hal_spi.c:42:18:hal_spi_transmit	32	static
+../App/Drivers/hal/hal_spi.c:55:18:hal_spi_receive	32	static
+../App/Drivers/hal/hal_spi.c:68:18:hal_spi_transmit_receive	40	static

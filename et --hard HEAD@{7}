@@ -1,0 +1,285 @@
+[33m14e6815[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/modbus-master[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33mb871125[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{1}: reset: moving to HEAD~1
+[33md2a1d58[m HEAD@{2}: checkout: moving from feature/freemodbus to feature/modbus-master
+[33mcb1eb2e[m[33m ([m[1;32mfeature/freemodbus[m[33m)[m HEAD@{3}: checkout: moving from feature/hal-uart to feature/freemodbus
+[33m7f9b1f3[m[33m ([m[1;32mfeature/hal-uart[m[33m)[m HEAD@{4}: checkout: moving from feature/modbus-master to feature/hal-uart
+[33md2a1d58[m HEAD@{5}: checkout: moving from master to feature/modbus-master
+[33mb871125[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{6}: checkout: moving from feature/modbus-master to master
+[33md2a1d58[m HEAD@{7}: commit: Implemented modbus-master, not tested
+[33mb871125[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{8}: checkout: moving from master to feature/modbus-master
+[33mb871125[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{9}: commit: Master updated using the newest hal developed
+[33m14e6815[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/modbus-master[m[33m)[m HEAD@{10}: commit: imported updated hal-time
+[33md860d6a[m HEAD@{11}: commit: imported updated hal-display
+[33meb770c0[m HEAD@{12}: commit: imported updated hal-spi
+[33medf98c7[m HEAD@{13}: commit: imported updated hal-storage
+[33m6b60097[m HEAD@{14}: commit: imported updated hal-rtc
+[33m9195332[m HEAD@{15}: commit: imported updated hal-crc
+[33m64d5ffb[m HEAD@{16}: commit: imported updated hal-timer
+[33mb10321b[m HEAD@{17}: commit: imported updated hal-gpio
+[33m9ad7e93[m HEAD@{18}: commit: imported updated hal-uart
+[33mb909954[m HEAD@{19}: checkout: moving from feature/hal-uart to master
+[33m7f9b1f3[m[33m ([m[1;32mfeature/hal-uart[m[33m)[m HEAD@{20}: checkout: moving from master to feature/hal-uart
+[33mb909954[m HEAD@{21}: merge feature/hal-uart: Merge made by the 'ort' strategy.
+[33m1c3b0de[m HEAD@{22}: checkout: moving from feature/hal-uart to master
+[33m7f9b1f3[m[33m ([m[1;32mfeature/hal-uart[m[33m)[m HEAD@{23}: commit: delete some bsp files about gpio (wrong branch)
+[33m2137992[m HEAD@{24}: checkout: moving from master to feature/hal-uart
+[33m1c3b0de[m HEAD@{25}: commit (merge): merge feature/hal-uart - kept updated UART implementation
+[33m4e1de7d[m HEAD@{26}: commit: deleted some hals to clean before merge
+[33mcbd99df[m HEAD@{27}: commit: deleted some hals to clean before merge
+[33m6860e37[m HEAD@{28}: checkout: moving from feature/hal-display to master
+[33maea7da9[m[33m ([m[1;32mfeature/hal-display[m[33m)[m HEAD@{29}: commit: Update ili9341 driver using hal-time
+[33m4863c8d[m HEAD@{30}: checkout: moving from feature/freemodbus to feature/hal-display
+[33mcb1eb2e[m[33m ([m[1;32mfeature/freemodbus[m[33m)[m HEAD@{31}: commit: Update and removed other hals
+[33m4841780[m HEAD@{32}: checkout: moving from feature/hal-time to feature/freemodbus
+[33m47e3cfd[m[33m ([m[1;32mfeature/hal-time[m[33m)[m HEAD@{33}: commit: implemented hal-time using hal_systick
+[33m0e046bc[m HEAD@{34}: commit: implemented hal_display
+[33m4863c8d[m HEAD@{35}: checkout: moving from feature/hal-display to feature/hal-time
+[33m4863c8d[m HEAD@{36}: commit: Update clean ili9341 driver
+[33m5eb033c[m HEAD@{37}: commit: implemented hal_display
+[33m6860e37[m HEAD@{38}: checkout: moving from master to feature/hal-display
+[33m6860e37[m HEAD@{39}: checkout: moving from test/buttons-updated-hal-gpio to master
+[33m481702c[m[33m ([m[1;32mtest/buttons-updated-hal-gpio[m[33m)[m HEAD@{40}: commit: Implemented test using new hal gpio
+[33maf88cd7[m[33m ([m[1;32mfeature/hal-gpio[m[33m)[m HEAD@{41}: checkout: moving from feature/hal-gpio to test/buttons-updated-hal-gpio
+[33maf88cd7[m[33m ([m[1;32mfeature/hal-gpio[m[33m)[m HEAD@{42}: checkout: moving from test/gpio_led_button to feature/hal-gpio
+[33m9b894d6[m[33m ([m[1;32mtest/gpio_led_button[m[33m)[m HEAD@{43}: reset: moving to HEAD
+[33m9b894d6[m[33m ([m[1;32mtest/gpio_led_button[m[33m)[m HEAD@{44}: checkout: moving from feature/hal-gpio to test/gpio_led_button
+[33maf88cd7[m[33m ([m[1;32mfeature/hal-gpio[m[33m)[m HEAD@{45}: commit: Updated the IRQ function
+[33m37d6b74[m HEAD@{46}: checkout: moving from feature/hal-spi to feature/hal-gpio
+[33mc42f5c4[m[33m ([m[1;32mfeature/hal-spi[m[33m)[m HEAD@{47}: commit: Updated hal-spi and bsp
+[33me3d4d27[m HEAD@{48}: checkout: moving from feature/hal-timer to feature/hal-spi
+[33mdad9903[m[33m ([m[1;32mfeature/hal-timer[m[33m)[m HEAD@{49}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33m7f22386[m[33m ([m[1;32mfeature/hal-crc[m[33m)[m HEAD@{50}: commit: Deleted other hals to clean this hal
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{51}: checkout: moving from feature/hal-rtc to feature/hal-crc
+[33m420b082[m[33m ([m[1;32mfeature/hal-rtc[m[33m)[m HEAD@{52}: commit: Deleted other hals to clean this hal
+[33m6e0642a[m HEAD@{53}: checkout: moving from feature/hal-timer to feature/hal-rtc
+[33mdad9903[m[33m ([m[1;32mfeature/hal-timer[m[33m)[m HEAD@{54}: commit: Deleted other hals to clean this hal
+[33md07e351[m HEAD@{55}: checkout: moving from feature/hal-uart to feature/hal-timer
+[33m2137992[m HEAD@{56}: checkout: moving from feature/hal-gpio to feature/hal-uart
+[33m37d6b74[m HEAD@{57}: commit: Deleted other hals to clean this hal
+[33ma2b9e42[m HEAD@{58}: commit: Deleted other hals to clean this hal
+[33m7dc5f98[m HEAD@{59}: checkout: moving from feature/hal-storage to feature/hal-gpio
+[33m9ffe276[m[33m ([m[1;32mfeature/hal-storage[m[33m)[m HEAD@{60}: commit: update hal-storage and implemented fatfs middleware and using sdio on bsp
+[33m3f5d341[m HEAD@{61}: commit: update hal-storage and implemented fatfs middleware and using sdio on bsp
+[33m6860e37[m HEAD@{62}: checkout: moving from feature/freemodbus to feature/hal-storage
+[33m4841780[m HEAD@{63}: checkout: moving from feature/hal-storage to feature/freemodbus
+[33m6860e37[m HEAD@{64}: checkout: moving from test/rtc-uart to feature/hal-storage
+[33md3773d5[m[33m ([m[1;32mtest/rtc-uart[m[33m)[m HEAD@{65}: commit: update polling with timestamp
+[33md1286cf[m HEAD@{66}: merge feature/hal-rtc: Merge made by the 'ort' strategy.
+[33m63bdeaa[m HEAD@{67}: checkout: moving from feature/hal-rtc to test/rtc-uart
+[33m6e0642a[m HEAD@{68}: commit: Update rtc timestamp
+[33m0769e25[m HEAD@{69}: checkout: moving from test/rtc-uart to feature/hal-rtc
+[33m63bdeaa[m HEAD@{70}: commit: Update rtc response
+[33m0769e25[m HEAD@{71}: checkout: moving from feature/hal-rtc to test/rtc-uart
+[33m0769e25[m HEAD@{72}: commit (merge): restore .projects, update .ioc and copiling
+[33ma65f7e4[m HEAD@{73}: merge feature/hal-uart: Merge made by the 'ort' strategy.
+[33m749b87e[m HEAD@{74}: merge feature/hal-timer: Merge made by the 'ort' strategy.
+[33m2082d3a[m HEAD@{75}: checkout: moving from feature/hal-timer to feature/hal-rtc
+[33md07e351[m HEAD@{76}: commit: update stm32cubeide project files
+[33mac28fba[m HEAD@{77}: commit: restore stm32cubeide project files
+[33m93a4351[m HEAD@{78}: checkout: moving from test/uart-timer-rx-done-Timeout to feature/hal-timer
+[33me78fd45[m[33m ([m[1;32mtest/uart-timer-rx-done-Timeout[m[33m)[m HEAD@{79}: commit: fixed timer counter, now tim2 and tim5 count in us resolution until 4294s and tim3 until 65ms
+[33m767831a[m HEAD@{80}: checkout: moving from test/uart-timer-rx-done-Timeout to test/uart-timer-rx-done-Timeout
+[33m767831a[m HEAD@{81}: commit: implemented tx pooling with clock values
+[33ma731c16[m HEAD@{82}: checkout: moving from test/uart-timer-tx-pooling to test/uart-timer-rx-done-Timeout
+[33m4773bce[m[33m ([m[1;32mtest/uart-timer-tx-pooling[m[33m)[m HEAD@{83}: reset: moving to HEAD
+[33m4773bce[m[33m ([m[1;32mtest/uart-timer-tx-pooling[m[33m)[m HEAD@{84}: checkout: moving from 4773bce7c3c88f60eb56f1f7cc7201ab4deff40c to test/uart-timer-tx-pooling
+[33m4773bce[m[33m ([m[1;32mtest/uart-timer-tx-pooling[m[33m)[m HEAD@{85}: commit: update .project
+[33m72ace4d[m HEAD@{86}: checkout: moving from feature/hal-timer to HEAD~1
+[33m93a4351[m HEAD@{87}: reset: moving to HEAD
+[33m93a4351[m HEAD@{88}: checkout: moving from test/uart-timer-tx-pooling to feature/hal-timer
+[33m93a4351[m HEAD@{89}: checkout: moving from feature/hal-timer to test/uart-timer-tx-pooling
+[33m93a4351[m HEAD@{90}: checkout: moving from test/uart-timer-rx-done-Timeout to feature/hal-timer
+[33ma731c16[m HEAD@{91}: commit (merge): implemented test with reset trigger after a rx byte ant timeout after 5s, but the time is wrong and it is going faster then 5s
+[33m2137992[m HEAD@{92}: checkout: moving from feature/hal-timer to test/uart-timer-rx-done-Timeout
+[33m93a4351[m HEAD@{93}: checkout: moving from test/uart-timer-rx-done-Timeout to feature/hal-timer
+[33m2137992[m HEAD@{94}: reset: moving to HEAD
+[33m2137992[m HEAD@{95}: checkout: moving from feature/hal-uart to test/uart-timer-rx-done-Timeout
+[33m2137992[m HEAD@{96}: checkout: moving from test/uart-timer-rx-done-ENTER-char to feature/hal-uart
+[33mb51482c[m[33m ([m[1;32mtest/uart-timer-rx-done-ENTER-char[m[33m)[m HEAD@{97}: commit (merge): update uart-timer-rx-done-ENTER-char, working
+[33m93a4351[m HEAD@{98}: checkout: moving from feature/hal-uart to test/uart-timer-rx-done-ENTER-char
+[33m2137992[m HEAD@{99}: commit: fixed some issue on hal_uart_stm32f4.c and add .project
+[33m8c30396[m HEAD@{100}: commit: fixed some issue on hal_uart_stm32f4.c
+[33m4afb383[m HEAD@{101}: checkout: moving from feature/hal-timer to feature/hal-uart
+[33m93a4351[m HEAD@{102}: reset: moving to HEAD
+[33m93a4351[m HEAD@{103}: checkout: moving from test/uart-timer-rx-done-ENTER-char to feature/hal-timer
+[33m93a4351[m HEAD@{104}: checkout: moving from feature/hal-timer to test/uart-timer-rx-done-ENTER-char
+[33m93a4351[m HEAD@{105}: checkout: moving from test/uart-timer-rx-done-ENTER-char to feature/hal-timer
+[33m93a4351[m HEAD@{106}: checkout: moving from feature/hal-timer to test/uart-timer-rx-done-ENTER-char
+[33m93a4351[m HEAD@{107}: checkout: moving from test/uart-timer-rx-done-ENTER-char to feature/hal-timer
+[33m93a4351[m HEAD@{108}: checkout: moving from test/uart-rx-polling to test/uart-timer-rx-done-ENTER-char
+[33m84b2512[m[33m ([m[1;32mtest/uart-rx-polling[m[33m)[m HEAD@{109}: checkout: moving from test/uart-timer-rx-done-ENTER-char to test/uart-rx-polling
+[33m93a4351[m HEAD@{110}: reset: moving to HEAD
+[33m93a4351[m HEAD@{111}: checkout: moving from feature/hal-timer to test/uart-timer-rx-done-ENTER-char
+[33m93a4351[m HEAD@{112}: commit: removed some files not necessary generated by stmide
+[33m72ace4d[m HEAD@{113}: commit (merge): Update hal_timer to integrate with new hal_uart
+[33mc5cff29[m HEAD@{114}: checkout: moving from feature/hal-uart to feature/hal-timer
+[33m4afb383[m HEAD@{115}: commit: Update .ioc
+[33me2604cb[m HEAD@{116}: commit: chore: remove build artifacts
+[33m3b8894e[m HEAD@{117}: commit: Update new hal_uart and implemented rx modes
+[33m1bdd990[m HEAD@{118}: commit: Update new hal_uart and implemented rx modes
+[33mfd0d816[m HEAD@{119}: checkout: moving from feature/hal-timer to feature/hal-uart
+[33mc5cff29[m HEAD@{120}: checkout: moving from feature/hal-uart to feature/hal-timer
+[33mfd0d816[m HEAD@{121}: reset: moving to HEAD
+[33mfd0d816[m HEAD@{122}: commit: Update rx-done with char
+[33m3a7557f[m HEAD@{123}: checkout: moving from test/crc-uart-tx-rx-calc to feature/hal-uart
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{124}: reset: moving to HEAD
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{125}: checkout: moving from test/uart-rx-polling to test/crc-uart-tx-rx-calc
+[33m84b2512[m[33m ([m[1;32mtest/uart-rx-polling[m[33m)[m HEAD@{126}: checkout: moving from test/crc-uart-tx-rx-calc to test/uart-rx-polling
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{127}: reset: moving to HEAD
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{128}: checkout: moving from feature/hal-crc to test/crc-uart-tx-rx-calc
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{129}: checkout: moving from test/crc-uart to feature/hal-crc
+[33md6e3116[m[33m ([m[1;32mtest/crc-uart[m[33m)[m HEAD@{130}: commit: Test sending every 10s crc calc
+[33mddb26f5[m HEAD@{131}: checkout: moving from test/uart-rx-polling to test/crc-uart
+[33m84b2512[m[33m ([m[1;32mtest/uart-rx-polling[m[33m)[m HEAD@{132}: reset: moving to HEAD
+[33m84b2512[m[33m ([m[1;32mtest/uart-rx-polling[m[33m)[m HEAD@{133}: commit: update .ioc
+[33m71b9ab0[m HEAD@{134}: checkout: moving from test/uart-tx-polling to test/uart-rx-polling
+[33m88e1a0e[m[33m ([m[1;32mtest/uart-tx-polling[m[33m)[m HEAD@{135}: reset: moving to HEAD
+[33m88e1a0e[m[33m ([m[1;32mtest/uart-tx-polling[m[33m)[m HEAD@{136}: commit: fixed app_setup as void
+[33m86a63d8[m HEAD@{137}: checkout: moving from test/crc-uart to test/uart-tx-polling
+[33mddb26f5[m HEAD@{138}: reset: moving to HEAD
+[33mddb26f5[m HEAD@{139}: checkout: moving from test/uart-rx-polling to test/crc-uart
+[33m71b9ab0[m HEAD@{140}: checkout: moving from test/uart-tx-polling to test/uart-rx-polling
+[33m86a63d8[m HEAD@{141}: checkout: moving from test/crc-uart to test/uart-tx-polling
+[33mddb26f5[m HEAD@{142}: reset: moving to HEAD
+[33mddb26f5[m HEAD@{143}: checkout: moving from test/uart-rx-polling to test/crc-uart
+[33m71b9ab0[m HEAD@{144}: checkout: moving from test/uart-tx-polling to test/uart-rx-polling
+[33m86a63d8[m HEAD@{145}: checkout: moving from test/crc-uart to test/uart-tx-polling
+[33mddb26f5[m HEAD@{146}: checkout: moving from test/uart-rx-polling to test/crc-uart
+[33m71b9ab0[m HEAD@{147}: checkout: moving from test/uart-rx-polling-edit-rxcallback to test/uart-rx-polling
+[33m74dc31e[m[33m ([m[1;32mtest/uart-rx-polling-edit-rxcallback[m[33m)[m HEAD@{148}: reset: moving to HEAD
+[33m74dc31e[m[33m ([m[1;32mtest/uart-rx-polling-edit-rxcallback[m[33m)[m HEAD@{149}: checkout: moving from test/crc-uart to test/uart-rx-polling-edit-rxcallback
+[33mddb26f5[m HEAD@{150}: reset: moving to HEAD
+[33mddb26f5[m HEAD@{151}: checkout: moving from feature/hal-crc to test/crc-uart
+[33mabe2b03[m[33m ([m[1;32mtest/crc-uart-tx-rx-calc[m[33m)[m HEAD@{152}: commit: fixed .ioc generating code
+[33mddb26f5[m HEAD@{153}: checkout: moving from test/crc-uart to feature/hal-crc
+[33mddb26f5[m HEAD@{154}: checkout: moving from feature/hal-crc to test/crc-uart
+[33mddb26f5[m HEAD@{155}: commit: chore: normalize line endings via gitattributes
+[33m584f3e7[m HEAD@{156}: commit: update Driversa and fixed main.c
+[33m14e1026[m HEAD@{157}: commit: fixed crc calculator
+[33m7449bed[m HEAD@{158}: checkout: moving from feature/hal-timer to feature/hal-crc
+[33mc5cff29[m HEAD@{159}: commit: chore(main): restore canonical main.c
+[33md114c5b[m HEAD@{160}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33m7449bed[m HEAD@{161}: checkout: moving from feature/hal-crc to feature/hal-crc
+[33m7449bed[m HEAD@{162}: merge feature/hal-timer: Merge made by the 'ort' strategy.
+[33m54ce81b[m HEAD@{163}: checkout: moving from feature/hal-timer to feature/hal-crc
+[33md114c5b[m HEAD@{164}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33m54ce81b[m HEAD@{165}: cherry-pick: chore: add gitignore for build and IDE files
+[33mf07ffa6[m HEAD@{166}: checkout: moving from feature/hal-timer to feature/hal-crc
+[33md114c5b[m HEAD@{167}: commit: chore: add gitignore for build and IDE files
+[33m608f918[m HEAD@{168}: commit: chore: remove build artifacts and IDE files from repository
+[33md35ded0[m HEAD@{169}: commit: Update main.c. System stable
+[33m4b284a4[m HEAD@{170}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33mf07ffa6[m HEAD@{171}: reset: moving to HEAD
+[33mf07ffa6[m HEAD@{172}: reset: moving to HEAD
+[33mf07ffa6[m HEAD@{173}: checkout: moving from feature/hal-timer to feature/hal-crc
+[33m4b284a4[m HEAD@{174}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33mf07ffa6[m HEAD@{175}: cherry-pick: hal_timer implemented and working, tested at /test/timer..... Using 3 timers
+[33m26bccf7[m HEAD@{176}: checkout: moving from feature/hal-timer to feature/hal-crc
+[33m4b284a4[m HEAD@{177}: checkout: moving from feature/hal-crc to feature/hal-timer
+[33m26bccf7[m HEAD@{178}: checkout: moving from feature/hal-spi to feature/hal-crc
+[33me3d4d27[m HEAD@{179}: checkout: moving from feature/hal-storage to feature/hal-spi
+[33m6860e37[m HEAD@{180}: checkout: moving from feature/hal-timer to feature/hal-storage
+[33m4b284a4[m HEAD@{181}: checkout: moving from feature/hal-gpio to feature/hal-timer
+[33m7dc5f98[m HEAD@{182}: reset: moving to 7dc5f98
+[33m15e186b[m HEAD@{183}: reset: moving to HEAD~1
+[33m7dc5f98[m HEAD@{184}: checkout: moving from feature/hal-timer to feature/hal-gpio
+[33m4b284a4[m HEAD@{185}: reset: moving to HEAD
+[33m4b284a4[m HEAD@{186}: commit: hal_timer implemented and working, tested at /test/timer..... Using 3 timers
+[33mc5afd24[m HEAD@{187}: reset: moving to HEAD~1
+[33m0b815f8[m HEAD@{188}: checkout: moving from test/timer_gpio_led_buttoms to feature/hal-timer
+[33m777895d[m[33m ([m[1;32mtest/timer_gpio_led_buttoms[m[33m)[m HEAD@{189}: commit: implemented test, small error when pressed fast the buttoms
+[33m8c1cf8e[m HEAD@{190}: cherry-pick: add gpio 4 and fixed bsp to set as true
+[33mc5afd24[m HEAD@{191}: checkout: moving from feature/hal-timer to test/timer_gpio_led_buttoms
+[33m0b815f8[m HEAD@{192}: cherry-pick: add gpio 4 and fixed bsp to set as true
+[33mc5afd24[m HEAD@{193}: checkout: moving from feature/hal-gpio to feature/hal-timer
+[33m7dc5f98[m HEAD@{194}: commit: fixed app_setup() to void app_setup()
+[33m15e186b[m HEAD@{195}: checkout: moving from test/timer_gpio_led_buttoms to feature/hal-gpio
+[33mc5afd24[m HEAD@{196}: reset: moving to HEAD
+[33mc5afd24[m HEAD@{197}: checkout: moving from feature/hal-timer to test/timer_gpio_led_buttoms
+[33mc5afd24[m HEAD@{198}: commit: fixed timer, non tested yet
+[33m8291906[m HEAD@{199}: cherry-pick: remove gpio auto-generated code from CubeMX
+[33me7e94e9[m HEAD@{200}: checkout: moving from feature/hal-gpio to feature/hal-timer
+[33m15e186b[m HEAD@{201}: commit: remove gpio auto-generated code from CubeMX
+[33m71aa30b[m HEAD@{202}: reset: moving to HEAD~1
+[33mc9a047a[m HEAD@{203}: commit: refactor(main): remove gpio auto-generated code from CubeMX
+[33m71aa30b[m HEAD@{204}: checkout: moving from feature/hal-timer to feature/hal-gpio
+[33me7e94e9[m HEAD@{205}: checkout: moving from feature/hal-gpio to feature/hal-timer
+[33m71aa30b[m HEAD@{206}: cherry-pick: add gpio 4 and fixed bsp to set as true
+[33m2834247[m HEAD@{207}: checkout: moving from test/gpio_led_button to feature/hal-gpio
+[33m9b894d6[m[33m ([m[1;32mtest/gpio_led_button[m[33m)[m HEAD@{208}: commit: implemented led controlled by buttons
+[33med4fa18[m HEAD@{209}: commit: add gpio 4 and fixed bsp to set as true
+[33m2834247[m HEAD@{210}: checkout: moving from feature/hal-gpio to test/gpio_led_button
+[33m2834247[m HEAD@{211}: checkout: moving from feature/hal-timer to feature/hal-gpio
+[33me7e94e9[m HEAD@{212}: checkout: moving from feature/freemodbus to feature/hal-timer
+[33m4841780[m HEAD@{213}: commit: implemented freemodbus with port using the project HAL and defined modbus map and the callbacks
+[33m6860e37[m HEAD@{214}: checkout: moving from feature/hal-spi to feature/freemodbus
+[33me3d4d27[m HEAD@{215}: commit: implementing spi -no tested-
+[33m6860e37[m HEAD@{216}: reset: moving to HEAD~1
+[33m279c903[m HEAD@{217}: commit: implementing spi -no tested-
+[33m6860e37[m HEAD@{218}: reset: moving to HEAD~1
+[33m5486523[m HEAD@{219}: commit: implementing spi -no tested-
+[33m6860e37[m HEAD@{220}: checkout: moving from feature/freemodbus to feature/hal-spi
+[33m6860e37[m HEAD@{221}: reset: moving to HEAD
+[33m6860e37[m HEAD@{222}: checkout: moving from feature/hal-spi to feature/freemodbus
+[33m6860e37[m HEAD@{223}: checkout: moving from master to feature/hal-spi
+[33m6860e37[m HEAD@{224}: merge feature/hal-storage: Fast-forward
+[33mc0a58b5[m HEAD@{225}: checkout: moving from feature/hal-storage to master
+[33m6860e37[m HEAD@{226}: commit: Implemented storage actions on SD
+[33mc0a58b5[m HEAD@{227}: checkout: moving from master to feature/hal-storage
+[33mc0a58b5[m HEAD@{228}: merge feature/hal-rtc: Merge made by the 'ort' strategy.
+[33m26bccf7[m HEAD@{229}: checkout: moving from feature/hal-rtc to master
+[33m2082d3a[m HEAD@{230}: commit: Implemented rtc
+[33me87a35d[m HEAD@{231}: checkout: moving from master to feature/hal-rtc
+[33m26bccf7[m HEAD@{232}: merge feature/hal-crc: Fast-forward
+[33me87a35d[m HEAD@{233}: checkout: moving from feature/hal-crc to master
+[33m26bccf7[m HEAD@{234}: commit: Update hal_crc_port
+[33me87a35d[m HEAD@{235}: checkout: moving from feature/hal-rtc to feature/hal-crc
+[33me87a35d[m HEAD@{236}: checkout: moving from master to feature/hal-rtc
+[33me87a35d[m HEAD@{237}: merge feature/hal-crc: Fast-forward
+[33me7e94e9[m HEAD@{238}: checkout: moving from feature/hal-crc to master
+[33me87a35d[m HEAD@{239}: commit: Implemented crc calculator
+[33me7e94e9[m HEAD@{240}: checkout: moving from master to feature/hal-crc
+[33me7e94e9[m HEAD@{241}: merge feature/hal-timer: Fast-forward
+[33m2834247[m HEAD@{242}: checkout: moving from feature/hal-timer to master
+[33me7e94e9[m HEAD@{243}: commit: Implemented hal_timer
+[33m2834247[m HEAD@{244}: checkout: moving from master to feature/hal-timer
+[33m2834247[m HEAD@{245}: merge feature/hal-gpio: Fast-forward
+[33m3a7557f[m HEAD@{246}: checkout: moving from feature/hal-gpio to master
+[33m2834247[m HEAD@{247}: commit: Implemented hal_gpio
+[33m3a7557f[m HEAD@{248}: checkout: moving from master to feature/hal-gpio
+[33m3a7557f[m HEAD@{249}: merge feature/hal-uart: Fast-forward
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{250}: checkout: moving from master to master
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{251}: checkout: moving from test/uart-tx-polling to master
+[33m86a63d8[m HEAD@{252}: commit: update tx pooling
+[33m813d9be[m HEAD@{253}: rebase (finish): returning to refs/heads/test/uart-tx-polling
+[33m813d9be[m HEAD@{254}: rebase (continue): Initial commit - STM32 Modbus RTU project, testing uart_write() pooling
+[33m3a7557f[m HEAD@{255}: reset: moving to HEAD~1
+[33mfcae4af[m HEAD@{256}: commit: update tx pooling
+[33m3a7557f[m HEAD@{257}: rebase (start): checkout feature/hal-uart
+[33ma81d4a5[m[33m ([m[1;31morigin/test/uart-tx-polling[m[33m)[m HEAD@{258}: checkout: moving from test/uart-rx-polling-edit-rxcallback to test/uart-tx-polling
+[33m74dc31e[m[33m ([m[1;32mtest/uart-rx-polling-edit-rxcallback[m[33m)[m HEAD@{259}: rebase (finish): returning to refs/heads/test/uart-rx-polling-edit-rxcallback
+[33m74dc31e[m[33m ([m[1;32mtest/uart-rx-polling-edit-rxcallback[m[33m)[m HEAD@{260}: rebase (pick): Testing the rx function editing directly the stm32f4 port to react all \n messages reacived
+[33m9c89243[m HEAD@{261}: rebase (pick): Testing the rx function (resending after 10s what were reacived)
+[33m568e9a5[m HEAD@{262}: rebase (pick): Testing the rx function (not working yet)
+[33m3a7557f[m HEAD@{263}: rebase (start): checkout feature/hal-uart
+[33m291f5e4[m HEAD@{264}: checkout: moving from test/uart-rx-polling to test/uart-rx-polling-edit-rxcallback
+[33m71b9ab0[m HEAD@{265}: rebase (finish): returning to refs/heads/test/uart-rx-polling
+[33m71b9ab0[m HEAD@{266}: rebase (pick): Testing the rx function (resending after 10s what were reacived)
+[33m47c1d5c[m HEAD@{267}: rebase (pick): Testing the rx function (not working yet)
+[33m3a7557f[m HEAD@{268}: rebase (start): checkout feature/hal-uart
+[33mfcb6efe[m HEAD@{269}: checkout: moving from feature/hal-uart to test/uart-rx-polling
+[33m3a7557f[m HEAD@{270}: commit: Implemented new modes to RX_DONE
+[33m14ac1db[m[33m ([m[1;31morigin/feature/hal-uart[m[33m)[m HEAD@{271}: checkout: moving from test/uart-rx-polling-edit-rxcallback to feature/hal-uart
+[33m291f5e4[m HEAD@{272}: commit: Testing the rx function editing directly the stm32f4 port to react all \n messages reacived
+[33mfcb6efe[m HEAD@{273}: checkout: moving from test/uart-rx-polling to test/uart-rx-polling-edit-rxcallback
+[33mfcb6efe[m HEAD@{274}: commit: Testing the rx function (resending after 10s what were reacived)
+[33mb5a8d0f[m[33m ([m[1;31morigin/test/uart-rx-polling[m[33m)[m HEAD@{275}: checkout: moving from master to test/uart-rx-polling
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{276}: checkout: moving from test/uart-rx-polling to master
+[33mb5a8d0f[m[33m ([m[1;31morigin/test/uart-rx-polling[m[33m)[m HEAD@{277}: commit: Testing the rx function (not working yet)
+[33m14ac1db[m[33m ([m[1;31morigin/feature/hal-uart[m[33m)[m HEAD@{278}: checkout: moving from feature/hal-uart to test/uart-rx-polling
+[33m14ac1db[m[33m ([m[1;31morigin/feature/hal-uart[m[33m)[m HEAD@{279}: commit: Initial commit - HAL_UART with stm32f4 port
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{280}: checkout: moving from test/uart-tx-polling to feature/hal-uart
+[33ma81d4a5[m[33m ([m[1;31morigin/test/uart-tx-polling[m[33m)[m HEAD@{281}: commit: Initial commit - STM32 Modbus RTU project, testing uart_write() pooling
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{282}: checkout: moving from feature/hal-uart to test/uart-tx-polling
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{283}: checkout: moving from master to feature/hal-uart
+[33m9b27dc6[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{284}: commit (initial): Initial commit - STM32 Modbus RTU project, testing uart_write()

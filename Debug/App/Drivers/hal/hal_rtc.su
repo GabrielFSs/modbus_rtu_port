@@ -1,0 +1,6 @@
+../App/Drivers/hal/hal_rtc.c:5:18:hal_rtc_init	8	static
+../App/Drivers/hal/hal_rtc.c:13:18:hal_rtc_set_time	16	static
+../App/Drivers/hal/hal_rtc.c:21:18:hal_rtc_get_time	16	static
+../App/Drivers/hal/hal_rtc.c:29:18:hal_rtc_set_date	16	static
+../App/Drivers/hal/hal_rtc.c:37:18:hal_rtc_get_date	16	static
+../App/Drivers/hal/hal_rtc.c:47:18:hal_rtc_get_timestamp	16	static

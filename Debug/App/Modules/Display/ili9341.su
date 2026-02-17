@@ -1,0 +1,6 @@
+../App/Modules/Display/ili9341.c:5:20:write_cmd	16	static
+../App/Modules/Display/ili9341.c:10:20:write_data	16	static
+../App/Modules/Display/ili9341.c:15:6:ili9341_init	24	static
+../App/Modules/Display/ili9341.c:35:6:ili9341_set_rotation	16	static
+../App/Modules/Display/ili9341.c:49:6:ili9341_set_window	24	static
+../App/Modules/Display/ili9341.c:69:6:ili9341_write_pixels	16	static

@@ -1,0 +1,2 @@
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_spi.c:4:6:bsp_spi_init	48	static
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_spi.c:50:6:bsp_spi_deinit	16	static

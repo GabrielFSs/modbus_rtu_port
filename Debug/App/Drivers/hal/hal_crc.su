@@ -1,0 +1,5 @@
+../App/Drivers/hal/hal_crc.c:7:6:hal_crc_init	8	static
+../App/Drivers/hal/hal_crc.c:13:6:hal_crc_deinit	8	static
+../App/Drivers/hal/hal_crc.c:19:15:hal_crc_open	16	static
+../App/Drivers/hal/hal_crc.c:27:6:hal_crc_close	16	static
+../App/Drivers/hal/hal_crc.c:33:10:hal_crc_compute	24	static

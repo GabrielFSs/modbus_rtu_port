@@ -1,0 +1,4 @@
+../App/Drivers/ports/hal_storage_stm32f4.c:10:29:stm32_storage_init	8	static
+../App/Drivers/ports/hal_storage_stm32f4.c:22:29:stm32_storage_deinit	8	static
+../App/Drivers/ports/hal_storage_stm32f4.c:29:29:stm32_storage_write_file	584	static
+../App/Drivers/ports/hal_storage_stm32f4.c:50:29:stm32_storage_read_file	592	static

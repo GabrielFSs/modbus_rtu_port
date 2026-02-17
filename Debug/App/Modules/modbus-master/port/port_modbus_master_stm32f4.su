@@ -1,0 +1,7 @@
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:20:13:uart_event_cb	32	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:44:13:timer_cb	16	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:57:13:port_uart_send	32	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:69:17:port_crc16	16	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:77:17:port_time_ms	8	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:82:13:port_timer_start	8	static
+../App/Modules/modbus-master/port/port_modbus_master_stm32f4.c:92:6:mbm_port_init	64	static

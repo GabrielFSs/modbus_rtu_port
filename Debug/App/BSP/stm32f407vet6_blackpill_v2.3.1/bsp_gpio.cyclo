@@ -1,0 +1,4 @@
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.c:25:13:bsp_gpio_enable_clock	6
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.c:35:6:bsp_gpio_get_pin	4
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.c:51:6:bsp_gpio_enable_irq	16
+../App/BSP/stm32f407vet6_blackpill_v2.3.1/bsp_gpio.c:84:6:bsp_gpio_get_active_level	2
