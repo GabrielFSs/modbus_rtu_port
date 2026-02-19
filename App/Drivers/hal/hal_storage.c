@@ -28,3 +28,12 @@ hal_storage_status_t hal_storage_read_file(
 {
     return drv->read_file(path, data, maxlen, out_len);
 }
+
+/* 🔥 NOVO WRAPPER */
+hal_storage_status_t hal_storage_append_file(
+    const char *path,
+    const uint8_t *data,
+    size_t len)
+{
+    return drv->append_file(path, data, len);
+}

@@ -7,12 +7,15 @@
 /*               STM32 + FATFS IMPLEMENTATION                */
 /* ========================================================= */
 
+static FATFS fs;
+
+/* ================= INIT ================= */
+
 static hal_storage_status_t stm32_storage_init(void)
 {
     if (bsp_storage_init() != BSP_STORAGE_OK)
         return HAL_STORAGE_ERROR;
 
-    static FATFS fs;
     if (f_mount(&fs, "", 1) != FR_OK)
         return HAL_STORAGE_ERROR;
 
@@ -25,6 +28,8 @@ static hal_storage_status_t stm32_storage_deinit(void)
     bsp_storage_deinit();
     return HAL_STORAGE_OK;
 }
+
+/* ================= WRITE (OVERWRITE) ================= */
 
 static hal_storage_status_t stm32_storage_write_file(
     const char *path,
@@ -46,6 +51,39 @@ static hal_storage_status_t stm32_storage_write_file(
     f_close(&fil);
     return HAL_STORAGE_OK;
 }
+
+/* ================= APPEND 🔥 ================= */
+
+static hal_storage_status_t stm32_storage_append_file(
+    const char *path,
+    const uint8_t *data,
+    size_t len)
+{
+    FIL fil;
+
+    /* Abre criando se não existir */
+    if (f_open(&fil, path, FA_OPEN_ALWAYS | FA_WRITE) != FR_OK)
+        return HAL_STORAGE_ERROR;
+
+    /* Move ponteiro para final */
+    if (f_lseek(&fil, f_size(&fil)) != FR_OK)
+    {
+        f_close(&fil);
+        return HAL_STORAGE_ERROR;
+    }
+
+    UINT written;
+    if (f_write(&fil, data, len, &written) != FR_OK || written != len)
+    {
+        f_close(&fil);
+        return HAL_STORAGE_ERROR;
+    }
+
+    f_close(&fil);
+    return HAL_STORAGE_OK;
+}
+
+/* ================= READ ================= */
 
 static hal_storage_status_t stm32_storage_read_file(
     const char *path,
@@ -78,8 +116,9 @@ static hal_storage_status_t stm32_storage_read_file(
 
 hal_storage_drv_imp_t HAL_STORAGE_DRV =
 {
-    .init       = stm32_storage_init,
-    .deinit     = stm32_storage_deinit,
-    .write_file = stm32_storage_write_file,
-    .read_file  = stm32_storage_read_file
+    .init        = stm32_storage_init,
+    .deinit      = stm32_storage_deinit,
+    .write_file  = stm32_storage_write_file,
+    .read_file   = stm32_storage_read_file,
+    .append_file = stm32_storage_append_file   /* 🔥 NOVO */
 };
