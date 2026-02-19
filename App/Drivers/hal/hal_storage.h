@@ -29,6 +29,12 @@ typedef struct hal_storage_drv_imp_s
         size_t maxlen,
         size_t *out_len);
 
+    /* 🔥 NOVO */
+    hal_storage_status_t (*append_file)(
+        const char *path,
+        const uint8_t *data,
+        size_t len);
+
 } hal_storage_drv_imp_t;
 
 /* ===== DRIVER INSTANCE ===== */
@@ -48,5 +54,11 @@ hal_storage_status_t hal_storage_read_file(
     uint8_t *data,
     size_t maxlen,
     size_t *out_len);
+
+/* 🔥 NOVO */
+hal_storage_status_t hal_storage_append_file(
+    const char *path,
+    const uint8_t *data,
+    size_t len);
 
 #endif

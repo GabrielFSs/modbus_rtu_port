@@ -1,6 +1,6 @@
 #include "bsp_storage.h"
 
-static SD_HandleTypeDef hsd;
+SD_HandleTypeDef hsd;
 
 /* ================= GPIO CONFIG ================= */
 
