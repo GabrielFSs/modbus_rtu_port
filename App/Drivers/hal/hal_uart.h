@@ -210,15 +210,27 @@ typedef struct hal_uart_drv_imp_s
                                      hal_uart_timer_start_fn_t start,
                                      hal_uart_timer_stop_fn_t stop,
                                      void *ctx);
+    void (*rx_enable)(hal_uart_drv_t dev);
+    void (*rx_disable)(hal_uart_drv_t dev);
+
+    void (*tx_it_enable)(hal_uart_drv_t dev);
+    void (*tx_it_disable)(hal_uart_drv_t dev);
 
 } hal_uart_drv_imp_t;
-
-extern hal_uart_drv_imp_t HAL_UART_DRV;
 
 void hal_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
                                    hal_uart_timer_start_fn_t start,
                                    hal_uart_timer_stop_fn_t stop,
                                    void *ctx);
+
+void hal_uart_rx_enable(hal_uart_drv_t dev);
+void hal_uart_rx_disable(hal_uart_drv_t dev);
+
+void hal_uart_tx_it_enable(hal_uart_drv_t dev);
+void hal_uart_tx_it_disable(hal_uart_drv_t dev);
+
+
+extern hal_uart_drv_imp_t HAL_UART_DRV;
 
 
 #endif /* _HAL_UART_H_ */

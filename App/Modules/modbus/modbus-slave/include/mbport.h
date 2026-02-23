@@ -30,7 +30,11 @@
 #ifndef _MB_PORT_H
 #define _MB_PORT_H
 
-#include "port.h"
+#include <mb_port.h>
+
+#ifndef MB_PORT_HAS_CLOSE
+#define MB_PORT_HAS_CLOSE 0
+#endif
 
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C

@@ -373,9 +373,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->rx_done_mode == UART_RX_DONE_ON_LENGTH &&
             drv->rx_len >= drv->rx_done_length)
         {
-            drv->rx_done = true;
-            if (drv->timer_stop)
-                drv->timer_stop(drv->timer_ctx);
+            if (drv->cb)
+            {
+                drv->cb((hal_uart_drv_t)drv,
+                        UART_EVENT_RX_DONE,
+                        UART_STATUS_OK,
+                        drv->rx_buf,
+                        drv->rx_len,
+                        drv->cb_ctx);
+
+                drv->rx_len = 0;
+            }
+            else
+            {
+                drv->rx_done = true;
+            }
         }
 
         /* Restart timeout timer */

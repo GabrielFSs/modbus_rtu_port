@@ -28,17 +28,17 @@
  */
 
 /* ----------------------- System includes ----------------------------------*/
+#include "mb.h"
+#include "mbconfig.h"
+#include "mbframe.h"
+#include "mbproto.h"
+#include "mb_port.h"
+#include "stdlib.h"
+#include "string.h"
 #include "stdlib.h"
 #include "string.h"
 
 /* ----------------------- Platform includes --------------------------------*/
-#include "port.h"
-
-/* ----------------------- Modbus includes ----------------------------------*/
-#include "mb.h"
-#include "mbframe.h"
-#include "mbproto.h"
-#include "mbconfig.h"
 
 /* ----------------------- Defines ------------------------------------------*/
 #define MB_PDU_FUNC_READ_ADDR_OFF               ( MB_PDU_DATA_OFF + 0)

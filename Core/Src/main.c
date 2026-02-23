@@ -55,22 +55,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-    if (huart->Instance == USART3)
-    {
-    	if (rx_idx < RX_BUF_SIZE - 1)
-    	{
-    		rx_buf[rx_idx++] = rx_byte;
-    		HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
-    	}
-    	else
-    	{
-    		rx_idx = 0;
-    	}
-    }
-}
-*/
 
 /* USER CODE END 0 */
 
@@ -97,7 +81,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+ // coloca breakpoint aqui
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -109,11 +93,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  app_loop();
     /* USER CODE END WHILE */
-
+	  app_loop();
     /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 }

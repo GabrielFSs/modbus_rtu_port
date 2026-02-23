@@ -1,15 +1,11 @@
 #include "hal_time.h"
 
+/* Driver externo */
+extern const hal_time_driver_t HAL_TIME_DRIVER;
+
 /* ================= STATIC DRIVER ================= */
 
-static const hal_time_driver_t *time_drv = 0;
-
-/* ================= INIT ================= */
-
-void hal_time_init(const hal_time_driver_t *driver)
-{
-    time_drv = driver;
-}
+static const hal_time_driver_t *time_drv = &HAL_TIME_DRIVER;
 
 /* ================= GET TIME ================= */
 
