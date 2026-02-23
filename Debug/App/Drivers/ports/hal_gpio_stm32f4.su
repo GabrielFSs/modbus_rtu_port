@@ -1,8 +1,0 @@
-../App/Drivers/ports/hal_gpio_stm32f4.c:31:13:stm32_gpio_init	8	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:36:13:stm32_gpio_deinit	4	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:42:23:stm32_gpio_open	40	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:113:13:stm32_gpio_close	24	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:127:26:stm32_gpio_write	24	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:146:26:stm32_gpio_read	24	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:163:13:stm32_gpio_set_irq_cb	32	static
-../App/Drivers/ports/hal_gpio_stm32f4.c:177:6:HAL_GPIO_EXTI_Callback	24	static
