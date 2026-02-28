@@ -1,12 +1,12 @@
-#include "main.h"
+#include "app.h"
 
-#include <stdint.h>
-#include <stddef.h>
+/* ================= APP SETUP ================= */
 
 void app_setup(void)
 {
-
 }
+
+/* ================= APP LOOP ================= */
 
 void app_loop(void)
 {
