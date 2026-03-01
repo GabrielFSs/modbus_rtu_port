@@ -113,7 +113,7 @@ void mbm_rtu_start_tx(const mbm_request_t *req)
     if (!port || !req)
         return;
 
-    uint8_t frame[MBM_MAX_FRAME];
+    static uint8_t frame[MBM_MAX_FRAME];
     uint16_t len = build_request(frame, req);
 
     if (len == 0)
