@@ -1,8 +1,9 @@
-#ifndef _HAL_UART_H_
+	#ifndef _HAL_UART_H_
 #define _HAL_UART_H_
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct hal_uart_drv_s * hal_uart_drv_t;
 
@@ -101,6 +102,10 @@ typedef enum
     UART_RX_DONE_ON_LENGTH,
 } uart_rx_done_mode_t;
 
+/* ===================== GPIO ===================== */
+
+typedef void (*hal_uart_dir_ctrl_fn_t)(void *ctx, bool enable);
+
 /* ===================== UART CONFIG STRUCT ===================== */
 
 typedef struct
@@ -117,6 +122,8 @@ typedef struct
     uint16_t  tx_buffer_size;
 
     uart_dir_ctrl_t comm_control;
+    hal_uart_dir_ctrl_fn_t dir_ctrl;
+    void *dir_ctrl_ctx;
     uart_mode_t comm_mode;
     uart_duplex_t duplex_mode;
     hal_uart_databits_t databits;
@@ -142,6 +149,8 @@ typedef void (*hal_uart_event_cb_t)(
 
 typedef void (*hal_uart_timer_start_fn_t)(void *ctx);
 typedef void (*hal_uart_timer_stop_fn_t)(void *ctx);
+
+
 
 /* ===================== API ===================== */
 
