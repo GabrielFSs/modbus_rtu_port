@@ -1,4 +1,4 @@
-	#ifndef _HAL_UART_H_
+#ifndef _HAL_UART_H_
 #define _HAL_UART_H_
 
 #include <stdint.h>
@@ -20,9 +20,9 @@ typedef enum
 typedef enum
 {
     HAL_UART_BAUD_9600   = 9600,
-    HAL_UART_BAUD_19200 = 19200,
-    HAL_UART_BAUD_38400 = 38400,
-    HAL_UART_BAUD_57600 = 57600,
+    HAL_UART_BAUD_19200  = 19200,
+    HAL_UART_BAUD_38400  = 38400,
+    HAL_UART_BAUD_57600  = 57600,
     HAL_UART_BAUD_115200 = 115200,
     HAL_UART_BAUD_230400 = 230400
 } hal_uart_baud_t;
@@ -102,7 +102,7 @@ typedef enum
     UART_RX_DONE_ON_LENGTH,
 } uart_rx_done_mode_t;
 
-/* ===================== GPIO ===================== */
+/* ===================== GPIO DE/RE CONTROL ===================== */
 
 typedef void (*hal_uart_dir_ctrl_fn_t)(void *ctx, bool enable);
 
@@ -113,6 +113,7 @@ typedef struct
     hal_uart_baud_t  baudrate;
     hal_uart_dev_stopbit_t  stopbits;
     hal_uart_dev_parity_t  parity;
+    hal_uart_databits_t databits;
 
     uint8_t  *rx_buffer;
     uint16_t  rx_buffer_size;
@@ -124,9 +125,9 @@ typedef struct
     uart_dir_ctrl_t comm_control;
     hal_uart_dir_ctrl_fn_t dir_ctrl;
     void *dir_ctrl_ctx;
+
     uart_mode_t comm_mode;
     uart_duplex_t duplex_mode;
-    hal_uart_databits_t databits;
 
     uart_rx_done_mode_t rx_done_mode;
     uint8_t  rx_done_char;
@@ -149,8 +150,6 @@ typedef void (*hal_uart_event_cb_t)(
 
 typedef void (*hal_uart_timer_start_fn_t)(void *ctx);
 typedef void (*hal_uart_timer_stop_fn_t)(void *ctx);
-
-
 
 /* ===================== API ===================== */
 
@@ -180,13 +179,21 @@ void hal_uart_set_event_cb(hal_uart_drv_t dev,
                            hal_uart_event_cb_t cb,
                            void *ctx);
 
-/* Timer injection (optional, only for RX_DONE_ON_TIMEOUT) */
+/* RX timeout timer injection */
 void hal_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
                                    hal_uart_timer_start_fn_t start,
                                    hal_uart_timer_stop_fn_t stop,
                                    void *ctx);
 
-/* ===================== DRIVER IMP ===================== */
+/* ===================== RX / TX CONTROL ===================== */
+
+void hal_uart_rx_enable(hal_uart_drv_t dev);
+void hal_uart_rx_disable(hal_uart_drv_t dev);
+
+void hal_uart_tx_it_enable(hal_uart_drv_t dev);
+void hal_uart_tx_it_disable(hal_uart_drv_t dev);
+
+/* ===================== DRIVER IMPLEMENTATION ===================== */
 
 typedef struct hal_uart_drv_imp_s
 {
@@ -216,18 +223,18 @@ typedef struct hal_uart_drv_imp_s
                          void *ctx);
 
     void (*set_rx_timeout_timer)(hal_uart_drv_t dev,
-                                     hal_uart_timer_start_fn_t start,
-                                     hal_uart_timer_stop_fn_t stop,
-                                     void *ctx);
+                                 hal_uart_timer_start_fn_t start,
+                                 hal_uart_timer_stop_fn_t stop,
+                                 void *ctx);
+
+    void (*rx_enable)(hal_uart_drv_t dev);
+    void (*rx_disable)(hal_uart_drv_t dev);
+
+    void (*tx_it_enable)(hal_uart_drv_t dev);
+    void (*tx_it_disable)(hal_uart_drv_t dev);
 
 } hal_uart_drv_imp_t;
 
 extern hal_uart_drv_imp_t HAL_UART_DRV;
-
-void hal_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
-                                   hal_uart_timer_start_fn_t start,
-                                   hal_uart_timer_stop_fn_t stop,
-                                   void *ctx);
-
 
 #endif /* _HAL_UART_H_ */

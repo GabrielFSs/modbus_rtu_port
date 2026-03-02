@@ -451,6 +451,49 @@ static void stm32_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
     drv->timer_ctx   = ctx;
 }
 
+/* ========================================================= */
+/* ================= RX/TX CONTROL ========================= */
+/* ========================================================= */
+
+static void stm32_uart_rx_enable(hal_uart_drv_t dev)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+    if (!drv || !drv->huart)
+        return;
+
+    drv->rx_enabled = true;
+
+    HAL_UART_Receive_IT(drv->huart, &drv->rx_byte, 1);
+}
+
+static void stm32_uart_rx_disable(hal_uart_drv_t dev)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+    if (!drv || !drv->huart)
+        return;
+
+    drv->rx_enabled = false;
+
+    HAL_UART_AbortReceive(drv->huart);
+}
+
+static void stm32_uart_tx_it_enable(hal_uart_drv_t dev)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+    if (!drv || !drv->huart)
+        return;
+
+    __HAL_UART_ENABLE_IT(drv->huart, UART_IT_TXE);
+}
+
+static void stm32_uart_tx_it_disable(hal_uart_drv_t dev)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+    if (!drv || !drv->huart)
+        return;
+
+    __HAL_UART_DISABLE_IT(drv->huart, UART_IT_TXE);
+}
 
 /* ========================================================= */
 /* ================= IRQ HANDLERS ========================== */
@@ -484,6 +527,11 @@ hal_uart_drv_imp_t HAL_UART_DRV = {
     .write = stm32_uart_write,
     .read = stm32_uart_read,
     .flush = stm32_uart_flush,
-	.set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,
+    .set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,
     .set_event_cb = stm32_uart_set_event_cb,
+
+    .rx_enable = stm32_uart_rx_enable,
+    .rx_disable = stm32_uart_rx_disable,
+    .tx_it_enable = stm32_uart_tx_it_enable,
+    .tx_it_disable = stm32_uart_tx_it_disable,
 };
