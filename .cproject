@@ -68,6 +68,7 @@
 									<listOptionValue builtIn="false" value="../App/Modules/modbus/modbus-master/Includes"/>
 									<listOptionValue builtIn="false" value="../App/Modules/modbus/modbus-master/port"/>
 									<listOptionValue builtIn="false" value="../App/Modules/modbus/modbus-master/rtu"/>
+									<listOptionValue builtIn="false" value="../App/Modules/modbus/modbus-sniffer/"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.29736296" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
