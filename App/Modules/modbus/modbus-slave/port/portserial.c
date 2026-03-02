@@ -1,23 +1,93 @@
 #include "mb.h"
 #include "mbport.h"
 #include "mb_port.h"
+
 #include "hal_uart.h"
+#include "hal_gpio.h"
+
+/* ========================================================= */
+/* RS485 POLICY (UART3 = RS485)                              */
+/* ========================================================= */
+
+#define RS485_DE_GPIO   HAL_GPIO_3   /* ajuste conforme seu BSP */
+#define RS485_RE_GPIO   HAL_GPIO_4   /* ajuste conforme seu BSP */
+
+static hal_gpio_drv_t rs485_de = NULL;
+static hal_gpio_drv_t rs485_re = NULL;
+static BOOL rs485_active = FALSE;
+
+static void rs485_init(void)
+{
+    if (rs485_active)
+        return;
+
+    hal_gpio_cfg_t cfg =
+    {
+        .direction = HAL_GPIO_OUTPUT,
+        .pull      = HAL_GPIO_NOPULL,
+        .out_type  = HAL_GPIO_PUSH_PULL,
+        .irq_edge  = HAL_GPIO_IRQ_NONE
+    };
+
+    rs485_de = hal_gpio_open(RS485_DE_GPIO, &cfg);
+    rs485_re = hal_gpio_open(RS485_RE_GPIO, &cfg);
+
+    if (rs485_de) hal_gpio_write(rs485_de, FALSE);
+    if (rs485_re) hal_gpio_write(rs485_re, FALSE);
+
+    rs485_active = TRUE;
+}
+
+static void rs485_deinit(void)
+{
+    if (!rs485_active)
+        return;
+
+    if (rs485_de)
+    {
+        hal_gpio_close(rs485_de);
+        rs485_de = NULL;
+    }
+
+    if (rs485_re)
+    {
+        hal_gpio_close(rs485_re);
+        rs485_re = NULL;
+    }
+
+    rs485_active = FALSE;
+}
+
+static void rs485_dir_control(void *ctx, bool enable)
+{
+    (void)ctx;
+
+    if (!rs485_active)
+        return;
+
+    if (enable)
+    {
+        hal_gpio_write(rs485_de, TRUE);
+        hal_gpio_write(rs485_re, TRUE);
+    }
+    else
+    {
+        hal_gpio_write(rs485_de, FALSE);
+        hal_gpio_write(rs485_re, FALSE);
+    }
+}
 
 /* ========================================================= */
 /* VARIÁVEIS GLOBAIS                                         */
 /* ========================================================= */
 
 static hal_uart_drv_t mb_uart = NULL;
+static hal_uart_dev_interface_t current_dev;
 
-/* RX precisa armazenar o último byte recebido */
 static volatile uint8_t rx_byte;
-
-/* ⚠️ TX byte precisa ser estático (NÃO pode ser local!) */
 static volatile uint8_t tx_byte;
 
-/* Buffer RX físico (1 byte) */
 static uint8_t rx_buf[1];
-
 
 /* ========================================================= */
 /* UART EVENT CALLBACK                                       */
@@ -35,6 +105,7 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
     (void)ctx;
 
     /* ================= RX ================= */
+
     if (event == UART_EVENT_RX_DONE && data && len > 0)
     {
         rx_byte = data[0];
@@ -46,6 +117,7 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
     }
 
     /* ================= TX ================= */
+
     if (event == UART_EVENT_TX_DONE)
     {
         if (pxMBFrameCBTransmitterEmpty)
@@ -54,7 +126,6 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
         }
     }
 }
-
 
 /* ========================================================= */
 /* SERIAL INIT                                               */
@@ -78,6 +149,15 @@ BOOL xMBPortSerialInit(UCHAR ucPort,
         case 2: dev = HAL_UART_DEV_3; break;
         default: return FALSE;
     }
+
+    current_dev = dev;
+
+    /* ================= RS485 POLICY ================= */
+
+    BOOL use_rs485 = (dev == HAL_UART_DEV_3);
+
+    if (use_rs485)
+        rs485_init();
 
     /* ================= BAUD ================= */
 
@@ -104,9 +184,20 @@ BOOL xMBPortSerialInit(UCHAR ucPort,
 
     /* ================= MODE ================= */
 
-    cfg.comm_mode   = UART_MODE_INTERRUPT;
-    cfg.duplex_mode = UART_DUPLEX_FULL;
-    cfg.comm_control = UART_DIR_NONE;
+    cfg.comm_mode = UART_MODE_INTERRUPT;
+
+    if (use_rs485)
+    {
+        cfg.duplex_mode  = UART_DUPLEX_HALF;
+        cfg.comm_control = UART_DIR_GPIO;
+        cfg.dir_ctrl     = rs485_dir_control;
+        cfg.dir_ctrl_ctx = NULL;
+    }
+    else
+    {
+        cfg.duplex_mode  = UART_DUPLEX_FULL;
+        cfg.comm_control = UART_DIR_NONE;
+    }
 
     /* ================= RX CONFIG ================= */
 
@@ -128,6 +219,10 @@ BOOL xMBPortSerialInit(UCHAR ucPort,
     return TRUE;
 }
 
+/* ========================================================= */
+/* CLOSE                                                     */
+/* ========================================================= */
+
 void vMBPortSerialClose(void)
 {
     if (mb_uart)
@@ -135,8 +230,12 @@ void vMBPortSerialClose(void)
         hal_uart_close(mb_uart);
         mb_uart = NULL;
     }
-}
 
+    if (current_dev == HAL_UART_DEV_3)
+    {
+        rs485_deinit();
+    }
+}
 
 /* ========================================================= */
 /* ENABLE / DISABLE RX & TX                                  */
@@ -144,6 +243,9 @@ void vMBPortSerialClose(void)
 
 void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
+    if (!mb_uart)
+        return;
+
     if (xRxEnable)
         hal_uart_rx_enable(mb_uart);
     else
@@ -151,7 +253,6 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 
     if (xTxEnable)
     {
-        /* Força início da transmissão */
         if (pxMBFrameCBTransmitterEmpty)
         {
             pxMBFrameCBTransmitterEmpty();
@@ -159,16 +260,14 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
     }
 }
 
-
 /* ========================================================= */
-/* SEND ONE BYTE (BYTE A BYTE - INTERRUPT SAFE)             */
+/* SEND ONE BYTE                                             */
 /* ========================================================= */
 
 BOOL xMBPortSerialPutByte(CHAR ucByte)
 {
     size_t written;
 
-    /* ⚠️ NÃO usar variável local */
     tx_byte = (uint8_t)ucByte;
 
     return (hal_uart_write(mb_uart,
@@ -177,7 +276,6 @@ BOOL xMBPortSerialPutByte(CHAR ucByte)
                            &written,
                            100) == UART_STATUS_OK);
 }
-
 
 /* ========================================================= */
 /* GET ONE BYTE                                              */
