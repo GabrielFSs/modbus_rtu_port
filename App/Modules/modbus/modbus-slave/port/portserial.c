@@ -4,6 +4,7 @@
 
 #include "hal_uart.h"
 #include "hal_gpio.h"
+#include "mb_sniffer.h"
 
 /* ========================================================= */
 /* RS485 POLICY (UART3 = RS485)                              */
@@ -110,6 +111,8 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
     {
         rx_byte = data[0];
 
+        mb_sniffer_rx_byte(rx_byte);
+
         if (pxMBFrameCBByteReceived)
         {
             pxMBFrameCBByteReceived();
@@ -120,7 +123,9 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
 
     if (event == UART_EVENT_TX_DONE)
     {
-        if (pxMBFrameCBTransmitterEmpty)
+    	mb_sniffer_tx_confirm();
+
+    	if (pxMBFrameCBTransmitterEmpty)
         {
             pxMBFrameCBTransmitterEmpty();
         }
@@ -269,6 +274,8 @@ BOOL xMBPortSerialPutByte(CHAR ucByte)
     size_t written;
 
     tx_byte = (uint8_t)ucByte;
+
+    mb_sniffer_tx_store(&tx_byte, 1);
 
     return (hal_uart_write(mb_uart,
                            (uint8_t *)&tx_byte,

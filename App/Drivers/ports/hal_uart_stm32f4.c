@@ -366,6 +366,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
                         UART_STATUS_OK,
                         NULL, 0,
                         drv->cb_ctx);
+
             }
             break;
         }

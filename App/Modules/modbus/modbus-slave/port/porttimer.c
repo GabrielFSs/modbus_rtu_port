@@ -3,6 +3,7 @@
 #include "mb_port.h"
 #include "hal_timer.h"
 #include "stddef.h"
+#include "mb_sniffer.h"
 
 static hal_timer_drv_t mb_timer = NULL;
 static uint32_t timeout_us = 0;
@@ -13,7 +14,10 @@ static void mb_timer_cb(hal_timer_drv_t timer, void *ctx)
     (void)ctx;
 
     if (pxMBPortCBTimerExpired)
+    {
+        mb_sniffer_rx_timeout();
         pxMBPortCBTimerExpired();
+    }
 }
 
 BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)
