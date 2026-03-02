@@ -71,3 +71,27 @@ void hal_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
     if (drv->set_rx_timeout_timer)
         drv->set_rx_timeout_timer(dev, start, stop, ctx);
 }
+
+void hal_uart_rx_enable(hal_uart_drv_t dev)
+{
+    if (drv->rx_enable)
+        drv->rx_enable(dev);
+}
+
+void hal_uart_rx_disable(hal_uart_drv_t dev)
+{
+    if (drv->rx_disable)
+        drv->rx_disable(dev);
+}
+
+void hal_uart_tx_it_enable(hal_uart_drv_t dev)
+{
+    if (drv->tx_it_enable)
+        drv->tx_it_enable(dev);
+}
+
+void hal_uart_tx_it_disable(hal_uart_drv_t dev)
+{
+    if (drv->tx_it_disable)
+        drv->tx_it_disable(dev);
+}
