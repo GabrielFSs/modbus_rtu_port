@@ -52,8 +52,8 @@ struct hal_uart_drv_s
 
     /* RS485 */
     uart_dir_ctrl_t dir_mode;
-    hal_uart_dir_ctrl_fn_t dir_ctrl;
-    void *dir_ctrl_ctx;
+    GPIO_TypeDef *de_port;
+    uint16_t de_pin;
 };
 
 static struct hal_uart_drv_s uart_instances[HAL_UART_DEVS_N];
@@ -104,18 +104,6 @@ static hal_uart_drv_t stm32_uart_open(hal_uart_dev_interface_t interface,
     drv->mode    = cfg->comm_mode;
     drv->duplex  = cfg->duplex_mode;
     drv->dir_mode = cfg->comm_control;
-
-    drv->dir_ctrl = cfg->dir_ctrl;
-    drv->dir_ctrl_ctx = cfg->dir_ctrl_ctx;
-
-    /* Se for RS485, inicia em RX */
-    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-    {
-        drv->dir_ctrl(drv->dir_ctrl_ctx, false);
-    }
-
-    drv->dir_ctrl = cfg->dir_ctrl;
-    drv->dir_ctrl_ctx = cfg->dir_ctrl_ctx;
 
     drv->rx_mode      = cfg->rx_mode;
     drv->rx_buf       = cfg->rx_buffer;
@@ -223,43 +211,19 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
     if (!drv || !drv->huart || !data || len == 0)
         return UART_STATUS_ERROR;
 
-    /* ================= RS485: habilita TX ================= */
-    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-    {
-        drv->dir_ctrl(drv->dir_ctrl_ctx, true);
-    }
-
     if (drv->mode == UART_MODE_POLLING)
     {
-        if (HAL_UART_Transmit(drv->huart,
-                              (uint8_t *)data,
-                              len,
-                              timeout_ms) != HAL_OK)
-        {
+        if (HAL_UART_Transmit(drv->huart, (uint8_t *)data, len, timeout_ms) != HAL_OK)
             return UART_STATUS_TIMEOUT;
-        }
-
-        /* Espera Transmission Complete real */
-        while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
-
-        /* ================= RS485: volta para RX ================= */
-        if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-        {
-            drv->dir_ctrl(drv->dir_ctrl_ctx, false);
-        }
     }
     else
     {
         drv->tx_busy = true;
-
-        if (HAL_UART_Transmit_IT(drv->huart,
-                                 (uint8_t *)data,
-                                 len) != HAL_OK)
+        if (HAL_UART_Transmit_IT(drv->huart, (uint8_t *)data, len) != HAL_OK)
         {
             drv->tx_busy = false;
             return UART_STATUS_ERROR;
         }
-        /* DE será desativado no TxCpltCallback */
     }
 
     if (written)
@@ -344,29 +308,17 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
     for (int i = 0; i < HAL_UART_DEVS_N; i++)
     {
-        struct hal_uart_drv_s *drv = &uart_instances[i];
-
-        if (drv->huart == huart)
+        if (uart_instances[i].huart == huart)
         {
-            drv->tx_busy = false;
+            uart_instances[i].tx_busy = false;
 
-            /* Espera TC real (segurança extra) */
-            while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
-
-            /* ================= RS485: volta para RX ================= */
-            if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
+            if (uart_instances[i].cb)
             {
-                drv->dir_ctrl(drv->dir_ctrl_ctx, false);
-            }
-
-            if (drv->cb)
-            {
-                drv->cb((hal_uart_drv_t)drv,
-                        UART_EVENT_TX_DONE,
-                        UART_STATUS_OK,
-                        NULL, 0,
-                        drv->cb_ctx);
-
+                uart_instances[i].cb((hal_uart_drv_t)&uart_instances[i],
+                                      UART_EVENT_TX_DONE,
+                                      UART_STATUS_OK,
+                                      NULL, 0,
+                                      uart_instances[i].cb_ctx);
             }
             break;
         }
@@ -421,9 +373,21 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->rx_done_mode == UART_RX_DONE_ON_LENGTH &&
             drv->rx_len >= drv->rx_done_length)
         {
-            drv->rx_done = true;
-            if (drv->timer_stop)
-                drv->timer_stop(drv->timer_ctx);
+            if (drv->cb)
+            {
+                drv->cb((hal_uart_drv_t)drv,
+                        UART_EVENT_RX_DONE,
+                        UART_STATUS_OK,
+                        drv->rx_buf,
+                        drv->rx_len,
+                        drv->cb_ctx);
+
+                drv->rx_len = 0;
+            }
+            else
+            {
+                drv->rx_done = true;
+            }
         }
 
         /* Restart timeout timer */
