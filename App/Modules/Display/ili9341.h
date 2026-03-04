@@ -26,4 +26,10 @@ void ili9341_set_window(uint16_t x0,
 void ili9341_write_pixels(const uint16_t *pixels,
                           uint32_t len);
 
+/** Preenche retângulo com cor RGB565. Requer write_buffer no io. */
+void ili9341_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color);
+
+/** Inicializa o port (HAL display + ILI9341). Chamar antes de qualquer outra função. */
+void ili9341_port_init(void);
+
 #endif

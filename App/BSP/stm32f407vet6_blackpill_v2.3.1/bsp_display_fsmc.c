@@ -45,8 +45,9 @@ void bsp_display_fsmc_init(void)
                GPIO_PIN_15;
     HAL_GPIO_Init(GPIOE, &gpio);
 
+    /* PD8–PD11: D13–D15 (PD8–10) + A16 (PD11) – esquemático FSMC_A16 = PD11 */
     gpio.Pin = GPIO_PIN_8 | GPIO_PIN_9 |
-               GPIO_PIN_10;
+               GPIO_PIN_10 | GPIO_PIN_11;
     HAL_GPIO_Init(GPIOD, &gpio);
 
     /* RD, WR, CS */
@@ -60,7 +61,7 @@ void bsp_display_fsmc_init(void)
     gpio.Pin = GPIO_PIN_0;
     HAL_GPIO_Init(GPIOG, &gpio);
 
-    /* A18 = PD13 (RS) */
+    /* A18 = PD13 (RS/DC do display) – esquemático FSMC_A18 = PD13 */
     gpio.Pin       = GPIO_PIN_13;
     gpio.Mode      = GPIO_MODE_AF_PP;
     gpio.Pull      = GPIO_NOPULL;
@@ -88,11 +89,12 @@ void bsp_display_fsmc_init(void)
     hsram.Init.AsynchronousWait   = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
     hsram.Init.WriteBurst         = FSMC_WRITE_BURST_DISABLE;
 
+    /* Timing mais folgado reduz “linhas pretas” e dá margem ao latch (HCLK 168 MHz). */
     FSMC_NORSRAM_TimingTypeDef timing = {0};
 
     timing.AddressSetupTime      = 2;
     timing.AddressHoldTime       = 1;
-    timing.DataSetupTime         = 5;
+    timing.DataSetupTime         = 6;
     timing.BusTurnAroundDuration = 1;
     timing.CLKDivision           = 2;
     timing.DataLatency           = 2;

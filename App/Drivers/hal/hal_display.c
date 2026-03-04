@@ -1,7 +1,6 @@
 #include "hal_display.h"
 
-/* HAL_DISPLAY_DRV agora é ponteiro global definido
-   via compile-time no hal_display_port.c */
+/* HAL_DISPLAY_DRV é definido em compile-time em ports/hal_display_stm32f4.c */
 
 /* ================= INIT ================= */
 

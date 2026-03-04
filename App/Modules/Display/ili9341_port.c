@@ -1,6 +1,9 @@
+/**
+ * Port ILI9341 → hal_display (STM32F4): liga o driver ili9341 ao HAL de display.
+ */
 #include "ili9341.h"
 #include "hal_display.h"
-#include "hal_time.h"
+#include "stm32f4xx_hal.h"
 
 static hal_display_t disp;
 
@@ -18,7 +21,13 @@ static void port_write_data(uint16_t data)
 
 static void port_delay(uint32_t ms)
 {
-    hal_time_delay_ms(ms);
+    HAL_Delay(ms);
+}
+
+static void port_write_buffer(const uint16_t *buf, uint32_t len)
+{
+    if (buf && disp)
+        hal_display_write_buffer(disp, buf, len);
 }
 
 /* ================= PORT INIT ================= */
@@ -30,9 +39,10 @@ void ili9341_port_init(void)
 
     static ili9341_io_t io =
     {
-        .write_cmd  = port_write_cmd,
-        .write_data = port_write_data,
-        .delay_ms   = port_delay
+        .write_cmd    = port_write_cmd,
+        .write_data   = port_write_data,
+        .write_buffer = port_write_buffer,
+        .delay_ms     = port_delay
     };
 
     ili9341_init(&io);
