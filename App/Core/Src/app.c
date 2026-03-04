@@ -135,7 +135,7 @@ void app_setup(void)
 
     mbm_serial_cfg_t serial_cfg =
     {
-        .baudrate = 115200,
+        .baudrate = 9600,
         .databits = HAL_UART_DATABITS_8,
         .parity   = HAL_UART_PARITY_NONE,
         .stopbits = HAL_UART_STOPBIT_1,

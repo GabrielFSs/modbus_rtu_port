@@ -350,8 +350,11 @@ static void stm32_uart_tc_handler(UART_HandleTypeDef *huart)
 
         drv->tx_busy = false;
 
+        /* RS485 volta para RX */
         if (drv->dir_mode == UART_DIR_EXTERNAL && drv->dir_ctrl)
+        {
             drv->dir_ctrl(drv->dir_ctrl_ctx, HAL_UART_DIR_RX);
+        }
 
         if (drv->cb)
         {
@@ -416,6 +419,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             drv->rx_done = true;
             if (drv->timer_stop)
                 drv->timer_stop(drv->timer_ctx);
+
+            /* Em modo LENGTH, notifica o callback quando o
+             * número de bytes configurado for atingido. Isso
+             * permite casos como rx_done_length == 1, onde o
+             * usuário quer um callback a cada byte recebido. */
+            if (drv->cb)
+            {
+                drv->cb((hal_uart_drv_t)drv,
+                        UART_EVENT_RX_DONE,
+                        UART_STATUS_OK,
+                        drv->rx_buf,
+                        drv->rx_len,
+                        drv->cb_ctx);
+            }
+
+            /* Reinicia o acumulador para próxima sequência. */
+            drv->rx_len  = 0;
+            drv->rx_done = false;
         }
 
         if (drv->rx_done_mode == UART_RX_DONE_ON_TIMEOUT &&

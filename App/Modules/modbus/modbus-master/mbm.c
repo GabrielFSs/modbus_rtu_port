@@ -411,8 +411,11 @@ void mbm_poll(void)
 
         case MBM_STATE_WAIT_RESPONSE:
         {
-            if (!current_job)
-                break;
+        	if (!current_job)
+        	{
+        	    state = MBM_STATE_IDLE;
+        	    return;
+        	}
 
             mbm_slave_state_t *s = get_slave_state(current_job->slave_id);
             uint32_t timeout = s ? s->timeout_ms : current_job->timeout_ms;
