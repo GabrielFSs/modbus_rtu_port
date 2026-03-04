@@ -213,12 +213,15 @@ void EXTI0_IRQHandler(void)
 }
 
 /**
-  * @brief This function handles EXTI line1 interrupt.
+  * @brief This function handles EXTI line3 interrupt (e.g. PE3 / KEY1).
   */
-
 void EXTI3_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
+  /* USER CODE BEGIN EXTI3_IRQn 0 */
+  /* USER CODE END EXTI3_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
+  /* USER CODE BEGIN EXTI3_IRQn 1 */
+  /* USER CODE END EXTI3_IRQn 1 */
 }
 
 /**
@@ -233,6 +236,21 @@ void EXTI4_IRQHandler(void)
   /* USER CODE BEGIN EXTI4_IRQn 1 */
 
   /* USER CODE END EXTI4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles EXTI line[9:5] interrupts.
+  *        Usado por key3 (PE5) no app Modbus.
+  */
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */
