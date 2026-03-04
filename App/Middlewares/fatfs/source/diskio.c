@@ -4,6 +4,14 @@
 
 extern SD_HandleTypeDef hsd;
 
+/* FATFS chama para timestamp de arquivos; retorna 0 se não houver RTC */
+DWORD get_fattime(void)
+{
+    /* Formato: (year-1980)<<25 | month<<21 | day<<16 | hour<<11 | min<<5 | sec/2
+     * Retorno 0 = 01/01/1980 00:00:00 */
+    return 0;
+}
+
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
 /*-----------------------------------------------------------------------*/

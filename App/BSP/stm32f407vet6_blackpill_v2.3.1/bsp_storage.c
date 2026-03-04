@@ -1,6 +1,7 @@
 #include "bsp_storage.h"
 
-static SD_HandleTypeDef hsd;
+/* Exportado para diskio.c (FATFS) */
+SD_HandleTypeDef hsd;
 
 /* ================= GPIO CONFIG ================= */
 

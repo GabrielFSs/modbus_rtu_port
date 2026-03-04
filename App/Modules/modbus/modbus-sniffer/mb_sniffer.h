@@ -18,7 +18,7 @@ typedef struct
     sniffer_direction_t dir;
     uint16_t length;
     uint8_t  data[SNIFFER_MAX_FRAME];
-    hal_rtc_timestamp_t ts;
+    hal_rtc_timestamp_t ts;   /* RTC no momento do frame */
 } sniffer_frame_t;
 
 void mb_sniffer_init(void);

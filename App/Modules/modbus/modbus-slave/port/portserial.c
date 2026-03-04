@@ -4,6 +4,7 @@
 
 #include "hal_uart.h"
 #include "hal_gpio.h"
+#include "mb_sniffer.h"
 
 /* ========================================================= */
 /* GLOBALS                                                   */
@@ -22,6 +23,21 @@ static volatile uint8_t tx_byte;
 
 /* RX buffer físico */
 static uint8_t rx_buf[1];
+
+/* Sniffer TX: acumula bytes enviados; no 3.5T após último TX = frame completo */
+#define SNIFFER_TX_BUF_SIZE  256
+static uint8_t tx_sniffer_buf[SNIFFER_TX_BUF_SIZE];
+static uint16_t tx_sniffer_len = 0;
+
+static void slave_tx_complete_for_sniffer(void)
+{
+    if (tx_sniffer_len == 0)
+        return;
+
+    mb_sniffer_tx_store(tx_sniffer_buf, tx_sniffer_len);
+    mb_sniffer_tx_confirm();
+    tx_sniffer_len = 0;
+}
 
 
 /* ========================================================= */
@@ -70,6 +86,7 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
     if (event == UART_EVENT_RX_DONE && data && len > 0)
     {
         rx_byte = data[0];
+        mb_sniffer_rx_byte(data[0]);
 
         if (pxMBFrameCBByteReceived)
         {
@@ -81,6 +98,8 @@ static void mb_uart_event_cb(hal_uart_drv_t dev,
 
     if (event == UART_EVENT_TX_DONE)
     {
+        mb_port_timer_restart_tx();
+
         if (pxMBFrameCBTransmitterEmpty)
         {
             pxMBFrameCBTransmitterEmpty();
@@ -185,6 +204,9 @@ BOOL xMBPortSerialInit(UCHAR ucPort,
 
     hal_uart_set_event_cb(mb_uart, mb_uart_event_cb, NULL);
 
+    tx_sniffer_len = 0;
+    mb_port_timer_set_tx_complete_cb(slave_tx_complete_for_sniffer);
+
     return TRUE;
 }
 
@@ -242,6 +264,9 @@ BOOL xMBPortSerialPutByte(CHAR ucByte)
     size_t written;
 
     tx_byte = (uint8_t)ucByte;
+
+    if (tx_sniffer_len < SNIFFER_TX_BUF_SIZE)
+        tx_sniffer_buf[tx_sniffer_len++] = (uint8_t)ucByte;
 
     return (hal_uart_write(mb_uart,
                            (uint8_t *)&tx_byte,

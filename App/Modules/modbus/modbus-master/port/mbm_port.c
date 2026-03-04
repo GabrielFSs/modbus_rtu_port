@@ -4,6 +4,7 @@
 #include "hal_crc.h"
 #include "hal_time.h"
 #include "hal_gpio.h"
+#include "mb_sniffer.h"
 
 /* ============================================================ */
 /* HANDLES                                                      */
@@ -60,7 +61,11 @@ static void uart_event_cb(hal_uart_drv_t dev,
     {
         rx_byte = data[0];
         mbm_rx_byte(rx_byte);
+        mb_sniffer_rx_byte(rx_byte);
     }
+
+    if (event == UART_EVENT_TX_DONE)
+        mb_sniffer_tx_confirm();
 }
 
 /* ============================================================ */
@@ -72,6 +77,7 @@ static void timer_cb(hal_timer_drv_t t, void *ctx)
     (void)t;
     (void)ctx;
 
+    mb_sniffer_rx_timeout();
     mbm_frame_timeout();
 }
 
@@ -81,6 +87,7 @@ static void timer_cb(hal_timer_drv_t t, void *ctx)
 
 static void port_uart_send(uint8_t *data, uint16_t len)
 {
+    mb_sniffer_tx_store(data, len);
     size_t written;
     hal_uart_write(uart, data, len, &written, 1000);
 }

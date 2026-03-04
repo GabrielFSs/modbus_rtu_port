@@ -1,12 +1,13 @@
 #include "mb_sniffer.h"
 #include "hal_storage.h"
+#include "hal_rtc.h"
 #include <string.h>
 #include <stdio.h>
 
 /* ================= PRIVATE STATE ================= */
 
 static uint8_t enabled = 0;
-static const char *log_path = "modbus.log";
+static const char *log_path = "Debug.txt";
 
 /* RX buffer */
 static uint8_t rx_temp[SNIFFER_MAX_FRAME];
@@ -67,7 +68,6 @@ void mb_sniffer_rx_timeout(void)
     f->dir = SNIFFER_DIR_RX;
     f->length = rx_index;
     memcpy(f->data, rx_temp, rx_index);
-
     hal_rtc_get_timestamp(&f->ts);
 
     head = next;
@@ -105,7 +105,6 @@ void mb_sniffer_tx_confirm(void)
     f->dir = SNIFFER_DIR_TX;
     f->length = tx_len_pending;
     memcpy(f->data, tx_temp, tx_len_pending);
-
     hal_rtc_get_timestamp(&f->ts);
 
     head = next;

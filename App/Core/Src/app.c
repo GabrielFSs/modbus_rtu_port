@@ -6,9 +6,11 @@
 #include "hal_crc.h"
 #include "hal_time.h"
 #include "hal_time_stm32f4.h"
+#include "hal_storage.h"
 
 #include "mbm.h"
 #include "mbm_port.h"
+#include "mb_sniffer.h"
 
 /* ========================================================= */
 /* ===================== DEFINES =========================== */
@@ -180,6 +182,13 @@ void app_setup(void)
     hal_crc_init();
     hal_time_stm32f4_init();
 
+    /* Storage (SD) para sniffer; falha silenciosa se não houver cartão */
+    if (hal_storage_init() == HAL_STORAGE_OK)
+    {
+        mb_sniffer_init();
+        mb_sniffer_enable(1);
+    }
+
     hal_gpio_cfg_t led_cfg =
     {
         .direction = HAL_GPIO_OUTPUT,
@@ -236,4 +245,6 @@ void app_setup(void)
 void app_loop(void)
 {
     mbm_poll();
+    /* Drena fila do sniffer e grava em Debug.txt no SD (não bloqueia se fila vazia) */
+    mb_sniffer_process();
 }
