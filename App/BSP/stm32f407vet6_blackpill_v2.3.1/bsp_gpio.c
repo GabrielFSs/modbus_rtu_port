@@ -15,10 +15,10 @@ typedef struct
 static const bsp_gpio_map_t gpio_map[HAL_GPIO_N] =
 {
     /* HAL_GPIO_0 */ { GPIOA, GPIO_PIN_0, true  },
-    /* HAL_GPIO_1 */ { GPIOC, GPIO_PIN_5, false },
-    /* HAL_GPIO_2 */ { GPIOB, GPIO_PIN_2, false },
-    /* HAL_GPIO_3 */ { GPIOA, GPIO_PIN_1, true  },
-    /* HAL_GPIO_4 */ { GPIOA, GPIO_PIN_4, true  },
+    /* HAL_GPIO_1 */ { GPIOA, GPIO_PIN_6, false },
+    /* HAL_GPIO_2 */ { GPIOA, GPIO_PIN_7, false },
+    /* HAL_GPIO_3 */ { GPIOE, GPIO_PIN_4, true  },
+    /* HAL_GPIO_4 */ { GPIOE, GPIO_PIN_5, true  },
 
     /* HAL_GPIO_RS485_DE */ { GPIOB, GPIO_PIN_12, true },
     /* HAL_GPIO_RS485_RE */ { GPIOB, GPIO_PIN_13, true },

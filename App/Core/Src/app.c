@@ -1,5 +1,6 @@
 #include "app.h"
 #include "hal_uart.h"
+#include "hal_gpio.h"
 
 #include <stdint.h>
 #include <stddef.h>
@@ -8,64 +9,39 @@
 #include "stm32f4xx_hal.h"
 
 /* ===== CONFIG ===== */
-#define RX_BUF_SIZE 64
-#define TX_PERIOD_MS 10000
+#define RX_BUF_SIZE   64
+#define TX_PERIOD_MS  10000
 
-#define RS485_DE_PORT GPIOB
-#define RS485_DE_PIN  GPIO_PIN_12
-
-#define RS485_RE_PORT GPIOB
-#define RS485_RE_PIN  GPIO_PIN_13
-
+/* ===== GLOBALS ===== */
 static hal_uart_drv_t uart;
 static uint8_t rx_buf[RX_BUF_SIZE];
 static uint32_t last_tick;
 
-/* ========================================================= */
-/* ================= RS485 GPIO INIT ======================= */
-/* ========================================================= */
-static void rs485_gpio_init(void)
-{
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-
-    GPIO_InitTypeDef gpio = {0};
-
-    gpio.Pin   = RS485_DE_PIN | RS485_RE_PIN;
-    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
-    gpio.Pull  = GPIO_NOPULL;
-    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    HAL_GPIO_Init(GPIOB, &gpio);
-
-    /* Inicia em modo RX */
-    HAL_GPIO_WritePin(RS485_DE_PORT, RS485_DE_PIN, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(RS485_RE_PORT, RS485_RE_PIN, GPIO_PIN_RESET);
-}
+static hal_gpio_drv_t rs485_de;
+static hal_gpio_drv_t rs485_re;
 
 /* ========================================================= */
 /* ================= RS485 DIR CALLBACK ==================== */
 /* ========================================================= */
-static void rs485_dir_control(void *ctx, bool enable)
-{
-    (void)ctx;
 
-    if (enable)
+void rs485_dir_control(void *ctx, hal_uart_dir_t dir)
+{
+    if (dir == HAL_UART_DIR_TX)
     {
-        /* TX mode */
-        HAL_GPIO_WritePin(RS485_DE_PORT, RS485_DE_PIN, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(RS485_RE_PORT, RS485_RE_PIN, GPIO_PIN_SET);
+        hal_gpio_write(rs485_de, true);
+        hal_gpio_write(rs485_re, true);
     }
     else
     {
-        /* RX mode */
-        HAL_GPIO_WritePin(RS485_DE_PORT, RS485_DE_PIN, GPIO_PIN_RESET);
-        HAL_GPIO_WritePin(RS485_RE_PORT, RS485_RE_PIN, GPIO_PIN_RESET);
+        hal_gpio_write(rs485_de, false);
+        hal_gpio_write(rs485_re, false);
     }
 }
 
 /* ========================================================= */
 /* ================= UART CONFIG =========================== */
 /* ========================================================= */
+
 static hal_uart_cfg_t uart_cfg =
 {
     .baudrate = HAL_UART_BAUD_9600,
@@ -76,7 +52,7 @@ static hal_uart_cfg_t uart_cfg =
     .comm_mode   = UART_MODE_INTERRUPT,
     .duplex_mode = UART_DUPLEX_HALF,
 
-    .comm_control = UART_DIR_GPIO,
+    .comm_control = UART_DIR_EXTERNAL,
     .dir_ctrl     = rs485_dir_control,
     .dir_ctrl_ctx = NULL,
 
@@ -93,10 +69,33 @@ static hal_uart_cfg_t uart_cfg =
 /* ========================================================= */
 /* ================= SETUP ================================= */
 /* ========================================================= */
+
 void app_setup(void)
 {
-    rs485_gpio_init();
+    /* ===== GPIO INIT ===== */
+    hal_gpio_init();
 
+    hal_gpio_cfg_t gpio_out =
+    {
+        .direction = HAL_GPIO_OUTPUT,
+        .pull      = HAL_GPIO_NOPULL,
+        .out_type  = HAL_GPIO_PUSH_PULL,
+        .irq_edge  = HAL_GPIO_IRQ_NONE
+    };
+
+    rs485_de = hal_gpio_open(HAL_GPIO_RS485_DE, &gpio_out);
+    rs485_re = hal_gpio_open(HAL_GPIO_RS485_RE, &gpio_out);
+
+    if (!rs485_de || !rs485_re)
+    {
+        while (1);
+    }
+
+    /* inicia RS485 em RX */
+    hal_gpio_write(rs485_de, false);
+    hal_gpio_write(rs485_re, false);
+
+    /* ===== UART INIT ===== */
     hal_uart_init();
 
     uart = hal_uart_open(HAL_UART_DEV_3, &uart_cfg);
@@ -111,6 +110,7 @@ void app_setup(void)
 /* ========================================================= */
 /* ================= LOOP ================================== */
 /* ========================================================= */
+
 void app_loop(void)
 {
     uint32_t now = HAL_GetTick();

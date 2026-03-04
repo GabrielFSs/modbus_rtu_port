@@ -7,6 +7,9 @@
 #include "hal_uart.h"
 #include "bsp_uart.h"
 
+
+static void stm32_uart_tc_handler(UART_HandleTypeDef *huart);
+
 /* ========================================================= */
 /* ================= DRIVER STRUCT ========================= */
 /* ========================================================= */
@@ -109,13 +112,10 @@ static hal_uart_drv_t stm32_uart_open(hal_uart_dev_interface_t interface,
     drv->dir_ctrl_ctx = cfg->dir_ctrl_ctx;
 
     /* Se for RS485, inicia em RX */
-    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
+    if (drv->dir_mode == UART_DIR_EXTERNAL && drv->dir_ctrl)
     {
-        drv->dir_ctrl(drv->dir_ctrl_ctx, false);
+        drv->dir_ctrl(drv->dir_ctrl_ctx, HAL_UART_DIR_RX);
     }
-
-    drv->dir_ctrl = cfg->dir_ctrl;
-    drv->dir_ctrl_ctx = cfg->dir_ctrl_ctx;
 
     drv->rx_mode      = cfg->rx_mode;
     drv->rx_buf       = cfg->rx_buffer;
@@ -223,11 +223,9 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
     if (!drv || !drv->huart || !data || len == 0)
         return UART_STATUS_ERROR;
 
-    /* ================= RS485: habilita TX ================= */
-    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-    {
-        drv->dir_ctrl(drv->dir_ctrl_ctx, true);
-    }
+    /* RS485 enable TX */
+    if (drv->dir_mode == UART_DIR_EXTERNAL && drv->dir_ctrl)
+        drv->dir_ctrl(drv->dir_ctrl_ctx, HAL_UART_DIR_TX);
 
     if (drv->mode == UART_MODE_POLLING)
     {
@@ -235,18 +233,12 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
                               (uint8_t *)data,
                               len,
                               timeout_ms) != HAL_OK)
-        {
             return UART_STATUS_TIMEOUT;
-        }
 
-        /* Espera Transmission Complete real */
         while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
 
-        /* ================= RS485: volta para RX ================= */
-        if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-        {
-            drv->dir_ctrl(drv->dir_ctrl_ctx, false);
-        }
+        if (drv->dir_mode == UART_DIR_EXTERNAL && drv->dir_ctrl)
+            drv->dir_ctrl(drv->dir_ctrl_ctx, HAL_UART_DIR_RX);
     }
     else
     {
@@ -259,7 +251,6 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
             drv->tx_busy = false;
             return UART_STATUS_ERROR;
         }
-        /* DE será desativado no TxCpltCallback */
     }
 
     if (written)
@@ -269,7 +260,7 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
 }
 
 /* ========================================================= */
-/* ================= READ (OPTIONAL) ======================= */
+/* ================= READ ================================= */
 /* ========================================================= */
 
 static uart_status_t stm32_uart_read(hal_uart_drv_t dev,
@@ -342,33 +333,37 @@ static void stm32_uart_set_event_cb(hal_uart_drv_t dev,
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
+    stm32_uart_tc_handler(huart);
+}
+
+static void stm32_uart_tc_handler(UART_HandleTypeDef *huart)
+{
     for (int i = 0; i < HAL_UART_DEVS_N; i++)
     {
         struct hal_uart_drv_s *drv = &uart_instances[i];
 
-        if (drv->huart == huart)
+        if (drv->huart != huart)
+            continue;
+
+        __HAL_UART_CLEAR_FLAG(huart, UART_FLAG_TC);
+        __HAL_UART_DISABLE_IT(huart, UART_IT_TC);
+
+        drv->tx_busy = false;
+
+        if (drv->dir_mode == UART_DIR_EXTERNAL && drv->dir_ctrl)
+            drv->dir_ctrl(drv->dir_ctrl_ctx, HAL_UART_DIR_RX);
+
+        if (drv->cb)
         {
-            drv->tx_busy = false;
-
-            /* Espera TC real (segurança extra) */
-            while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
-
-            /* ================= RS485: volta para RX ================= */
-            if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
-            {
-                drv->dir_ctrl(drv->dir_ctrl_ctx, false);
-            }
-
-            if (drv->cb)
-            {
-                drv->cb((hal_uart_drv_t)drv,
-                        UART_EVENT_TX_DONE,
-                        UART_STATUS_OK,
-                        NULL, 0,
-                        drv->cb_ctx);
-            }
-            break;
+            drv->cb((hal_uart_drv_t)drv,
+                    UART_EVENT_TX_DONE,
+                    UART_STATUS_OK,
+                    NULL,
+                    0,
+                    drv->cb_ctx);
         }
+
+        break;
     }
 }
 
@@ -381,7 +376,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (drv->huart != huart || !drv->rx_enabled)
             continue;
 
-        /* Store byte */
         if (drv->rx_mode == UART_RX_MODE_LINEAR)
         {
             if (drv->rx_len < drv->rx_buf_size)
@@ -397,12 +391,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             }
         }
 
-        /* RX DONE conditions */
         if (drv->rx_done_mode == UART_RX_DONE_ON_CHAR &&
             drv->rx_byte == drv->rx_done_char)
         {
             if (drv->rx_len > 0)
-                drv->rx_len--;  // remove terminador
+                drv->rx_len--;
 
             if (drv->cb)
             {
@@ -425,7 +418,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
                 drv->timer_stop(drv->timer_ctx);
         }
 
-        /* Restart timeout timer */
         if (drv->rx_done_mode == UART_RX_DONE_ON_TIMEOUT &&
             drv->timer_start)
         {
@@ -451,7 +443,6 @@ static void stm32_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
     drv->timer_ctx   = ctx;
 }
 
-
 /* ========================================================= */
 /* ================= IRQ HANDLERS ========================== */
 /* ========================================================= */
@@ -471,7 +462,6 @@ void USART3_IRQHandler(void)
     HAL_UART_IRQHandler(&huart3);
 }
 
-
 /* ========================================================= */
 /* ================= DRIVER EXPORT ========================= */
 /* ========================================================= */
@@ -484,6 +474,6 @@ hal_uart_drv_imp_t HAL_UART_DRV = {
     .write = stm32_uart_write,
     .read = stm32_uart_read,
     .flush = stm32_uart_flush,
-	.set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,
+    .set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,
     .set_event_cb = stm32_uart_set_event_cb,
 };
