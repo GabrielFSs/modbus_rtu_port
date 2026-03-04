@@ -3,6 +3,8 @@
 #include "hal_timer.h"
 #include "hal_crc.h"
 #include "hal_time.h"
+#include "hal_gpio.h"
+#include "mb_sniffer.h"
 
 /* ============================================================ */
 /* HANDLES                                                      */
@@ -12,11 +14,36 @@ static hal_uart_drv_t  uart  = NULL;
 static hal_timer_drv_t timer = NULL;
 static hal_crc_drv_t   crc   = NULL;
 
+static hal_gpio_drv_t gpio_de = NULL;
+static hal_gpio_drv_t gpio_re = NULL;
+
 /* RX buffer físico (1 byte modo contínuo) */
 static uint8_t rx_byte;
 
 /* ============================================================ */
-/* UART CALLBACK                                               */
+/* RS485 DIR CONTROL                                            */
+/* ============================================================ */
+
+static void rs485_dir_ctrl(void *ctx, hal_uart_dir_t dir)
+{
+    (void)ctx;
+
+    if (dir == HAL_UART_DIR_TX)
+    {
+        /* habilita driver RS485 */
+        hal_gpio_write(gpio_de, true);
+        hal_gpio_write(gpio_re, true);
+    }
+    else
+    {
+        /* volta para recepção */
+        hal_gpio_write(gpio_de, false);
+        hal_gpio_write(gpio_re, false);
+    }
+}
+
+/* ============================================================ */
+/* UART CALLBACK                                                */
 /* ============================================================ */
 
 static void uart_event_cb(hal_uart_drv_t dev,
@@ -34,26 +61,33 @@ static void uart_event_cb(hal_uart_drv_t dev,
     {
         rx_byte = data[0];
         mbm_rx_byte(rx_byte);
+        mb_sniffer_rx_byte(rx_byte);
     }
+
+    if (event == UART_EVENT_TX_DONE)
+        mb_sniffer_tx_confirm();
 }
 
 /* ============================================================ */
-/* TIMER CALLBACK (3.5 CHAR)                                   */
+/* TIMER CALLBACK (3.5 CHAR)                                    */
 /* ============================================================ */
 
 static void timer_cb(hal_timer_drv_t t, void *ctx)
 {
     (void)t;
     (void)ctx;
+
+    mb_sniffer_rx_timeout();
     mbm_frame_timeout();
 }
 
 /* ============================================================ */
-/* PORT WRAPPERS                                               */
+/* PORT WRAPPERS                                                */
 /* ============================================================ */
 
 static void port_uart_send(uint8_t *data, uint16_t len)
 {
+    mb_sniffer_tx_store(data, len);
     size_t written;
     hal_uart_write(uart, data, len, &written, 1000);
 }
@@ -70,14 +104,15 @@ static uint32_t port_time_ms(void)
 
 static void port_timer_start(void)
 {
-    if (!timer) return;
+    if (!timer)
+        return;
 
     hal_timer_stop(timer);
     hal_timer_start(timer);
 }
 
 /* ============================================================ */
-/* PORT STRUCT                                                 */
+/* PORT STRUCT                                                  */
 /* ============================================================ */
 
 static mbm_port_t port =
@@ -89,7 +124,7 @@ static mbm_port_t port =
 };
 
 /* ============================================================ */
-/* OPEN (CONFIGURA TUDO)                                       */
+/* OPEN                                                         */
 /* ============================================================ */
 
 mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
@@ -97,11 +132,35 @@ mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
     if (!cfg)
         return MBM_ERR_INVALID;
 
-    /* Fecha se já estiver aberto */
     if (uart)
         mbm_port_close();
 
-    /* ================= UART ================= */
+    /* ===================================================== */
+    /* GPIO RS485                                            */
+    /* ===================================================== */
+
+    hal_gpio_cfg_t gpio_cfg =
+    {
+        .direction = HAL_GPIO_OUTPUT,
+        .pull      = HAL_GPIO_NOPULL,
+        .out_type  = HAL_GPIO_PUSH_PULL,
+        .irq_edge  = HAL_GPIO_IRQ_NONE
+    };
+
+    gpio_de = hal_gpio_open(HAL_GPIO_RS485_DE, &gpio_cfg);
+    gpio_re = hal_gpio_open(HAL_GPIO_RS485_RE, &gpio_cfg);
+
+    if (!gpio_de || !gpio_re)
+        return MBM_ERR_BUSY;
+
+    /* inicia em RX */
+
+    hal_gpio_write(gpio_de, false);
+    hal_gpio_write(gpio_re, false);
+
+    /* ===================================================== */
+    /* UART                                                  */
+    /* ===================================================== */
 
     hal_uart_cfg_t uart_cfg = {0};
 
@@ -110,13 +169,17 @@ mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
     uart_cfg.parity   = cfg->parity;
     uart_cfg.stopbits = cfg->stopbits;
 
-    uart_cfg.comm_mode    = UART_MODE_INTERRUPT;
-    uart_cfg.duplex_mode  = UART_DUPLEX_FULL;
-    uart_cfg.comm_control = UART_DIR_NONE;
+    uart_cfg.comm_mode   = UART_MODE_INTERRUPT;
+    uart_cfg.duplex_mode = UART_DUPLEX_HALF;
+
+    uart_cfg.comm_control = UART_DIR_EXTERNAL;
+    uart_cfg.dir_ctrl     = rs485_dir_ctrl;
+    uart_cfg.dir_ctrl_ctx = NULL;
 
     uart_cfg.rx_mode        = UART_RX_MODE_LINEAR;
     uart_cfg.rx_buffer      = &rx_byte;
     uart_cfg.rx_buffer_size = 1;
+
     uart_cfg.rx_done_mode   = UART_RX_DONE_ON_LENGTH;
     uart_cfg.rx_done_length = 1;
 
@@ -125,9 +188,10 @@ mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
         return MBM_ERR_BUSY;
 
     hal_uart_set_event_cb(uart, uart_event_cb, NULL);
-    hal_uart_rx_enable(uart);
 
-    /* ================= CRC ================= */
+    /* ===================================================== */
+    /* CRC                                                   */
+    /* ===================================================== */
 
     hal_crc_cfg_t crc_cfg =
     {
@@ -141,9 +205,12 @@ mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
 
     crc = hal_crc_open(&crc_cfg);
 
-    /* ================= TIMER 3.5 CHAR ================= */
+    /* ===================================================== */
+    /* TIMER                                                 */
+    /* ===================================================== */
 
-    uint32_t timeout_ms = (35UL * 1000UL) / cfg->baudrate;
+    uint32_t timeout_ms = (38500UL) / cfg->baudrate;
+
     if (timeout_ms == 0)
         timeout_ms = 1;
 
@@ -157,7 +224,9 @@ mbm_status_t mbm_port_open(const mbm_serial_cfg_t *cfg)
 
     timer = hal_timer_open(HAL_TIMER_0, &timer_cfg);
 
-    /* ================= BIND CORE ================= */
+    /* ===================================================== */
+    /* INIT MODBUS                                           */
+    /* ===================================================== */
 
     mbm_init(&port);
 
@@ -186,6 +255,18 @@ mbm_status_t mbm_port_close(void)
     {
         hal_crc_close(crc);
         crc = NULL;
+    }
+
+    if (gpio_de)
+    {
+        hal_gpio_close(gpio_de);
+        gpio_de = NULL;
+    }
+
+    if (gpio_re)
+    {
+        hal_gpio_close(gpio_re);
+        gpio_re = NULL;
     }
 
     return MBM_ERR_OK;
