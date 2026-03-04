@@ -33,7 +33,7 @@
 #include <mb_port.h>
 
 #ifndef MB_PORT_HAS_CLOSE
-#define MB_PORT_HAS_CLOSE 0
+#define MB_PORT_HAS_CLOSE 1
 #endif
 
 #ifdef __cplusplus

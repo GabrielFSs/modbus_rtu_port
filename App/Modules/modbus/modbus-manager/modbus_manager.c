@@ -1,70 +1,64 @@
 #include "modbus_manager.h"
-#include "port_modbus_manager.h"
 
 /* FreeModbus (Slave) */
 #include "mb.h"
 #include "mbport.h"
 #include "mb_port.h"
 
-/* Master */
-#include "mb_master.h"
+/* Master (mbm + port próprio) */
+#include "mbm.h"
+#include "mbm_port.h"
+
+#include "hal_uart.h"
+#include <stddef.h>
 
 /* ============================================================ */
 
 static modbus_mode_t current_mode = MODBUS_MODE_NONE;
 static bool sniffer_enabled = false;
 
-/* ============================================================
- * Timer físico controlado pelo manager
- * ============================================================ */
+/* Slave: ID usado em eMBInit (alterável via modbus_manager_set_slave_id) */
+static uint8_t slave_address = 0x01;
 
-void mb_port_timer_restart(void)
+/* UART/port index: 0=UART1, 1=UART2, 2=UART3 (usado em master e slave) */
+#define DEFAULT_UART_INDEX  2
+
+/* Última config usada (para apply_serial_cfg reiniciar no mesmo modo) */
+static modbus_serial_cfg_t last_cfg = {
+    .baudrate  = 9600,
+    .databits  = 8,
+    .parity    = 0,
+    .stopbits  = 1,
+    .uart_index = DEFAULT_UART_INDEX
+};
+
+/* ============================================================ */
+
+static eMBParity cfg_parity_to_mb(uint8_t parity)
 {
-    if (modbus_manager_port.timer_restart)
-        modbus_manager_port.timer_restart();
+    switch (parity)
+    {
+        case 0: return MB_PAR_NONE;
+        case 1: return MB_PAR_EVEN;
+        case 2: return MB_PAR_ODD;
+        default: return MB_PAR_NONE;
+    }
 }
 
-void mb_port_timer_stop(void)
+static void cfg_to_mbm_serial(const modbus_serial_cfg_t *cfg,
+                              uint8_t uart_index,
+                              mbm_serial_cfg_t *out)
 {
-    /* opcional */
-}
-
-/* ============================================================
- * CALLBACKS DO PORT (HAL → Manager)
- * ============================================================ */
-
-static void manager_uart_rx_cb(const uint8_t *data, size_t len)
-{
-    if (!data || len == 0 || current_mode == MODBUS_MODE_NONE)
+    if (!cfg || !out)
         return;
 
-    if (current_mode == MODBUS_MODE_SLAVE)
-    {
-        for (size_t i = 0; i < len; i++)
-            mb_port_rx_byte(data[i]);
-    }
-    else if (current_mode == MODBUS_MODE_MASTER)
-    {
-        if (modbus_manager_port.timer_restart)
-            modbus_manager_port.timer_restart();
-
-        for (size_t i = 0; i < len; i++)
-            mbm_rx_byte(data[i]);
-    }
-
-    /* Futuro: sniffer */
-}
-
-static void manager_timer_cb(void)
-{
-    if (current_mode == MODBUS_MODE_SLAVE)
-    {
-        mb_port_timer_expired();
-    }
-    else if (current_mode == MODBUS_MODE_MASTER)
-    {
-        mbm_frame_timeout();
-    }
+    out->baudrate = cfg->baudrate;
+    out->databits = cfg->databits;
+    out->parity   = (cfg->parity == 0) ? HAL_UART_PARITY_NONE :
+                    (cfg->parity == 1) ? HAL_UART_PARITY_EVEN :
+                                         HAL_UART_PARITY_ODD;
+    out->stopbits = (cfg->stopbits == 2) ? HAL_UART_STOPBIT_2 : HAL_UART_STOPBIT_1;
+    out->uart     = (uart_index <= 2) ? (int)(HAL_UART_DEV_1 + uart_index) : (int)HAL_UART_DEV_3;
 }
 
 /* ============================================================ */
@@ -73,6 +67,7 @@ void modbus_manager_init(void)
 {
     current_mode = MODBUS_MODE_NONE;
     sniffer_enabled = false;
+    slave_address = 0x01;
 }
 
 /* ============================================================ */
@@ -89,57 +84,55 @@ bool modbus_manager_start(modbus_mode_t mode,
 
     modbus_manager_stop();
 
-    if (!modbus_manager_port.init(cfg->baudrate,
-                                  cfg->databits,
-                                  cfg->parity,
-                                  cfg->stopbits))
-    {
-        return false;
-    }
-
-    modbus_manager_port.set_uart_rx_callback(manager_uart_rx_cb);
-    modbus_manager_port.set_timer_callback(manager_timer_cb);
+    /* Guardar config para apply_serial_cfg */
+    last_cfg.baudrate   = cfg->baudrate;
+    last_cfg.databits  = cfg->databits;
+    last_cfg.parity    = cfg->parity;
+    last_cfg.stopbits  = cfg->stopbits;
+    last_cfg.uart_index = (cfg->uart_index <= 2) ? cfg->uart_index : DEFAULT_UART_INDEX;
 
     /* ================= SLAVE ================= */
 
     if (mode == MODBUS_MODE_SLAVE)
     {
-        eMBParity parity;
-
-        switch (cfg->parity)
-        {
-            case 0: parity = MB_PAR_NONE; break;
-            case 1: parity = MB_PAR_EVEN; break;
-            case 2: parity = MB_PAR_ODD;  break;
-            default: parity = MB_PAR_NONE;
-        }
+        eMBParity parity = cfg_parity_to_mb(cfg->parity);
+        uint8_t port = (cfg->uart_index <= 2) ? cfg->uart_index : DEFAULT_UART_INDEX;
+        UCHAR ucPort = (UCHAR)port;
 
         if (eMBInit(MB_RTU,
-                    0x01,
-                    0,
+                    slave_address,
+                    ucPort,
                     cfg->baudrate,
-                    parity) != MB_ENOERR)
+                    parity,
+                    cfg->stopbits) != MB_ENOERR)
         {
-            modbus_manager_port.deinit();
             return false;
         }
 
-        eMBEnable();
+        if (eMBEnable() != MB_ENOERR)
+        {
+            eMBClose();
+            return false;
+        }
     }
 
     /* ================= MASTER ================= */
 
     if (mode == MODBUS_MODE_MASTER)
     {
-        port_modbus_master_init();
+        mbm_serial_cfg_t mbm_cfg;
+        uint8_t uart_idx = (cfg->uart_index <= 2) ? cfg->uart_index : DEFAULT_UART_INDEX;
 
-        port_modbus_master_set_uart_send(
-            modbus_manager_port_uart_send);
+        cfg_to_mbm_serial(cfg, uart_idx, &mbm_cfg);
 
-        port_modbus_master_set_timer_restart(
-            modbus_manager_port.timer_restart);
+        if (mbm_port_open(&mbm_cfg) != MBM_ERR_OK)
+            return false;
 
-        mbm_init(&modbus_master_port);
+        if (mbm_enable() != MBM_ERR_OK)
+        {
+            mbm_port_close();
+            return false;
+        }
     }
 
     current_mode = mode;
@@ -151,9 +144,15 @@ bool modbus_manager_start(modbus_mode_t mode,
 void modbus_manager_stop(void)
 {
     if (current_mode == MODBUS_MODE_SLAVE)
+    {
         eMBDisable();
-
-    modbus_manager_port.deinit();
+        eMBClose();
+    }
+    else if (current_mode == MODBUS_MODE_MASTER)
+    {
+        mbm_disable();
+        mbm_port_close();
+    }
 
     current_mode = MODBUS_MODE_NONE;
 }
@@ -178,4 +177,37 @@ void modbus_manager_enable_sniffer(bool enable)
 modbus_mode_t modbus_manager_get_mode(void)
 {
     return current_mode;
+}
+
+/* ============================================================
+ * HELPERS PARA GUI / RUNTIME
+ * ============================================================ */
+
+bool modbus_manager_apply_serial_cfg(const modbus_serial_cfg_t *cfg)
+{
+    if (cfg)
+    {
+        last_cfg.baudrate   = cfg->baudrate;
+        last_cfg.databits   = cfg->databits;
+        last_cfg.parity     = cfg->parity;
+        last_cfg.stopbits   = cfg->stopbits;
+        last_cfg.uart_index = (cfg->uart_index <= 2) ? cfg->uart_index : DEFAULT_UART_INDEX;
+    }
+
+    if (current_mode == MODBUS_MODE_NONE)
+        return true;
+
+    return modbus_manager_start(current_mode, &last_cfg);
+}
+
+void modbus_manager_set_slave_id(uint8_t slave_id)
+{
+    slave_address = slave_id;
+}
+
+bool modbus_manager_add_request(const void *req)
+{
+    if (current_mode != MODBUS_MODE_MASTER || !req)
+        return false;
+    return (mbm_add_request((const mbm_request_t *)req) == MBM_ERR_OK);
 }

@@ -228,7 +228,7 @@ BOOL xMBPortSerialInit(UCHAR ucPort,
 /* CLOSE                                                     */
 /* ========================================================= */
 
-void vMBPortSerialClose(void)
+void xMBPortSerialClose(void)
 {
     if (mb_uart)
     {
