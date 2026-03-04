@@ -5,9 +5,16 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+
+/* ========================================================= */
+/* ===================== HANDLE ============================ */
+/* ========================================================= */
+
 typedef struct hal_uart_drv_s * hal_uart_drv_t;
 
-/* ===================== UART CONFIG ===================== */
+/* ========================================================= */
+/* ===================== UART DEVICE ======================= */
+/* ========================================================= */
 
 typedef enum
 {
@@ -16,6 +23,10 @@ typedef enum
     HAL_UART_DEV_3,
     HAL_UART_DEVS_N
 } hal_uart_dev_interface_t;
+
+/* ========================================================= */
+/* ===================== BAUDRATE ========================== */
+/* ========================================================= */
 
 typedef enum
 {
@@ -26,6 +37,10 @@ typedef enum
     HAL_UART_BAUD_115200 = 115200,
     HAL_UART_BAUD_230400 = 230400
 } hal_uart_baud_t;
+
+/* ========================================================= */
+/* ===================== FRAME CONFIG ====================== */
+/* ========================================================= */
 
 typedef enum
 {
@@ -48,11 +63,19 @@ typedef enum
     HAL_UART_PARITY_ODD
 } hal_uart_dev_parity_t;
 
+/* ========================================================= */
+/* ===================== DUPLEX ============================ */
+/* ========================================================= */
+
 typedef enum
 {
-    UART_DIR_NONE,
-    UART_DIR_GPIO
-} uart_dir_ctrl_t;
+    UART_DUPLEX_FULL,
+    UART_DUPLEX_HALF
+} uart_duplex_t;
+
+/* ========================================================= */
+/* ===================== MODE ============================== */
+/* ========================================================= */
 
 typedef enum
 {
@@ -61,13 +84,34 @@ typedef enum
     UART_MODE_DMA
 } uart_mode_t;
 
+/* ========================================================= */
+/* ===================== RS485 CONTROL ===================== */
+/* ========================================================= */
+
 typedef enum
 {
-    UART_DUPLEX_FULL,
-    UART_DUPLEX_HALF
-} uart_duplex_t;
+    UART_DIR_NONE,      /* normal UART */
+    UART_DIR_EXTERNAL   /* RS485 control via callback */
+} uart_dir_ctrl_t;
 
-/* ===================== STATUS / EVENTS ===================== */
+/*
+ * Direction used for RS485 control
+ */
+typedef enum
+{
+    HAL_UART_DIR_RX = 0,
+    HAL_UART_DIR_TX
+} hal_uart_dir_t;
+
+/*
+ * External function to control DE/RE pins
+ * Implemented by application or other HAL
+ */
+typedef void (*hal_uart_dir_ctrl_fn_t)(void *ctx, hal_uart_dir_t dir);
+
+/* ========================================================= */
+/* ===================== STATUS ============================ */
+/* ========================================================= */
 
 typedef enum
 {
@@ -78,6 +122,10 @@ typedef enum
     UART_STATUS_ABORTED
 } uart_status_t;
 
+/* ========================================================= */
+/* ===================== EVENTS ============================ */
+/* ========================================================= */
+
 typedef enum
 {
     UART_EVENT_RX_DONE,
@@ -86,7 +134,9 @@ typedef enum
     UART_EVENT_ERROR
 } uart_event_t;
 
-/* ===================== RX MODES ===================== */
+/* ========================================================= */
+/* ===================== RX MODES ========================== */
+/* ========================================================= */
 
 typedef enum
 {
@@ -99,43 +149,49 @@ typedef enum
     UART_RX_DONE_NONE,
     UART_RX_DONE_ON_CHAR,
     UART_RX_DONE_ON_TIMEOUT,
-    UART_RX_DONE_ON_LENGTH,
+    UART_RX_DONE_ON_LENGTH
 } uart_rx_done_mode_t;
 
-/* ===================== GPIO DE/RE CONTROL ===================== */
-
-typedef void (*hal_uart_dir_ctrl_fn_t)(void *ctx, bool enable);
-
-/* ===================== UART CONFIG STRUCT ===================== */
+/* ========================================================= */
+/* ===================== UART CONFIG ======================= */
+/* ========================================================= */
 
 typedef struct
 {
-    hal_uart_baud_t  baudrate;
-    hal_uart_dev_stopbit_t  stopbits;
-    hal_uart_dev_parity_t  parity;
+    /* Frame config */
+    hal_uart_baud_t baudrate;
+    hal_uart_dev_stopbit_t stopbits;
+    hal_uart_dev_parity_t parity;
     hal_uart_databits_t databits;
 
+    /* RX buffer */
     uint8_t  *rx_buffer;
-    uint16_t  rx_buffer_size;
+    uint16_t rx_buffer_size;
     uart_rx_mode_t rx_mode;
 
+    /* TX buffer (optional for DMA) */
     uint8_t  *tx_buffer;
-    uint16_t  tx_buffer_size;
+    uint16_t tx_buffer_size;
 
+    /* Communication mode */
+    uart_mode_t comm_mode;
+    uart_duplex_t duplex_mode;
+
+    /* RS485 direction control */
     uart_dir_ctrl_t comm_control;
     hal_uart_dir_ctrl_fn_t dir_ctrl;
     void *dir_ctrl_ctx;
 
-    uart_mode_t comm_mode;
-    uart_duplex_t duplex_mode;
-
+    /* RX completion control */
     uart_rx_done_mode_t rx_done_mode;
     uint8_t  rx_done_char;
     uint16_t rx_done_length;
 
 } hal_uart_cfg_t;
 
-/* ===================== CALLBACK ===================== */
+/* ========================================================= */
+/* ===================== CALLBACK ========================== */
+/* ========================================================= */
 
 typedef void (*hal_uart_event_cb_t)(
     hal_uart_drv_t dev,
@@ -146,95 +202,109 @@ typedef void (*hal_uart_event_cb_t)(
     void *ctx
 );
 
-/* ===================== TIMER ABSTRACTION ===================== */
+/* ========================================================= */
+/* ===================== TIMER ABSTRACTION ================= */
+/* ========================================================= */
 
 typedef void (*hal_uart_timer_start_fn_t)(void *ctx);
 typedef void (*hal_uart_timer_stop_fn_t)(void *ctx);
 
-/* ===================== API ===================== */
+/* ========================================================= */
+/* ===================== HAL API =========================== */
+/* ========================================================= */
 
 void hal_uart_init(void);
 void hal_uart_deinit(void);
 
-hal_uart_drv_t hal_uart_open(hal_uart_dev_interface_t interface,
-                             const hal_uart_cfg_t *cfg);
+hal_uart_drv_t hal_uart_open(
+    hal_uart_dev_interface_t interface,
+    const hal_uart_cfg_t *cfg
+);
 
 void hal_uart_close(hal_uart_drv_t dev);
 
-uart_status_t hal_uart_write(hal_uart_drv_t dev,
-                             const uint8_t *data,
-                             size_t len,
-                             size_t *written,
-                             uint32_t timeout_ms);
+uart_status_t hal_uart_write(
+    hal_uart_drv_t dev,
+    const uint8_t *data,
+    size_t len,
+    size_t *written,
+    uint32_t timeout_ms
+);
 
-uart_status_t hal_uart_read(hal_uart_drv_t dev,
-                            uint8_t *data,
-                            size_t maxlen,
-                            size_t *read,
-                            uint32_t timeout_ms);
+uart_status_t hal_uart_read(
+    hal_uart_drv_t dev,
+    uint8_t *data,
+    size_t maxlen,
+    size_t *read,
+    uint32_t timeout_ms
+);
 
 void hal_uart_flush(hal_uart_drv_t dev);
 
-void hal_uart_set_event_cb(hal_uart_drv_t dev,
-                           hal_uart_event_cb_t cb,
-                           void *ctx);
+void hal_uart_set_event_cb(
+    hal_uart_drv_t dev,
+    hal_uart_event_cb_t cb,
+    void *ctx
+);
 
 /* RX timeout timer injection */
-void hal_uart_set_rx_timeout_timer(hal_uart_drv_t dev,
-                                   hal_uart_timer_start_fn_t start,
-                                   hal_uart_timer_stop_fn_t stop,
-                                   void *ctx);
+void hal_uart_set_rx_timeout_timer(
+    hal_uart_drv_t dev,
+    hal_uart_timer_start_fn_t start,
+    hal_uart_timer_stop_fn_t stop,
+    void *ctx
+);
 
-/* ===================== RX / TX CONTROL ===================== */
-
-void hal_uart_rx_enable(hal_uart_drv_t dev);
-void hal_uart_rx_disable(hal_uart_drv_t dev);
-
-void hal_uart_tx_it_enable(hal_uart_drv_t dev);
-void hal_uart_tx_it_disable(hal_uart_drv_t dev);
-
-/* ===================== DRIVER IMPLEMENTATION ===================== */
+/* ========================================================= */
+/* ===================== DRIVER INTERFACE ================== */
+/* ========================================================= */
 
 typedef struct hal_uart_drv_imp_s
 {
     void (*init)(void);
     void (*deinit)(void);
 
-    hal_uart_drv_t (*open)(hal_uart_dev_interface_t interface,
-                           const hal_uart_cfg_t *cfg);
+    hal_uart_drv_t (*open)(
+        hal_uart_dev_interface_t interface,
+        const hal_uart_cfg_t *cfg
+    );
+
     void (*close)(hal_uart_drv_t dev);
 
-    uart_status_t (*write)(hal_uart_drv_t dev,
-                           const uint8_t *data,
-                           size_t len,
-                           size_t *written,
-                           uint32_t timeout_ms);
+    uart_status_t (*write)(
+        hal_uart_drv_t dev,
+        const uint8_t *data,
+        size_t len,
+        size_t *written,
+        uint32_t timeout_ms
+    );
 
-    uart_status_t (*read)(hal_uart_drv_t dev,
-                          uint8_t *data,
-                          size_t maxlen,
-                          size_t *read,
-                          uint32_t timeout_ms);
+    uart_status_t (*read)(
+        hal_uart_drv_t dev,
+        uint8_t *data,
+        size_t maxlen,
+        size_t *read,
+        uint32_t timeout_ms
+    );
 
     void (*flush)(hal_uart_drv_t dev);
 
-    void (*set_event_cb)(hal_uart_drv_t dev,
-                         hal_uart_event_cb_t cb,
-                         void *ctx);
+    void (*set_event_cb)(
+        hal_uart_drv_t dev,
+        hal_uart_event_cb_t cb,
+        void *ctx
+    );
 
-    void (*set_rx_timeout_timer)(hal_uart_drv_t dev,
-                                 hal_uart_timer_start_fn_t start,
-                                 hal_uart_timer_stop_fn_t stop,
-                                 void *ctx);
-
-    void (*rx_enable)(hal_uart_drv_t dev);
-    void (*rx_disable)(hal_uart_drv_t dev);
-
-    void (*tx_it_enable)(hal_uart_drv_t dev);
-    void (*tx_it_disable)(hal_uart_drv_t dev);
+    void (*set_rx_timeout_timer)(
+        hal_uart_drv_t dev,
+        hal_uart_timer_start_fn_t start,
+        hal_uart_timer_stop_fn_t stop,
+        void *ctx
+    );
 
 } hal_uart_drv_imp_t;
 
+/* Driver instance implemented by port */
 extern hal_uart_drv_imp_t HAL_UART_DRV;
 
 #endif /* _HAL_UART_H_ */
