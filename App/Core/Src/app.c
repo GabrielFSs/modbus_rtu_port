@@ -11,26 +11,23 @@
 #include "mbm_port.h"
 
 /* ========================================================= */
-/* DEFINES */
+/* ===================== DEFINES =========================== */
 /* ========================================================= */
 
 #define SLAVE_ID     2
 #define MB_REG_ADDR  0
-#define DEBOUNCE_MS  200
+#define MB_REG_QTY   1
 
 /* ========================================================= */
-/* HANDLES */
+/* ===================== HANDLES =========================== */
 /* ========================================================= */
 
 static hal_gpio_drv_t led_red  = NULL;
 static hal_gpio_drv_t led_blue = NULL;
-static hal_gpio_drv_t key0     = NULL;
-
-static volatile uint8_t request_pending = 0;
-static uint32_t last_press_time = 0;
+static hal_gpio_drv_t key1     = NULL;
 
 /* ========================================================= */
-/* MODBUS CALLBACK */
+/* ===================== MODBUS CALLBACK =================== */
 /* ========================================================= */
 
 static void modbus_cb(uint8_t *response,
@@ -40,62 +37,72 @@ static void modbus_cb(uint8_t *response,
     if (status != MBM_ERR_OK)
         return;
 
-    if (!response || length < 5)
+    if (length < 5)
         return;
 
-    if (response[1] == 0x03)
-    {
-        uint16_t value =
-            ((uint16_t)response[3] << 8) |
-             (uint16_t)response[4];
+    if (response[1] != 0x04)
+        return;
 
-        if (value > 1000)
-        {
-            hal_gpio_write(led_red,  true);
-            hal_gpio_write(led_blue, false);
-        }
-        else
-        {
-            hal_gpio_write(led_red,  false);
-            hal_gpio_write(led_blue, true);
-        }
+    uint16_t value =
+        ((uint16_t)response[3] << 8) |
+         (uint16_t)response[4];
+
+    if (value > 1000)
+    {
+        hal_gpio_write(led_red,  true);
+        hal_gpio_write(led_blue, false);
+    }
+    else
+    {
+        hal_gpio_write(led_red,  false);
+        hal_gpio_write(led_blue, true);
     }
 }
 
 /* ========================================================= */
-/* BUTTON ISR */
+/* ===================== BUTTON IRQ ======================== */
 /* ========================================================= */
 
 static void button_cb(hal_gpio_drv_t gpio, void *ctx)
 {
     (void)ctx;
 
-    if (gpio != key0)
+    if (gpio != key1)
         return;
 
-    uint32_t now = hal_time_ms();
+    mbm_request_t req = {0};
 
-    if ((now - last_press_time) < DEBOUNCE_MS)
-        return;
+    req.slave_id  = SLAVE_ID;
+    req.function  = 0x04;
+    req.address   = MB_REG_ADDR;
+    req.quantity  = MB_REG_QTY;
+    req.job_id    = 1;
 
-    last_press_time = now;
+    req.timeout_ms = 200;
+    req.retries    = 2;
 
-    request_pending = 1;
+    req.callback = modbus_cb;
+
+    mbm_add_request(&req);
 }
 
 /* ========================================================= */
-/* SETUP */
+/* ===================== SETUP ============================= */
 /* ========================================================= */
 
 void app_setup(void)
 {
+    /* ================= HAL INIT ================= */
+
     hal_gpio_init();
     hal_uart_init();
     hal_timer_init();
     hal_crc_init();
+
     hal_time_stm32f4_init();
 
-    /* LEDs */
+    /* ================= LED CONFIG ================= */
+
     hal_gpio_cfg_t led_cfg =
     {
         .direction = HAL_GPIO_OUTPUT,
@@ -107,25 +114,28 @@ void app_setup(void)
     led_red  = hal_gpio_open(HAL_GPIO_1, &led_cfg);
     led_blue = hal_gpio_open(HAL_GPIO_2, &led_cfg);
 
-    hal_gpio_write(led_red, false);
+    hal_gpio_write(led_red,  false);
     hal_gpio_write(led_blue, false);
 
-    /* KEY0 — ajuste conforme sua placa */
-    hal_gpio_cfg_t key_cfg =
+    /* ================= BUTTON CONFIG ================= */
+
+    hal_gpio_cfg_t key_rising_cfg =
         {
             .direction = HAL_GPIO_INPUT,
             .pull      = HAL_GPIO_PULLDOWN,
             .irq_edge  = HAL_GPIO_IRQ_RISING
         };
-    key0 = hal_gpio_open(HAL_GPIO_0, &key_cfg);
 
-    if (key0)
-        hal_gpio_set_irq_cb(key0, button_cb, NULL);
+    key1 = hal_gpio_open(HAL_GPIO_0, &key_rising_cfg);
 
-    /* Serial Modbus */
+    if (key1)
+        hal_gpio_set_irq_cb(key1, button_cb, NULL);
+
+    /* ================= MODBUS PORT OPEN ================= */
+
     mbm_serial_cfg_t serial_cfg =
     {
-        .baudrate = 9600,
+        .baudrate = 115200,
         .databits = HAL_UART_DATABITS_8,
         .parity   = HAL_UART_PARITY_NONE,
         .stopbits = HAL_UART_STOPBIT_1,
@@ -133,34 +143,16 @@ void app_setup(void)
     };
 
     mbm_port_open(&serial_cfg);
+
+    /* Habilita o core */
     mbm_enable();
 }
 
 /* ========================================================= */
-/* LOOP */
+/* ===================== LOOP ============================== */
 /* ========================================================= */
 
 void app_loop(void)
 {
-    if (request_pending)
-    {
-        request_pending = 0;
-
-        if (mbm_is_enabled() && !mbm_is_busy())
-        {
-            mbm_request_t req = {0};
-
-            req.slave_id   = SLAVE_ID;
-            req.function   = 0x03;
-            req.address    = MB_REG_ADDR;
-            req.quantity   = 1;
-            req.timeout_ms = 200;
-            req.retries    = 2;
-            req.callback   = modbus_cb;
-
-            mbm_add_request(&req);
-        }
-    }
-
     mbm_poll();
 }
