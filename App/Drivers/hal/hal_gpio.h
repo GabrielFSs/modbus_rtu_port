@@ -10,14 +10,16 @@ typedef enum
     HAL_GPIO_0,
     HAL_GPIO_1,
     HAL_GPIO_2,
-    HAL_GPIO_3,
-    HAL_GPIO_4,
-
+    HAL_GPIO_3,           /* KEY0 */
+    HAL_GPIO_4,           /* KEY1 */
     HAL_GPIO_RS485_DE,
     HAL_GPIO_RS485_RE,
-
+    HAL_GPIO_TOUCH_CS,    /* T_CS (touch SPI CS) */
+    HAL_GPIO_TOUCH_TINT,  /* T_PEN – interrupção touch, ativo low; usar set_irq_cb */
+    HAL_GPIO_LCD_BL,      /* Backlight */
     HAL_GPIO_N
 } hal_gpio_id_t;
+
 /* ===== DIREÇÃO ===== */
 typedef enum
 {

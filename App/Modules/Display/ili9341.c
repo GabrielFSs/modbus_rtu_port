@@ -69,5 +69,33 @@ void ili9341_set_window(uint16_t x0,
 void ili9341_write_pixels(const uint16_t *pixels,
                           uint32_t len)
 {
-    io.write_buffer(pixels, len);
+    if (io.write_buffer && pixels)
+        io.write_buffer(pixels, len);
+}
+
+#define ILI9341_MAX_FILL_CHUNK  240u  /* linha completa 240px (teste; antes 320) */
+
+void ili9341_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color)
+{
+    if (w == 0 || h == 0 || !io.write_buffer)
+        return;
+
+    ili9341_set_window(x, y, (uint16_t)(x + w - 1), (uint16_t)(y + h - 1));
+
+    uint32_t total = (uint32_t)w * (uint32_t)h;
+    static uint16_t line_buf[ILI9341_MAX_FILL_CHUNK];
+
+    uint16_t fill_w = (w < ILI9341_MAX_FILL_CHUNK) ? w : ILI9341_MAX_FILL_CHUNK;
+    for (uint16_t i = 0; i < fill_w; i++)
+        line_buf[i] = color;
+
+    uint32_t sent = 0;
+    while (sent < total)
+    {
+        uint32_t chunk = total - sent;
+        if (chunk > ILI9341_MAX_FILL_CHUNK)
+            chunk = ILI9341_MAX_FILL_CHUNK;
+        io.write_buffer(line_buf, chunk);
+        sent += chunk;
+    }
 }
