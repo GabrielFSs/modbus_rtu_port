@@ -32,4 +32,8 @@ void mb_sniffer_tx_confirm(void);
 
 void mb_sniffer_process(void);
 
+/** Últimos N frames em RAM para a UI (sem ler SD). out[0] = mais recente. */
+#define SNIFFER_LAST_FRAMES_N  10
+void mb_sniffer_get_last_frames(sniffer_frame_t *out, uint8_t max, uint8_t *count);
+
 #endif

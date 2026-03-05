@@ -2,11 +2,14 @@
 
 #include "hal_uart.h"
 #include "hal_timer.h"
+#include "hal_crc.h"
+#include "hal_time.h"
 
 #include <stddef.h>
 
 static hal_uart_drv_t  uart  = NULL;
 static hal_timer_drv_t timer = NULL;
+static hal_crc_drv_t   crc   = NULL;
 
 static mbm_uart_rx_cb_t       rx_cb    = NULL;
 static mbm_timer_timeout_cb_t timer_cb = NULL;
@@ -76,6 +79,23 @@ static bool port_init(const modbus_serial_cfg_t *cfg)
 
     hal_uart_set_event_cb(uart, uart_event_cb, NULL);
 
+    /* CRC16 Modbus para modo Master */
+    hal_crc_cfg_t crc_cfg = {
+        .type        = HAL_CRC_16,
+        .poly        = HAL_CRC_POLY_MODBUS,
+        .init_value  = 0xFFFF,
+        .xor_out     = 0x0000,
+        .reflect_in  = true,
+        .reflect_out = true
+    };
+    crc = hal_crc_open(&crc_cfg);
+    if (!crc)
+    {
+        hal_uart_close(uart);
+        uart = NULL;
+        return false;
+    }
+
     /* ===== T3.5 ===== */
 
     uint32_t t35_us = (35000000UL) / cfg->baudrate;
@@ -114,6 +134,12 @@ static void port_deinit(void)
         timer = NULL;
     }
 
+    if (crc)
+    {
+        hal_crc_close(crc);
+        crc = NULL;
+    }
+
     if (uart)
     {
         hal_uart_close(uart);
@@ -147,6 +173,28 @@ static void port_timer_restart(void)
     }
 }
 
+/* ================= MASTER (mbm) HELPERS ================= */
+
+static void port_uart_send(uint8_t *data, uint16_t len)
+{
+    if (!uart || !data || len == 0)
+        return;
+    size_t written;
+    hal_uart_write(uart, data, len, &written, 1000);
+}
+
+static uint16_t port_crc16(uint8_t *data, uint16_t len)
+{
+    if (!crc || !data)
+        return 0;
+    return (uint16_t)hal_crc_compute(crc, data, len);
+}
+
+static uint32_t port_get_time_ms(void)
+{
+    return hal_time_ms();
+}
+
 /* ================= EXPORT ================= */
 
 const modbus_manager_port_t modbus_manager_port =
@@ -155,5 +203,8 @@ const modbus_manager_port_t modbus_manager_port =
     .deinit               = port_deinit,
     .set_uart_rx_callback = port_set_uart_rx_callback,
     .set_timer_callback   = port_set_timer_callback,
-    .timer_restart        = port_timer_restart
+    .timer_restart        = port_timer_restart,
+    .uart_send            = port_uart_send,
+    .crc16                = port_crc16,
+    .get_time_ms          = port_get_time_ms
 };

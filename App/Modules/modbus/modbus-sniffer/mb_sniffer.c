@@ -22,6 +22,19 @@ static sniffer_frame_t queue[SNIFFER_QUEUE_SIZE];
 static volatile uint8_t head = 0;
 static volatile uint8_t tail = 0;
 
+/* Últimos N frames para UI (ring, last_frames_head = mais recente) */
+static sniffer_frame_t last_frames[SNIFFER_LAST_FRAMES_N];
+static uint8_t last_frames_head = 0;
+static uint8_t last_frames_count = 0;
+
+static void push_last_frame(const sniffer_frame_t *f)
+{
+    last_frames[last_frames_head] = *f;
+    last_frames_head = (last_frames_head + 1) % SNIFFER_LAST_FRAMES_N;
+    if (last_frames_count < SNIFFER_LAST_FRAMES_N)
+        last_frames_count++;
+}
+
 /* ================= INIT ================= */
 
 void mb_sniffer_init(void)
@@ -31,6 +44,8 @@ void mb_sniffer_init(void)
     tx_waiting_confirm = 0;
     head = 0;
     tail = 0;
+    last_frames_head = 0;
+    last_frames_count = 0;
 }
 
 /* ================= ENABLE ================= */
@@ -69,6 +84,7 @@ void mb_sniffer_rx_timeout(void)
     memcpy(f->data, rx_temp, rx_index);
 
     hal_rtc_get_timestamp(&f->ts);
+    push_last_frame(f);
 
     head = next;
     rx_index = 0;
@@ -107,6 +123,7 @@ void mb_sniffer_tx_confirm(void)
     memcpy(f->data, tx_temp, tx_len_pending);
 
     hal_rtc_get_timestamp(&f->ts);
+    push_last_frame(f);
 
     head = next;
     tx_waiting_confirm = 0;
@@ -156,4 +173,26 @@ void mb_sniffer_process(void)
 
         tail = (tail + 1) % SNIFFER_QUEUE_SIZE;
     }
+}
+
+/* ================= GET LAST FRAMES (UI) ================= */
+
+void mb_sniffer_get_last_frames(sniffer_frame_t *out, uint8_t max, uint8_t *count)
+{
+    if (!out || !count)
+        return;
+
+    *count = 0;
+    if (max == 0 || last_frames_count == 0)
+        return;
+
+    uint8_t n = (max < last_frames_count) ? max : last_frames_count;
+    uint8_t idx = (last_frames_head + SNIFFER_LAST_FRAMES_N - 1) % SNIFFER_LAST_FRAMES_N;
+
+    for (uint8_t i = 0; i < n; i++)
+    {
+        out[i] = last_frames[idx];
+        idx = (idx + SNIFFER_LAST_FRAMES_N - 1) % SNIFFER_LAST_FRAMES_N;
+    }
+    *count = n;
 }

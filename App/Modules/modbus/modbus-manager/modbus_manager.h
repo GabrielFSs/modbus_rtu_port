@@ -17,6 +17,7 @@ typedef struct
     uint8_t  databits;
     uint8_t  parity;
     uint8_t  stopbits;
+    uint8_t  slave_id;   /* 1..247, usado apenas em modo slave */
 } modbus_serial_cfg_t;
 
 void modbus_manager_init(void);
@@ -26,5 +27,7 @@ bool modbus_manager_start(modbus_mode_t mode,
 
 void modbus_manager_stop(void);
 void modbus_manager_poll(void);
+
+modbus_mode_t modbus_manager_get_mode(void);
 
 #endif

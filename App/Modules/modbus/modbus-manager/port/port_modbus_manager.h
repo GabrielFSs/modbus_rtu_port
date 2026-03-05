@@ -19,6 +19,11 @@ typedef struct
 
     void (*timer_restart)(void);
 
+    /* Para modo Master (mbm): envio UART, CRC16 Modbus, tempo em ms */
+    void     (*uart_send)(uint8_t *data, uint16_t len);
+    uint16_t (*crc16)(uint8_t *data, uint16_t len);
+    uint32_t (*get_time_ms)(void);
+
 } modbus_manager_port_t;
 
 extern const modbus_manager_port_t modbus_manager_port;
