@@ -20,7 +20,7 @@ static void port_write_data(uint16_t data)
 }
 
 static void port_delay(uint32_t ms)
-{
+ {
     HAL_Delay(ms);
 }
 

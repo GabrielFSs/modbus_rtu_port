@@ -4,19 +4,19 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/* ===== GPIO DEVICE ID (conforme esquemático display + teclas) ===== */
+/* ===== GPIO DEVICE ID ===== */
 typedef enum
 {
     HAL_GPIO_0,
     HAL_GPIO_1,
     HAL_GPIO_2,
-    HAL_GPIO_3,           /* KEY0 – PE3 no esquemático */
-    HAL_GPIO_4,           /* KEY1 – PE2 no esquemático */
+    HAL_GPIO_3,           /* KEY0 */
+    HAL_GPIO_4,           /* KEY1 */
     HAL_GPIO_RS485_DE,
     HAL_GPIO_RS485_RE,
-    HAL_GPIO_TOUCH_CS,    /* T_CS – PB12 (SPI2 touch) */
-    HAL_GPIO_TOUCH_TINT,  /* T_PEN – PC5 (interrupção touch, ativo low) */
-    HAL_GPIO_LCD_BL,      /* LCD BL – PB1 (backlight, ativo low no módulo) */
+    HAL_GPIO_TOUCH_CS,    /* T_CS (touch SPI CS) */
+    HAL_GPIO_TOUCH_TINT,  /* T_PEN – interrupção touch, ativo low; usar set_irq_cb */
+    HAL_GPIO_LCD_BL,      /* Backlight */
     HAL_GPIO_N
 } hal_gpio_id_t;
 
