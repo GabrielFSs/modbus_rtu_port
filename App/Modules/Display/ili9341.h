@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-#define ILI9341_WIDTH   240
-#define ILI9341_HEIGHT  320
+#define ILI9341_WIDTH   320   /* landscape */
+#define ILI9341_HEIGHT  240   /* landscape */
 
 typedef struct
 {

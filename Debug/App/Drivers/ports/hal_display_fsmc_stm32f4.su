@@ -1,0 +1,7 @@
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:43:13:stm32_fsmc_init	8	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:48:13:stm32_fsmc_deinit	8	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:53:22:stm32_fsmc_open	4	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:58:13:stm32_fsmc_close	16	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:63:29:stm32_fsmc_write_cmd	16	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:71:29:stm32_fsmc_write_data	16	static
+../App/Drivers/ports/hal_display_fsmc_stm32f4.c:79:29:stm32_fsmc_write_buffer	32	static

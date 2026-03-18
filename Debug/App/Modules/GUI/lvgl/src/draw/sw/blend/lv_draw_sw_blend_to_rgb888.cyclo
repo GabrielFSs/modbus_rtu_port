@@ -1,0 +1,15 @@
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:224:28:lv_draw_sw_blend_color_to_rgb888	20
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:352:28:lv_draw_sw_blend_image_to_rgb888	9
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:404:35:i1_image_blend	22
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:494:35:al88_image_blend	22
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:580:35:l8_image_blend	22
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:668:35:rgb565_image_blend	20
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:766:35:rgb888_image_blend	24
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:866:35:argb8888_image_blend	22
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:953:42:lv_color_24_24_mix_premult	3
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:970:35:argb8888_premultiplied_image_blend	26
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:1083:42:blend_non_normal_pixel	5
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:1114:42:lv_color_8_24_mix	3
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:1132:42:lv_color_24_24_mix	3
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:1152:45:get_bit	2
+../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c:1159:44:drawbuf_next_row	1

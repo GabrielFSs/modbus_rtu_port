@@ -2,13 +2,17 @@
 
 /* ================= STATIC DRIVER ================= */
 
-static const hal_time_driver_t *time_drv = 0;
+/* A implementação port específica (ex.: `ports/hal_time_stm32f4.c`)
+ * deve exportar `HAL_TIME_DRV`. */
+extern const hal_time_driver_t HAL_TIME_DRV;
+
+static const hal_time_driver_t *time_drv = &HAL_TIME_DRV;
 
 /* ================= INIT ================= */
 
-void hal_time_init(const hal_time_driver_t *driver)
+void hal_time_init(void)
 {
-    time_drv = driver;
+    /* no-op: time_drv já aponta para HAL_TIME_DRV */
 }
 
 /* ================= GET TIME ================= */

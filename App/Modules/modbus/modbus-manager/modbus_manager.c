@@ -7,6 +7,9 @@
 /* Master */
 #include "mbm.h"
 
+/* Sniffer */
+#include "mb_sniffer.h"
+
 /* ============================================================ */
 
 static modbus_mode_t current_mode = MODBUS_MODE_NONE;
@@ -43,12 +46,23 @@ static void manager_uart_rx_cb(const uint8_t *data, size_t len)
         modbus_manager_port.timer_restart();
 
     for (size_t i = 0; i < len; i++)
+    {
+        mb_sniffer_rx_byte(data[i]);
         mbm_rx_byte(data[i]);
+    }
 }
 
 static void manager_timer_cb(void)
 {
+    mb_sniffer_rx_timeout();
     mbm_frame_timeout();
+}
+
+static void manager_uart_send(uint8_t *data, uint16_t len)
+{
+    mb_sniffer_tx_store(data, len);
+    modbus_manager_port.uart_send(data, len);
+    mb_sniffer_tx_confirm();
 }
 
 /* ============================================================ */
@@ -90,10 +104,12 @@ bool modbus_manager_start(modbus_mode_t mode,
         uint8_t sid = (cfg->slave_id >= 1 && cfg->slave_id <= 247)
                      ? cfg->slave_id : 1;
 
-        /* eMBInit( eMode, ucSlaveAddress, ucPort, ulBaudRate, eParity, ucStopBits ) */
+        /* ucPort: 0=UART1, 1=UART2, 2=UART3. uart_dev 0=RS232(UART2)→1, 1=RS485(UART3)→2 */
+        UCHAR ucPort = (cfg->uart_dev == 0) ? 1u : 2u;
+
         if (eMBInit(MB_RTU,
                     sid,
-                    0u,
+                    ucPort,
                     cfg->baudrate,
                     parity,
                     cfg->stopbits) != MB_ENOERR)
@@ -114,12 +130,18 @@ bool modbus_manager_start(modbus_mode_t mode,
     modbus_manager_port.set_uart_rx_callback(manager_uart_rx_cb);
     modbus_manager_port.set_timer_callback(manager_timer_cb);
 
-    master_port.uart_send          = modbus_manager_port.uart_send;
+    master_port.uart_send          = manager_uart_send;
     master_port.crc16              = modbus_manager_port.crc16;
     master_port.get_time_ms        = modbus_manager_port.get_time_ms;
     master_port.timer_start_35char = modbus_manager_port.timer_restart;
 
     mbm_init(&master_port);
+
+    if (mbm_enable() != MBM_ERR_OK)
+    {
+        modbus_manager_port.deinit();
+        return false;
+    }
 
     current_mode = mode;
     return true;
@@ -136,6 +158,8 @@ void modbus_manager_stop(void)
     }
     else if (current_mode == MODBUS_MODE_MASTER)
     {
+        mbm_disable();
+        mbm_deinit();
         modbus_manager_port.deinit();
     }
 

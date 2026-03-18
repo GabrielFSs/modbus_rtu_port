@@ -62,13 +62,18 @@ static void raw_to_display(uint16_t rx, uint16_t ry, int16_t *cx, int16_t *cy)
     if (ry < XPT2046_CAL_Y_TOP)    ry = XPT2046_CAL_Y_TOP;
     if (ry > XPT2046_CAL_Y_BOTTOM) ry = XPT2046_CAL_Y_BOTTOM;
 
-    int32_t x = (int32_t)(XPT2046_CAL_X_LEFT - rx) * 240
-                / (int32_t)(XPT2046_CAL_X_LEFT - XPT2046_CAL_X_RIGHT);
-    int32_t y = (int32_t)(ry - XPT2046_CAL_Y_TOP) * 320
+    /*
+     * Landscape rotation=1 (MADCTL 0x28): physical touch axes are swapped.
+     *   display X (0..319) ← raw Y
+     *   display Y (0..239) ← raw X (inverted)
+     */
+    int32_t x = (int32_t)(ry - XPT2046_CAL_Y_TOP) * 320
                 / (int32_t)(XPT2046_CAL_Y_BOTTOM - XPT2046_CAL_Y_TOP);
+    int32_t y = (int32_t)(rx - XPT2046_CAL_X_RIGHT) * 240
+                / (int32_t)(XPT2046_CAL_X_LEFT - XPT2046_CAL_X_RIGHT);
 
-    *cx = (int16_t)(x < 0 ? 0 : x > 239 ? 239 : x);
-    *cy = (int16_t)(y < 0 ? 0 : y > 319 ? 319 : y);
+    *cx = (int16_t)(x < 0 ? 0 : x > 319 ? 319 : x);
+    *cy = (int16_t)(y < 0 ? 0 : y > 239 ? 239 : y);
 }
 
 static void touch_read_cb(lv_indev_t * indev, lv_indev_data_t * data)

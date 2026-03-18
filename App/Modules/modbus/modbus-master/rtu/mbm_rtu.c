@@ -3,9 +3,9 @@
 
 static const mbm_port_t *port = NULL;
 
-static uint8_t  rx_buffer[MBM_MAX_FRAME];
-static uint16_t rx_index = 0;
-static uint8_t  frame_ready = 0;
+static uint8_t           rx_buffer[MBM_MAX_FRAME];
+static volatile uint16_t rx_index    = 0;
+static volatile uint8_t  frame_ready = 0;
 
 /* ============================================================ */
 /* INIT                                                         */

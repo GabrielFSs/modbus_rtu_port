@@ -167,6 +167,12 @@ uart_status_t hal_uart_write(hal_uart_drv_t dev,
                              size_t *written,
                              uint32_t timeout_ms);
 
+/** Envia buffer completo de forma bloqueante (evita frame fragmentado). */
+uart_status_t hal_uart_write_blocking(hal_uart_drv_t dev,
+                                      const uint8_t *data,
+                                      size_t len,
+                                      uint32_t timeout_ms);
+
 uart_status_t hal_uart_read(hal_uart_drv_t dev,
                             uint8_t *data,
                             size_t maxlen,
@@ -209,6 +215,11 @@ typedef struct hal_uart_drv_imp_s
                            size_t len,
                            size_t *written,
                            uint32_t timeout_ms);
+
+    uart_status_t (*write_blocking)(hal_uart_drv_t dev,
+                                    const uint8_t *data,
+                                    size_t len,
+                                    uint32_t timeout_ms);
 
     uart_status_t (*read)(hal_uart_drv_t dev,
                           uint8_t *data,

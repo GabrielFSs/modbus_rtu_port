@@ -1,0 +1,7 @@
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:47:12:lv_obj_class_create_obj	9
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:104:6:lv_obj_class_init_obj	5
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:136:6:lv_obj_destruct	3
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:156:6:lv_obj_is_editable	4
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:168:6:lv_obj_is_group_def	4
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:197:13:lv_obj_construct	3
+../App/Modules/GUI/lvgl/src/core/lv_obj_class.c:224:17:get_instance_size	4

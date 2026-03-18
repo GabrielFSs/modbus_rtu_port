@@ -7,16 +7,16 @@
  * CONFIGURAÇÃO DOS MAPAS
  * ============================================================ */
 
-#define MB_HOLDING_REGS_START   0
-#define MB_HOLDING_REGS_N       10
+#define MB_HOLDING_REGS_START   1
+#define MB_HOLDING_REGS_N       512
 
-#define MB_INPUT_REGS_START     0
-#define MB_INPUT_REGS_N         10
+#define MB_INPUT_REGS_START     1
+#define MB_INPUT_REGS_N         512
 
-#define MB_COILS_START          0
-#define MB_COILS_N              16
+#define MB_COILS_START          1
+#define MB_COILS_N              512
 
-#define MB_DISCRETE_START       0
+#define MB_DISCRETE_START       1
 #define MB_DISCRETE_N           16
 
 

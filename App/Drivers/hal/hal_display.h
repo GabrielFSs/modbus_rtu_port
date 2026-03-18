@@ -4,6 +4,16 @@
 #include <stdint.h>
 #include <stddef.h>
 
+/* ===== Display bus selection (compile-time) =====
+ * Coloque exatamente uma opção, ou passe via flags do compilador.
+ * Se nada for definido, assume-se `DISPLAY_USE_FSMC`.
+ */
+#if !defined(DISPLAY_USE_FSMC) && !defined(DISPLAY_USE_GPIO)
+#define DISPLAY_USE_FSMC 1
+#endif
+
+/* #define DISPLAY_USE_GPIO 1 */
+
 /* ================= OPAQUE HANDLE ================= */
 
 typedef struct hal_display_drv_s *hal_display_t;

@@ -1,0 +1,42 @@
+################################################################################
+# Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (11.3.rel1)
+################################################################################
+
+# Add inputs and outputs from these tool invocations to the build variables 
+C_SRCS += \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.c \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.c \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.c \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.c \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.c \
+../App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.c 
+
+OBJS += \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.o \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.o \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.o \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.o \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.o \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.o 
+
+C_DEPS += \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.d \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.d \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.d \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.d \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.d \
+./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.d 
+
+
+# Each subdirectory must supply rules for building sources it contributes
+App/Modules/GUI/lvgl/src/drivers/uefi/%.o App/Modules/GUI/lvgl/src/drivers/uefi/%.su App/Modules/GUI/lvgl/src/drivers/uefi/%.cyclo: ../App/Modules/GUI/lvgl/src/drivers/uefi/%.c App/Modules/GUI/lvgl/src/drivers/uefi/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../App/Drivers/hal -I../App/Core/Inc -I../App/Core/Src -I../App/Drivers/ports -I../App/Modules/modbus -I"C:/Users/gab_p/STM32CubeIDE/workspace_1.12.1/ModbusRTU/App" -I../App/BSP -I"C:/Users/gab_p/STM32CubeIDE/workspace_1.12.1/ModbusRTU/App/BSP/stm32f407vet6_blackpill_v2.3.1" -IC:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc -IC:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -IC:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Device/ST/STM32F4xx/Include -IC:/Users/gab_p/STM32Cube/Repository/STM32Cube_FW_F4_V1.28.3/Drivers/CMSIS/Include -I../App/Middlewares/fatfs/source -I../App/Modules/modbus-master -I../App/Modules/modbus/modbus-slave/include -I../App/Modules/modbus/modbus-slave/rtu -I../App/Modules/modbus/modbus-slave/port -I../App/Modules/modbus/modbus-master/Includes -I../App/Modules/modbus/modbus-master/port -I../App/Modules/modbus/modbus-master/rtu -I../App/Modules/modbus/modbus-sniffer -I../App/Modules/GUI -I../App/Modules/GUI/lvgl -I../App/Modules/GUI/lvgl/configs -I../App/Modules/GUI/lvgl/libs -I../App/Modules/GUI/lvgl/src -I../App/Modules/GUI/lvgl/src/core -I../App/Modules/GUI/lvgl/src/display -I../App/Modules/Display -I../App/Modules/modbus/modbus-manager/port -I../App/Modules/modbus/modbus-manager -I../App/Modules/modbus/modbus-slave -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+
+clean: clean-App-2f-Modules-2f-GUI-2f-lvgl-2f-src-2f-drivers-2f-uefi
+
+clean-App-2f-Modules-2f-GUI-2f-lvgl-2f-src-2f-drivers-2f-uefi:
+	-$(RM) ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_context.su ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_display.su ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_keyboard.su ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_pointer.su ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_indev_touch.su ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.cyclo ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.d ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.o ./App/Modules/GUI/lvgl/src/drivers/uefi/lv_uefi_private.su
+
+.PHONY: clean-App-2f-Modules-2f-GUI-2f-lvgl-2f-src-2f-drivers-2f-uefi
+

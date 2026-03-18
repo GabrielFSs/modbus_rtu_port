@@ -20,6 +20,14 @@ hal_storage_status_t hal_storage_write_file(
     return drv->write_file(path, data, len);
 }
 
+hal_storage_status_t hal_storage_append_file(
+    const char *path,
+    const uint8_t *data,
+    size_t len)
+{
+    return drv->append_file ? drv->append_file(path, data, len) : HAL_STORAGE_ERROR;
+}
+
 hal_storage_status_t hal_storage_read_file(
     const char *path,
     uint8_t *data,

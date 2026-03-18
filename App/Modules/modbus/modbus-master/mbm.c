@@ -9,9 +9,11 @@
 #define MBM_MAX_CACHE_ITEMS          32
 #define MBM_MAX_SCHEDULED            16
 #define MBM_SLAVE_FAIL_LIMIT         3
-#define MBM_SLAVE_BACKOFF_MS         5000
+#define MBM_SLAVE_BACKOFF_MS         2000
 #define MBM_DEFAULT_TIMEOUT_MS       200
 #define MBM_DEFAULT_RETRIES          2
+#define MBM_TURNAROUND_MS            5
+#define MBM_SCHED_MIN_INTERVAL_MS    50   /* Evita múltiplas adições em sequência (ex.: 8x) */
 #define MBM_MAX_COILS_PER_SLAVE      256
 #define MBM_MAX_DISCRETE_PER_SLAVE   256
 
@@ -93,6 +95,7 @@ static uint8_t scheduled_count = 0;
 
 static uint32_t job_start_time = 0;
 static uint8_t retry_count = 0;
+static uint32_t turnaround_end = 0;
 
 static mbm_analog_cache_t analog_cache[MBM_MAX_SLAVES];
 static uint8_t analog_count = 0;
@@ -299,6 +302,7 @@ void mbm_init(const mbm_port_t *p)
     queue_count = 0;
     scheduled_count = 0;
     retry_count = 0;
+    turnaround_end = 0;
     current_job = NULL;
     analog_count = 0;
     digital_count = 0;
@@ -343,6 +347,7 @@ mbm_status_t mbm_deinit(void)
     queue_count = 0;
     scheduled_count = 0;
     retry_count = 0;
+    turnaround_end = 0;
     current_job = NULL;
     analog_count = 0;
     digital_count = 0;
@@ -378,7 +383,17 @@ void mbm_poll(void)
         if (now >= scheduled[i].next_run)
         {
             if (mbm_add_request(&scheduled[i].req) == MBM_ERR_OK)
-                scheduled[i].next_run = now + scheduled[i].req.period_ms;
+            {
+                uint32_t period = scheduled[i].req.period_ms;
+                if (period < MBM_SCHED_MIN_INTERVAL_MS)
+                    period = MBM_SCHED_MIN_INTERVAL_MS;
+                scheduled[i].next_run = now + period;
+            }
+            else
+            {
+                /* Fila cheia: tenta de novo em 100ms para não travar recorrente */
+                scheduled[i].next_run = now + 100;
+            }
         }
     }
 
@@ -389,13 +404,19 @@ void mbm_poll(void)
             if (queue_count == 0)
                 break;
 
+            if (now < turnaround_end)
+                break;
+
             current_job = &job_queue[0];
 
             {
                 mbm_slave_state_t *s = get_slave_state(current_job->slave_id);
                 if (s && !s->online && now < s->next_retry_time)
                 {
+                    if (current_job->callback)
+                        current_job->callback(NULL, 0, MBM_ERR_TIMEOUT, current_job->job_id);
                     remove_current_job();
+                    turnaround_end = now + MBM_TURNAROUND_MS;
                     break;
                 }
             }
@@ -403,7 +424,6 @@ void mbm_poll(void)
             mbm_rtu_start_tx(current_job);
 
             oper_state = MBM_OPER_BUSY;
-            retry_count = 0;
             job_start_time = now;
             state = MBM_STATE_WAIT_RESPONSE;
 
@@ -412,16 +432,21 @@ void mbm_poll(void)
         case MBM_STATE_WAIT_RESPONSE:
         {
             if (!current_job)
+            {
+                state = MBM_STATE_IDLE;
+                oper_state = MBM_OPER_ENABLED;
                 break;
+            }
 
             mbm_slave_state_t *s = get_slave_state(current_job->slave_id);
             uint32_t timeout = s ? s->timeout_ms : current_job->timeout_ms;
+            uint32_t elapsed = (uint32_t)(now - job_start_time);
 
             if (mbm_rtu_frame_ready())
             {
                 process_response();
             }
-            else if ((now - job_start_time) > timeout)
+            else if (elapsed > timeout)
             {
                 process_response();
             }
@@ -441,15 +466,14 @@ static void process_response(void)
 
     uint8_t *rx_buffer = mbm_rtu_get_buffer();
     uint16_t rx_index = mbm_rtu_get_length();
+    mbm_slave_state_t *s = get_slave_state(current_job->slave_id);
+    uint32_t now = port->get_time_ms();
 
     if (!mbm_rtu_frame_ready())
-        return;
+        goto fail;
 
     if (rx_index < 5)
         goto fail;
-
-    mbm_slave_state_t *s = get_slave_state(current_job->slave_id);
-    uint32_t now = port->get_time_ms();
 
     uint16_t crc_rx =
         rx_buffer[rx_index - 2] |
@@ -469,7 +493,8 @@ static void process_response(void)
         if (current_job->callback)
             current_job->callback(rx_buffer,
                                   rx_index,
-                                  MBM_ERR_INVALID);
+                                  MBM_ERR_INVALID,
+                                  current_job->job_id);
         goto success;
     }
 
@@ -534,7 +559,8 @@ success:
     if (current_job->callback)
         current_job->callback(rx_buffer,
                               rx_index,
-                              MBM_ERR_OK);
+                              MBM_ERR_OK,
+                              current_job->job_id);
 
     if (s)
     {
@@ -546,6 +572,7 @@ success:
     remove_current_job();
     state = MBM_STATE_IDLE;
     oper_state = MBM_OPER_ENABLED;
+    turnaround_end = now + MBM_TURNAROUND_MS;
     mbm_rtu_clear();
     return;
 
@@ -555,6 +582,7 @@ fail:
     {
         state = MBM_STATE_IDLE;
         oper_state = MBM_OPER_ENABLED;
+        turnaround_end = now + MBM_TURNAROUND_MS;
         mbm_rtu_clear();
         return;
     }
@@ -570,12 +598,13 @@ fail:
     }
 
     if (current_job->callback)
-        current_job->callback(NULL, 0, MBM_ERR_TIMEOUT);
+        current_job->callback(NULL, 0, MBM_ERR_TIMEOUT, current_job->job_id);
 
     retry_count = 0;
     remove_current_job();
     state = MBM_STATE_IDLE;
     oper_state = MBM_OPER_ENABLED;
+    turnaround_end = now + MBM_TURNAROUND_MS;
     mbm_rtu_clear();
 }
 
@@ -651,7 +680,7 @@ mbm_status_t mbm_cancel_job(uint32_t job_id)
     if (current_job && current_job->job_id == job_id)
     {
         if (current_job->callback)
-            current_job->callback(NULL, 0, MBM_ERR_CANCELED);
+            current_job->callback(NULL, 0, MBM_ERR_CANCELED, current_job->job_id);
 
         retry_count = 0;
         remove_current_job();
@@ -667,7 +696,7 @@ mbm_status_t mbm_cancel_job(uint32_t job_id)
         if (job_queue[i].job_id == job_id)
         {
             if (job_queue[i].callback)
-                job_queue[i].callback(NULL, 0, MBM_ERR_CANCELED);
+                job_queue[i].callback(NULL, 0, MBM_ERR_CANCELED, job_queue[i].job_id);
 
             memmove(&job_queue[i],
                     &job_queue[i + 1],
@@ -690,9 +719,11 @@ mbm_status_t mbm_cancel_scheduled(uint32_t job_id)
         {
             scheduled[i].active = 0;
 
-            if (scheduled[i].req.callback)
-                scheduled[i].req.callback(NULL, 0, MBM_ERR_CANCELED);
-
+            if (mbm_cancel_job(job_id) != MBM_ERR_OK)
+            {
+                if (scheduled[i].req.callback)
+                    scheduled[i].req.callback(NULL, 0, MBM_ERR_CANCELED, scheduled[i].req.job_id);
+            }
             return MBM_ERR_OK;
         }
     }

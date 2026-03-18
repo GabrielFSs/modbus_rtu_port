@@ -1,0 +1,11 @@
+../App/Modules/modbus/modbus-manager/modbus_manager.c:25:6:mb_port_timer_restart	2
+../App/Modules/modbus/modbus-manager/modbus_manager.c:31:6:mb_port_timer_stop	1
+../App/Modules/modbus/modbus-manager/modbus_manager.c:40:13:manager_uart_rx_cb	5
+../App/Modules/modbus/modbus-manager/modbus_manager.c:55:13:manager_timer_cb	1
+../App/Modules/modbus/modbus-manager/modbus_manager.c:61:13:manager_uart_send	1
+../App/Modules/modbus/modbus-manager/modbus_manager.c:70:6:modbus_manager_init	1
+../App/Modules/modbus/modbus-manager/modbus_manager.c:78:6:modbus_manager_start	15
+../App/Modules/modbus/modbus-manager/modbus_manager.c:152:6:modbus_manager_stop	3
+../App/Modules/modbus/modbus-manager/modbus_manager.c:171:6:modbus_manager_poll	3
+../App/Modules/modbus/modbus-manager/modbus_manager.c:181:6:modbus_manager_enable_sniffer	1
+../App/Modules/modbus/modbus-manager/modbus_manager.c:186:15:modbus_manager_get_mode	1

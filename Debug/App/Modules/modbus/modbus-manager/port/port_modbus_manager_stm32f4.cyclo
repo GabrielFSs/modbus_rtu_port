@@ -1,0 +1,11 @@
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:24:13:rs485_dir_ctrl	4
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:45:13:uart_event_cb	5
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:62:13:timer_event_cb	2
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:75:13:port_init	23
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:219:13:port_deinit	6
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:258:13:port_set_uart_rx_callback	1
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:263:13:port_set_timer_callback	1
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:270:13:port_timer_restart	2
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:281:13:port_uart_send	4
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:291:17:port_crc16	3
+../App/Modules/modbus/modbus-manager/port/port_modbus_manager_stm32f4.c:298:17:port_get_time_ms	1

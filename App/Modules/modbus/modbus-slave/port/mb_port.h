@@ -6,6 +6,8 @@
 
 #define INLINE inline
 
+#define MB_PORT_HAS_CLOSE 1
+
 #define ENTER_CRITICAL_SECTION()
 #define EXIT_CRITICAL_SECTION()
 

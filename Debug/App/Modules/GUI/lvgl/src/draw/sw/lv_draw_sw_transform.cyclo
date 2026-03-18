@@ -1,0 +1,11 @@
+../App/Modules/GUI/lvgl/src/draw/sw/../../misc/../font/../draw/../misc/lv_color.h:476:46:lv_color_swap_16	1
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:108:6:lv_draw_sw_transform	27
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:331:13:transform_rgb888	23
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:431:13:transform_argb8888	27
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:524:21:unpremultiply	2
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:541:13:transform_argb8888_premultiplied	27
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:656:13:transform_rgb565a8	28
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:771:13:transform_rgb565a8_swapped	28
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:887:13:transform_a8	23
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:965:13:transform_al88	41
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_transform.c:1083:13:transform_point_upscaled	7

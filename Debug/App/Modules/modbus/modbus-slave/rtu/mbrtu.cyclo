@@ -1,0 +1,8 @@
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:78:1:eMBRTUInit	4
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:124:1:eMBRTUStart	1
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:140:1:eMBRTUStop	1
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:149:1:eMBRTUReceive	3
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:212:1:eMBRTUSend	2
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:266:1:xMBRTUReceiveFSM	6
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:351:1:xMBRTUTransmitFSM	4
+../App/Modules/modbus/modbus-slave/rtu/mbrtu.c:394:1:xMBRTUTimerT35Expired	7

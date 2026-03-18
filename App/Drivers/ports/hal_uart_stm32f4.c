@@ -44,7 +44,7 @@ struct hal_uart_drv_s
     size_t rx_rd;
 
     /* TX */
-    bool tx_busy;
+    volatile bool tx_busy;
 
     /* Callback */
     hal_uart_event_cb_t cb;
@@ -269,6 +269,38 @@ static uart_status_t stm32_uart_write(hal_uart_drv_t dev,
 }
 
 /* ========================================================= */
+/* ================= WRITE BLOCKING ========================= */
+/* ========================================================= */
+
+static uart_status_t stm32_uart_write_blocking(hal_uart_drv_t dev,
+                                               const uint8_t *data,
+                                               size_t len,
+                                               uint32_t timeout_ms)
+{
+    struct hal_uart_drv_s *drv = (struct hal_uart_drv_s *)dev;
+
+    if (!drv || !drv->huart || !data || len == 0)
+        return UART_STATUS_ERROR;
+
+    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
+        drv->dir_ctrl(drv->dir_ctrl_ctx, true);
+
+    if (HAL_UART_Transmit(drv->huart, (uint8_t *)data, len, timeout_ms) != HAL_OK)
+    {
+        if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
+            drv->dir_ctrl(drv->dir_ctrl_ctx, false);
+        return UART_STATUS_TIMEOUT;
+    }
+
+    while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
+
+    if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
+        drv->dir_ctrl(drv->dir_ctrl_ctx, false);
+
+    return UART_STATUS_OK;
+}
+
+/* ========================================================= */
 /* ================= READ (OPTIONAL) ======================= */
 /* ========================================================= */
 
@@ -350,10 +382,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
         {
             drv->tx_busy = false;
 
-            /* Espera TC real (segurança extra) */
-            while (!__HAL_UART_GET_FLAG(drv->huart, UART_FLAG_TC));
+            /* NÃO usar while(TC) aqui: o HAL pode já ter limpado o flag,
+             * causando loop infinito e travando a 2ª transmissão. */
 
-            /* ================= RS485: volta para RX ================= */
+            /* RS485: volta para RX */
             if (drv->dir_mode == UART_DIR_GPIO && drv->dir_ctrl)
             {
                 drv->dir_ctrl(drv->dir_ctrl_ctx, false);
@@ -423,6 +455,24 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             drv->rx_done = true;
             if (drv->timer_stop)
                 drv->timer_stop(drv->timer_ctx);
+
+            /* Em modo LENGTH, notifica o callback quando o
+             * número de bytes configurado for atingido. Isso
+             * permite casos como rx_done_length == 1, onde o
+             * usuário quer um callback a cada byte recebido. */
+            if (drv->cb)
+            {
+                drv->cb((hal_uart_drv_t)drv,
+                        UART_EVENT_RX_DONE,
+                        UART_STATUS_OK,
+                        drv->rx_buf,
+                        drv->rx_len,
+                        drv->cb_ctx);
+            }
+
+            /* Reinicia o acumulador para próxima sequência. */
+            drv->rx_len  = 0;
+            drv->rx_done = false;
         }
 
         /* Restart timeout timer */
@@ -525,6 +575,7 @@ hal_uart_drv_imp_t HAL_UART_DRV = {
     .open = stm32_uart_open,
     .close = stm32_uart_close,
     .write = stm32_uart_write,
+    .write_blocking = stm32_uart_write_blocking,
     .read = stm32_uart_read,
     .flush = stm32_uart_flush,
     .set_rx_timeout_timer = stm32_uart_set_rx_timeout_timer,

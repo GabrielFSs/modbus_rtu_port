@@ -13,17 +13,13 @@ static void stm32_delay_ms(uint32_t ms)
     HAL_Delay(ms);
 }
 
-/* ================= DRIVER INSTANCE ================= */
-
-static const hal_time_driver_t stm32_time_driver =
+/* ================= DRIVER INSTANCE (export) =================
+ * App/Drivers/hal/hal_time.c consome `HAL_TIME_DRV` diretamente.
+ * Isso elimina a necessidade de `hal_time_stm32f4_init()` e de qualquer
+ * header específico no app.
+ */
+const hal_time_driver_t HAL_TIME_DRV =
 {
     .get_ms   = stm32_get_ms,
     .delay_ms = stm32_delay_ms
 };
-
-/* ================= PUBLIC INIT ================= */
-
-void hal_time_stm32f4_init(void)
-{
-    hal_time_init(&stm32_time_driver);
-}

@@ -3,7 +3,6 @@
  * Fica em ports/ junto com hal_display_fsmc_stm32f4.c.
  */
 #include "hal_display.h"
-#include "config_display.h"
 
 #if defined(DISPLAY_USE_FSMC)
 

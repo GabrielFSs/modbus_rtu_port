@@ -1,6 +1,7 @@
 #include "ff.h"
 #include "diskio.h"
 #include "stm32f4xx_hal.h"
+#include "hal_rtc.h"
 
 extern SD_HandleTypeDef hsd;
 
@@ -123,3 +124,35 @@ DRESULT disk_ioctl(BYTE pdrv, BYTE cmd, void *buff)
 
     return RES_PARERR;
 }
+
+/*-----------------------------------------------------------------------*/
+/* Get current time for FatFs (timestamp em ficheiros)                   */
+/* Formato: (ano-1980)<<25 | mes<<21 | dia<<16 | hora<<11 | min<<5 | seg/2 */
+/*-----------------------------------------------------------------------*/
+
+#if !FF_FS_READONLY && !FF_FS_NORTC
+
+DWORD get_fattime(void)
+{
+    hal_rtc_date_t date;
+    hal_rtc_time_t time;
+    DWORD t = 0;
+
+    if (hal_rtc_get_date(&date) != HAL_RTC_OK ||
+        hal_rtc_get_time(&time) != HAL_RTC_OK)
+    {
+        /* RTC não disponível: devolver data fixa (ex.: 01/01/2025 00:00:00) */
+        return (DWORD)((2025 - 1980) << 25) | ((DWORD)1 << 21) | ((DWORD)1 << 16);
+    }
+
+    t  = (DWORD)(date.year >= 1980 ? date.year - 1980 : 0) << 25;
+    t |= (DWORD)(date.month >= 1 && date.month <= 12 ? date.month : 1) << 21;
+    t |= (DWORD)(date.day >= 1 && date.day <= 31 ? date.day : 1) << 16;
+    t |= (DWORD)(time.hour <= 23 ? time.hour : 0) << 11;
+    t |= (DWORD)(time.min <= 59 ? time.min : 0) << 5;
+    t |= (DWORD)(time.sec <= 59 ? time.sec / 2 : 0);
+
+    return t;
+}
+
+#endif

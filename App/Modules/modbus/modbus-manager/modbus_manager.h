@@ -18,6 +18,7 @@ typedef struct
     uint8_t  parity;
     uint8_t  stopbits;
     uint8_t  slave_id;   /* 1..247, usado apenas em modo slave */
+    uint8_t  uart_dev;   /* 0 = UART2/RS232, 1 = UART3/RS485 */
 } modbus_serial_cfg_t;
 
 void modbus_manager_init(void);

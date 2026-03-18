@@ -47,6 +47,27 @@ static hal_storage_status_t stm32_storage_write_file(
     return HAL_STORAGE_OK;
 }
 
+static hal_storage_status_t stm32_storage_append_file(
+    const char *path,
+    const uint8_t *data,
+    size_t len)
+{
+    FIL fil;
+
+    if (f_open(&fil, path, FA_WRITE | FA_OPEN_APPEND) != FR_OK)
+        return HAL_STORAGE_ERROR;
+
+    UINT written;
+    if (f_write(&fil, data, (UINT)len, &written) != FR_OK || written != (UINT)len)
+    {
+        f_close(&fil);
+        return HAL_STORAGE_ERROR;
+    }
+
+    f_close(&fil);
+    return HAL_STORAGE_OK;
+}
+
 static hal_storage_status_t stm32_storage_read_file(
     const char *path,
     uint8_t *data,
@@ -78,8 +99,9 @@ static hal_storage_status_t stm32_storage_read_file(
 
 hal_storage_drv_imp_t HAL_STORAGE_DRV =
 {
-    .init       = stm32_storage_init,
-    .deinit     = stm32_storage_deinit,
-    .write_file = stm32_storage_write_file,
-    .read_file  = stm32_storage_read_file
+    .init        = stm32_storage_init,
+    .deinit      = stm32_storage_deinit,
+    .write_file  = stm32_storage_write_file,
+    .append_file = stm32_storage_append_file,
+    .read_file   = stm32_storage_read_file
 };

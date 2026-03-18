@@ -46,4 +46,5 @@ void ili9341_port_init(void)
     };
 
     ili9341_init(&io);
+    ili9341_set_rotation(1);   /* landscape 320x240 */
 }

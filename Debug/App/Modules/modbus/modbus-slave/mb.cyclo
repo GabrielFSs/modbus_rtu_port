@@ -1,0 +1,5 @@
+../App/Modules/modbus/modbus-slave/mb.c:88:1:eMBInit	7
+../App/Modules/modbus/modbus-slave/mb.c:171:14:eMBEnable	2
+../App/Modules/modbus/modbus-slave/mb.c:181:14:eMBDisable	2
+../App/Modules/modbus/modbus-slave/mb.c:191:14:eMBClose	3
+../App/Modules/modbus/modbus-slave/mb.c:203:14:eMBPoll	13

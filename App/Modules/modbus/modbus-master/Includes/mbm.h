@@ -19,7 +19,8 @@ typedef enum
 
 typedef void (*mbm_callback_t)(uint8_t *response,
                                uint16_t length,
-                               mbm_status_t status);
+                               mbm_status_t status,
+                               uint32_t job_id);
 
 /* ================= REQUEST ================= */
 

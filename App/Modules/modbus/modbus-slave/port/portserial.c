@@ -10,8 +10,8 @@
 /* RS485 POLICY (UART3 = RS485)                              */
 /* ========================================================= */
 
-#define RS485_DE_GPIO   HAL_GPIO_3   /* ajuste conforme seu BSP */
-#define RS485_RE_GPIO   HAL_GPIO_4   /* ajuste conforme seu BSP */
+#define RS485_DE_GPIO   HAL_GPIO_RS485_DE
+#define RS485_RE_GPIO   HAL_GPIO_RS485_RE
 
 static hal_gpio_drv_t rs485_de = NULL;
 static hal_gpio_drv_t rs485_re = NULL;
@@ -240,6 +240,12 @@ void vMBPortSerialClose(void)
     {
         rs485_deinit();
     }
+}
+
+void vMBPortClose(void)
+{
+    vMBPortSerialClose();
+    xMBPortTimersClose();
 }
 
 /* ========================================================= */

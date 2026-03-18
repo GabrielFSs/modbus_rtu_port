@@ -1,0 +1,6 @@
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:36:34:lv_color_mix	1
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:46:14:lv_color_mix32	3
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:61:14:lv_color_mix32_premultiplied	3
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:80:9:lv_color_brightness	1
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:86:6:lv_color_filter_dsc_init	1
+../App/Modules/GUI/lvgl/src/misc/lv_color_op.c:91:14:lv_color_over32	5

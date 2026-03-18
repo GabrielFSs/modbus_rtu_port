@@ -54,3 +54,13 @@ void vMBPortTimersDisable(void)
     if (mb_timer)
         hal_timer_stop(mb_timer);
 }
+
+void xMBPortTimersClose(void)
+{
+    if (mb_timer)
+    {
+        hal_timer_stop(mb_timer);
+        hal_timer_close(mb_timer);
+        mb_timer = NULL;
+    }
+}

@@ -1,0 +1,5 @@
+../App/Modules/GUI/lvgl/src/draw/sw/../../misc/../stdlib/lv_string.h:73:20:lv_memzero	1
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_line.c:50:6:lv_draw_sw_line	12
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_line.c:105:35:draw_line_hor	9
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_line.c:182:35:draw_line_ver	8
+../App/Modules/GUI/lvgl/src/draw/sw/lv_draw_sw_line.c:253:35:draw_line_skew	14

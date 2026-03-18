@@ -18,7 +18,7 @@ typedef struct
 
 /* ================= API ================= */
 
-void hal_time_init(const hal_time_driver_t *driver);
+void hal_time_init(void);
 
 uint32_t hal_time_ms(void);
 

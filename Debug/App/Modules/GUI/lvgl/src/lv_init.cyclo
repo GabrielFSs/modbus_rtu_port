@@ -1,0 +1,6 @@
+../App/Modules/GUI/lvgl/src/draw/../misc/../stdlib/lv_string.h:73:20:lv_memzero	1
+../App/Modules/GUI/lvgl/src/lv_init.c:126:20:lv_global_init	3
+../App/Modules/GUI/lvgl/src/lv_init.c:158:20:lv_cleanup_devices	3
+../App/Modules/GUI/lvgl/src/lv_init.c:169:6:lv_is_initialized	1
+../App/Modules/GUI/lvgl/src/lv_init.c:179:6:lv_init	4
+../App/Modules/GUI/lvgl/src/lv_init.c:423:6:lv_deinit	3

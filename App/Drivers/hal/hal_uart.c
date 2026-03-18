@@ -39,6 +39,17 @@ uart_status_t hal_uart_write(hal_uart_drv_t dev,
     return drv->write(dev, data, len, written, timeout_ms);
 }
 
+uart_status_t hal_uart_write_blocking(hal_uart_drv_t dev,
+                                      const uint8_t *data,
+                                      size_t len,
+                                      uint32_t timeout_ms)
+{
+    if (drv->write_blocking)
+        return drv->write_blocking(dev, data, len, timeout_ms);
+    size_t w;
+    return drv->write(dev, data, len, &w, timeout_ms);
+}
+
 uart_status_t hal_uart_read(hal_uart_drv_t dev,
                             uint8_t *data,
                             size_t maxlen,

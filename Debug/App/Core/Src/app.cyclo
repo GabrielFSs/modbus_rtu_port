@@ -1,0 +1,3 @@
+../App/Core/Src/app.c:17:28:app_idle	1
+../App/Core/Src/app.c:23:6:app_setup	4
+../App/Core/Src/app.c:48:6:app_loop	2
