@@ -1,3 +1,0 @@
-../App/Drivers/hal/hal_time.c:13:6:hal_time_init	4	static
-../App/Drivers/hal/hal_time.c:20:10:hal_time_ms	8	static
-../App/Drivers/hal/hal_time.c:30:6:hal_time_delay_ms	16	static

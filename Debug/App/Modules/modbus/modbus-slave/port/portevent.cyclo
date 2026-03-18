@@ -1,3 +1,0 @@
-../App/Modules/modbus/modbus-slave/port/portevent.c:7:6:xMBPortEventInit	1
-../App/Modules/modbus/modbus-slave/port/portevent.c:13:6:xMBPortEventPost	1
-../App/Modules/modbus/modbus-slave/port/portevent.c:20:6:xMBPortEventGet	2

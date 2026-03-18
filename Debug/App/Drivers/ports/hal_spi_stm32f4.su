@@ -1,8 +1,0 @@
-../App/Drivers/ports/hal_spi_stm32f4.c:26:17:spi_compute_prescaler	24	static
-../App/Drivers/ports/hal_spi_stm32f4.c:46:13:stm32_spi_init	8	static
-../App/Drivers/ports/hal_spi_stm32f4.c:54:13:stm32_spi_deinit	8	static
-../App/Drivers/ports/hal_spi_stm32f4.c:70:22:stm32_spi_open	24	static
-../App/Drivers/ports/hal_spi_stm32f4.c:134:13:stm32_spi_close	24	static
-../App/Drivers/ports/hal_spi_stm32f4.c:151:25:stm32_spi_tx	32	static
-../App/Drivers/ports/hal_spi_stm32f4.c:193:25:stm32_spi_rx	32	static
-../App/Drivers/ports/hal_spi_stm32f4.c:235:25:stm32_spi_txrx	40	static

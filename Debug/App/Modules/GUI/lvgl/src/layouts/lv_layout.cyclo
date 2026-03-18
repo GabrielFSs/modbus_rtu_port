@@ -1,7 +1,0 @@
-../App/Modules/GUI/lvgl/src/layouts/../core/../debugging/sysmon/../../core/lv_obj_style_gen.h:1573:24:lv_obj_get_style_layout	1
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:39:6:lv_layout_init	1
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:53:6:lv_layout_deinit	1
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:58:10:lv_layout_create	2
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:69:10:lv_layout_register	2
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:80:6:lv_layout_get_min_size	4
-../App/Modules/GUI/lvgl/src/layouts/lv_layout.c:92:6:lv_layout_apply	3

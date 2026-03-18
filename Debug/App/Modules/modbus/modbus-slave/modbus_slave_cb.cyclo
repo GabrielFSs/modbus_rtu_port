@@ -1,4 +1,0 @@
-../App/Modules/modbus/modbus-slave/modbus_slave_cb.c:9:14:eMBRegHoldingCB	6
-../App/Modules/modbus/modbus-slave/modbus_slave_cb.c:53:14:eMBRegInputCB	4
-../App/Modules/modbus/modbus-slave/modbus_slave_cb.c:81:14:eMBRegCoilsCB	7
-../App/Modules/modbus/modbus-slave/modbus_slave_cb.c:122:14:eMBRegDiscreteCB	5

@@ -1,5 +1,0 @@
-../App/Modules/Display/ili9341_port.c:12:13:port_write_cmd	16	static
-../App/Modules/Display/ili9341_port.c:17:13:port_write_data	16	static
-../App/Modules/Display/ili9341_port.c:22:13:port_delay	16	static
-../App/Modules/Display/ili9341_port.c:27:13:port_write_buffer	16	static
-../App/Modules/Display/ili9341_port.c:35:6:ili9341_port_init	8	static

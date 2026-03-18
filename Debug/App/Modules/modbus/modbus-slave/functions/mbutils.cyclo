@@ -1,3 +1,0 @@
-../App/Modules/modbus/modbus-slave/functions/mbutils.c:48:1:xMBUtilSetBits	1
-../App/Modules/modbus/modbus-slave/functions/mbutils.c:87:1:xMBUtilGetBits	1
-../App/Modules/modbus/modbus-slave/functions/mbutils.c:118:1:prveMBError2Exception	5

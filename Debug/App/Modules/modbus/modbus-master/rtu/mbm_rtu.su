@@ -1,9 +1,0 @@
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:14:6:mbm_rtu_init	16	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:25:17:build_request	24	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:111:6:mbm_rtu_start_tx	24	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:132:6:mbm_rtu_rx_byte	16	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:145:6:mbm_rtu_frame_timeout	4	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:155:9:mbm_rtu_frame_ready	4	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:160:10:mbm_rtu_get_buffer	4	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:165:10:mbm_rtu_get_length	4	static
-../App/Modules/modbus/modbus-master/rtu/mbm_rtu.c:170:6:mbm_rtu_clear	4	static

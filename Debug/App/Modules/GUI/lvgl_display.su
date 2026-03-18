@@ -1,2 +1,0 @@
-../App/Modules/GUI/lvgl_display.c:13:13:flush_cb	32	static
-../App/Modules/GUI/lvgl_display.c:26:6:lvgl_display_init	24	static

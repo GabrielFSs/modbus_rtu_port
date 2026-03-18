@@ -1,6 +1,0 @@
-../App/Drivers/ports/hal_rtc_stm32f4.c:10:25:stm32_rtc_init	3
-../App/Drivers/ports/hal_rtc_stm32f4.c:30:25:stm32_rtc_set_time	3
-../App/Drivers/ports/hal_rtc_stm32f4.c:48:25:stm32_rtc_get_time	2
-../App/Drivers/ports/hal_rtc_stm32f4.c:65:25:stm32_rtc_set_date	3
-../App/Drivers/ports/hal_rtc_stm32f4.c:84:25:stm32_rtc_get_date	2
-../App/Drivers/ports/hal_rtc_stm32f4.c:100:25:stm32_rtc_get_timestamp	4

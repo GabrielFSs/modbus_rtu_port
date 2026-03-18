@@ -1,9 +1,0 @@
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:177:28:lv_draw_sw_blend_color_to_a8	17
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:252:28:lv_draw_sw_blend_image_to_a8	10
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:308:35:a8_image_blend	21
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:374:35:mask_only_image_blend	17
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:435:35:i1_image_blend	24
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:510:35:al88_image_blend	21
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:580:35:argb8888_image_blend	21
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:649:45:get_bit	2
-../App/Modules/GUI/lvgl/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c:656:44:drawbuf_next_row	1

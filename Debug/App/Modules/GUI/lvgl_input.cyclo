@@ -1,5 +1,0 @@
-../App/Modules/GUI/lvgl_input.c:16:13:is_touched	2
-../App/Modules/GUI/lvgl_input.c:25:13:read_raw	9
-../App/Modules/GUI/lvgl_input.c:58:13:raw_to_display	9
-../App/Modules/GUI/lvgl_input.c:79:13:touch_read_cb	3
-../App/Modules/GUI/lvgl_input.c:98:6:lvgl_input_init	5

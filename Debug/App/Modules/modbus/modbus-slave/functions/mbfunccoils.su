@@ -1,3 +1,0 @@
-../App/Modules/modbus/modbus-slave/functions/mbfunccoils.c:66:1:eMBFuncReadCoils	32	static
-../App/Modules/modbus/modbus-slave/functions/mbfunccoils.c:145:1:eMBFuncWriteCoil	24	static
-../App/Modules/modbus/modbus-slave/functions/mbfunccoils.c:199:1:eMBFuncWriteMultipleCoils	24	static

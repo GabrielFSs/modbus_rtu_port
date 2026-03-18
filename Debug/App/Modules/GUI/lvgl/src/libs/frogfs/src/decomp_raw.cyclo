@@ -1,3 +1,0 @@
-../App/Modules/GUI/lvgl/src/libs/frogfs/src/decomp_raw.c:16:16:read_raw	3
-../App/Modules/GUI/lvgl/src/libs/frogfs/src/decomp_raw.c:32:16:seek_raw	10
-../App/Modules/GUI/lvgl/src/libs/frogfs/src/decomp_raw.c:68:15:tell_raw	1

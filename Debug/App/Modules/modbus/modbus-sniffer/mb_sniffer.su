@@ -1,9 +1,0 @@
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:30:13:push_last_frame	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:40:6:mb_sniffer_init	4	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:53:6:mb_sniffer_enable	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:60:6:mb_sniffer_rx_byte	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:71:6:mb_sniffer_rx_timeout	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:95:6:mb_sniffer_tx_store	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:110:6:mb_sniffer_tx_confirm	16	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:134:6:mb_sniffer_process	680	static
-../App/Modules/modbus/modbus-sniffer/mb_sniffer.c:180:6:mb_sniffer_get_last_frames	32	static
